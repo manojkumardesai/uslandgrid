@@ -28,6 +28,7 @@ const NAMES: string[] = [
 })
 export class WellsRecordsComponent implements OnInit {
   panelOpenState = false;
+  totalAvailableWellsCount: any;
   displayedColumns: string[] = [
     'wellId',
     'wellName',
@@ -51,6 +52,7 @@ export class WellsRecordsComponent implements OnInit {
   ngOnInit() {
     this.apiService.fetchWellsData().subscribe((data) => {
       this.dataSource = new MatTableDataSource(data.wellDtos);
+      this.totalAvailableWellsCount = data.count;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
