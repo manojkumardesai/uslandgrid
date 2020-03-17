@@ -7,6 +7,7 @@ import { MapComponent } from './map/map.component';
 import { WellsRecordsComponent } from './wells-records/wells-records.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMaterialModule } from './modules/material.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { AngularMaterialModule } from './modules/material.module';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
