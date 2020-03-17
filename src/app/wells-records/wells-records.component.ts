@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ApiService } from '../_services/api.service';
+import { tap } from 'rxjs/operators';
 
 export interface UserData {
   id: string;
@@ -45,18 +46,26 @@ export class WellsRecordsComponent implements OnInit {
   ];
   dataSource: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  constructor(public apiService: ApiService) {}
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  constructor(public apiService: ApiService) { }
 
   ngOnInit() {
-    this.apiService.fetchWellsData().subscribe((data) => {
+    this.apiService.fetchWellsData(0, 5).subscribe((data) => {
       this.dataSource = new MatTableDataSource(data.wellDtos);
       this.totalAvailableWellsCount = data.count;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
 
+  }
+
+  ngAfterViewInit() {
+    this.paginator.page
+      .pipe(
+        tap(() => this.loadWells(this.paginator.pageIndex, this.paginator.pageSize))
+      )
+      .subscribe();
   }
 
   applyFilter(event: Event) {
@@ -66,6 +75,12 @@ export class WellsRecordsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  loadWells(offset=0, limit=0) {
+    this.apiService.fetchWellsData(offset, limit).subscribe((data) => {
+      this.dataSource = new MatTableDataSource(data.wellDtos);
+    });
   }
 }
 
