@@ -1,5 +1,54 @@
 <div class='detailPage'>
-    <div>Test</div>
+    <div class='chartStyle'>
+        <div class="container-fluid main">
+           
+            <div class="card profile">
+              <div class="card-header profileName">
+                BABBITT
+              </div>
+              <div class="card-body profileBody">
+                <div class="profilePic">
+                  <img class="avatar" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Well%2C_Prague_Satalice.jpg/766px-Well%2C_Prague_Satalice.jpg" alt="Username">
+                </div>
+                <div class="profileInfo">
+                  <p>Id: 35001200040000</p>
+                </div>
+                <div class="profileInfo">
+                  <p>Operator: FRIEDEL PETROLEUM CORP INC</p>
+                </div>
+                <div class="profileInfo">
+                  <p>Country: Adair</p>
+                </div>
+                <div class="profileInfo">
+                  <p>Status: PA</p>
+                </div>
+                <div class="profileInfo">
+                    <p>Spud Date: 5/15/1999</p>
+                </div>
+                <div class="profileInfo">
+                  <p>Completion Date: 6/9/1999</p>
+                </div>
+              </div>
+              <div class="card-footer actions">
+                <div class="actionFirst">
+                    <mat-chip-list aria-label="Fish selection">
+                        <mat-chip>35.65119</mat-chip>
+                    </mat-chip-list> Latitude
+                </div>
+                <div class="actionSecond">
+                    <mat-chip-list aria-label="Fish selection">
+                        <mat-chip>-94.51946</mat-chip>
+                    </mat-chip-list> Longitude
+                </div>
+                <div class="actionSecond">
+                    <mat-chip-list aria-label="Fish selection">
+                        <mat-chip>135</mat-chip>
+                    </mat-chip-list> Number
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
     <div class='chartStyle' *ngIf="barChartData">
         <canvas baseChart
             [datasets]="barChartData"
@@ -8,5 +57,11 @@
             [legend]="barChartLegend"
             [chartType]="barChartType"></canvas>
     </div>
-    <div>Test 2</div>
+    <div class='chartStyle' *ngIf="doughNutChartData">
+        <canvas baseChart
+            [data]="doughNutChartData"
+            [options]="doughNutChartOptions"
+            [labels]="barChartLabels"
+            [chartType]="doughNutChartType"></canvas>
+    </div>
 </div>

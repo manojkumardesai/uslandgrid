@@ -20,13 +20,29 @@ export class WellDetailComponent implements OnInit {
         align: 'end',
       }
     },
-    showLines: false
+    showLines: false,
+    legend: {position: 'bottom'}
+  };
+  public doughNutChartOptions: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    // We use these empty structures as placeholders for dynamic theming.
+    plugins: {
+      datalabels: {
+        anchor: 'end',
+        align: 'end',
+      }
+    },
+    showLines: false,
+    legend: {position: 'bottom'}
   };
 
-  public barChartData: ChartDataSets[] ;
+  public barChartData: ChartDataSets[];
+  public doughNutChartData;
   public barChartLabels: Label[];
   public barChartLegend = true;
   public barChartType: ChartType = 'bar';
+  public doughNutChartType: ChartType = 'doughnut';
   public chartReady = false;
 
   constructor(public apiService: ApiService) { }
@@ -43,6 +59,7 @@ export class WellDetailComponent implements OnInit {
       let values =  data.map((res) => {
         return res.value
       });
+      this.doughNutChartData = values;
       this.barChartData = [{
         data: values,
         label: 'Wells A'
