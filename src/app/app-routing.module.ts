@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from './modules/login/auth/auth.guard';
-import { AppComponent } from './app.component';
 import { WellDetailComponent } from './well-detail/well-detail.component';
 import { MapComponent } from './map/map.component';
 
@@ -9,7 +7,7 @@ import { MapComponent } from './map/map.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
   {
