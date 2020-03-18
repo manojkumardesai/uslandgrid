@@ -11,6 +11,7 @@ import { Label } from 'ng2-charts';
 export class WellDetailComponent implements OnInit {
   public barChartOptions: ChartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     // We use these empty structures as placeholders for dynamic theming.
     scales: { xAxes: [{}], yAxes: [{}] },
     plugins: {
@@ -19,6 +20,7 @@ export class WellDetailComponent implements OnInit {
         align: 'end',
       }
     },
+    showLines: false
   };
 
   public barChartData: ChartDataSets[] ;

@@ -1,8 +1,12 @@
-<div *ngIf="chartReady">
-    <canvas baseChart
-        [datasets]="barChartData"
-        [labels]="barChartLabels"
-        [options]="barChartOptions"
-        [legend]="barChartLegend"
-        [chartType]="barChartType"></canvas>
+<div class='detailPage'>
+    <div>Test</div>
+    <div class='chartStyle' *ngIf="barChartData">
+        <canvas baseChart
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType"></canvas>
+    </div>
+    <div>Test 2</div>
 </div>
