@@ -13,4 +13,8 @@ export class ApiService {
   fetchWellsData(offset, limit): Observable<any> {
     return this.http.get(`http://mercury:8080/wells?offset=${offset}&limit=${limit}`);
   }
+
+  fetchChartData(): Observable<any> {
+    return this.http.get(`http://mercury:8080/chart/county`);
+  }
 }

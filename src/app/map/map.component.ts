@@ -27,17 +27,29 @@ export class MapComponent implements AfterViewInit {
 
     tiles.addTo(this.map);
 
-    const plssLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/tx_plss/wms?', {
-       layers: 'TX_PLSS',
+    const cultureLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/tx_plss/wms?', {
+       layers: 'Culture',
        format: 'image/png8',
-       transparent: true
+       transparent: true,
+       styles: '',
+       attribution: null
      }).addTo(this.map);
 
-     /*const wellsLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/Wells/wms?', {
+    const plssLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/tx_plss/wms?', {
+       layers: 'National_PLSS',
+       format: 'image/png8',
+       transparent: true,
+       styles: '',
+       attribution: null
+     }).addTo(this.map);
+
+     const wellsLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/Wells/wms?', {
        layers: 'OK_Wells',
        format: 'image/png8',
-       transparent: true
-     }).addTo(this.map);*/
+       transparent: true,
+       styles: '',
+       attribution: null
+     }).addTo(this.map);
   }
 
 }

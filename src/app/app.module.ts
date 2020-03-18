@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMaterialModule } from './modules/material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { WellDetailComponent } from './well-detail/well-detail.component';
+import { ChartsModule } from 'ng2-charts';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { WellDetailComponent } from './well-detail/well-detail.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
-    HttpClientModule
+    HttpClientModule,
+    ChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
