@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { WellDetailComponent } from './well-detail/well-detail.component';
 import { MapComponent } from './map/map.component';
+import { LoginComponent } from './login/login.component';
 
 
 const routes: Routes = [
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'detail',
     component: WellDetailComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   }
 ];
 

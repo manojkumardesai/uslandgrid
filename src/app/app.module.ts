@@ -10,6 +10,8 @@ import { AngularMaterialModule } from './modules/material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { WellDetailComponent } from './well-detail/well-detail.component';
 import { ChartsModule } from 'ng2-charts';
+import { LoginComponent } from './login/login.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -17,7 +19,8 @@ import { ChartsModule } from 'ng2-charts';
     AppComponent,
     MapComponent,
     WellsRecordsComponent,
-    WellDetailComponent
+    WellDetailComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +28,9 @@ import { ChartsModule } from 'ng2-charts';
     BrowserAnimationsModule,
     AngularMaterialModule,
     HttpClientModule,
-    ChartsModule
+    ChartsModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
