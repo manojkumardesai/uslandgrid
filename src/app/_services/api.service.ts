@@ -17,4 +17,7 @@ export class ApiService {
   fetchChartData(): Observable<any> {
     return this.http.get(`http://mercury:8080/chart/county`);
   }
+  fetchWellDetails(wellId): Observable<any> {
+    return this.http.get(`http://mercury:8080/well/${wellId}`);
+  }
 }

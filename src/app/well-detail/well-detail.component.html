@@ -4,45 +4,45 @@
            
             <div class="card profile">
               <div class="card-header profileName">
-                BABBITT
+                {{ wellDetails.wellName }}
               </div>
               <div class="card-body profileBody">
                 <div class="profilePic">
                   <img class="avatar" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Well%2C_Prague_Satalice.jpg/766px-Well%2C_Prague_Satalice.jpg" alt="Username">
                 </div>
                 <div class="profileInfo">
-                  <p>Id: 35001200040000</p>
+                  <p>Id: {{ wellDetails.wellId }}</p>
                 </div>
                 <div class="profileInfo">
-                  <p>Operator: FRIEDEL PETROLEUM CORP INC</p>
+                  <p>Operator: {{ wellDetails.operator }}</p>
                 </div>
                 <div class="profileInfo">
-                  <p>Country: Adair</p>
+                  <p>Country: {{ wellDetails.country }}</p>
                 </div>
                 <div class="profileInfo">
-                  <p>Status: PA</p>
+                  <p>Status: {{ wellDetails.status }}</p>
                 </div>
                 <div class="profileInfo">
-                    <p>Spud Date: 5/15/1999</p>
+                    <p>Spud Date: {{ wellDetails.spudDate }}</p>
                 </div>
                 <div class="profileInfo">
-                  <p>Completion Date: 6/9/1999</p>
+                  <p>Completion Date: {{ wellDetails.completionDate }}</p>
                 </div>
               </div>
               <div class="card-footer actions">
                 <div class="actionFirst">
                     <mat-chip-list aria-label="Fish selection">
-                        <mat-chip>35.65119</mat-chip>
+                        <mat-chip>{{ wellDetails.latitude }}</mat-chip>
                     </mat-chip-list> Latitude
                 </div>
                 <div class="actionSecond">
                     <mat-chip-list aria-label="Fish selection">
-                        <mat-chip>-94.51946</mat-chip>
+                        <mat-chip>{{ wellDetails.longitude }}</mat-chip>
                     </mat-chip-list> Longitude
                 </div>
                 <div class="actionSecond">
                     <mat-chip-list aria-label="Fish selection">
-                        <mat-chip>135</mat-chip>
+                        <mat-chip>{{ wellDetails.wellNumber }}</mat-chip>
                     </mat-chip-list> Number
                 </div>
               </div>

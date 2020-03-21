@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../_services/api.service';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-well-detail',
@@ -44,11 +45,18 @@ export class WellDetailComponent implements OnInit {
   public barChartType: ChartType = 'bar';
   public doughNutChartType: ChartType = 'doughnut';
   public chartReady = false;
+  public wellId;
+  public wellDetails;
 
-  constructor(public apiService: ApiService) { }
+  constructor(public apiService: ApiService,
+              public route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.fetchDataForChart();
+    this.wellId = this.route.snapshot.paramMap.get("id");
+    if(this.wellId) {
+      this.fetchDataForChart();
+      this.fetchWellDetail(this.wellId);
+    }
   }
 
   fetchDataForChart() {
@@ -65,6 +73,12 @@ export class WellDetailComponent implements OnInit {
         label: 'Wells A'
       }];
       this.chartReady = true;
+    });
+  }
+
+  fetchWellDetail(wellId) {
+    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetails = data;
     });
   }
 
