@@ -1,0 +1,100 @@
+.detailPage {
+    margin-top: 55px;
+    display: flex;
+    padding: 3%
+}
+
+.chartStyle {
+    height: 300px;
+    width: 300px;
+    margin-left: 5%;
+}
+
+.main {
+    position: absolute;
+    top: 45%;
+    left: 17%;
+  }
+  .profile {
+    background-image: url("http://starkovtattoo.spb.ru/images/200/DSC100224440.png");
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color:#444;
+    width: 250px;
+    height: 420px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -200px 0 0 -125px;
+    border-radius:24px;
+    border:none;
+    box-shadow: 0 37.125px 70px -12.125px rgba(0,0,0,0.2);
+    transition:all .3s;
+  }
+  
+  .profileName {
+    background:transparent;
+    border:0;
+    text-align:center;
+    font-size:16px;
+    font-weight:800;
+    color:#eee;
+    padding-top: 5%;
+  }
+  
+  .isVerified {
+    fill: #eee;
+    margin:5px;
+  }
+  
+  .card-body {
+    color:#eee;
+    margin-top:1.5em;
+  }
+  .avatar {
+    border-radius:50%;
+    max-width:128px;
+    transform: scale(0.95);
+    transition:all .5s;
+    cursor:pointer;
+  }
+  .avatar:hover {
+    transform: scale(1);
+    box-shadow: 0 37.125px 70px -12.125px rgba(0,0,0,0.2);
+  }
+  .profilePic {
+    text-align:center;
+  }
+  .isOnline {
+    text-align:center;
+    color:#eee;
+  }
+  .profileInfo {
+    margin-top: 1em;
+    font-weight: 400;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+  }
+  .actions {
+    background:transparent;
+    border:0;
+    color:#fff;
+    display:inline-flex;
+  }
+  .actionFirst, .actionSecond {
+    width:50%;
+    text-align:center;
+    fill:#ddd;
+    transform: scale(0.8);
+    transition:all .3s;
+    cursor:pointer;
+  }
+  .actionFirst:hover, .actionSecond:hover {
+    transform: scale(1);
+    fill:#fff;
+    
+  }
+  

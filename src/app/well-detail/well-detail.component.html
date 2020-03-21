@@ -1,0 +1,67 @@
+<div class='detailPage'>
+    <div class='chartStyle'>
+        <div class="container-fluid main">
+           
+            <div class="card profile">
+              <div class="card-header profileName">
+                {{ wellDetails.wellName }}
+              </div>
+              <div class="card-body profileBody">
+                <div class="profilePic">
+                  <img class="avatar" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Well%2C_Prague_Satalice.jpg/766px-Well%2C_Prague_Satalice.jpg" alt="Username">
+                </div>
+                <div class="profileInfo">
+                  <p>Id: {{ wellDetails.wellId }}</p>
+                </div>
+                <div class="profileInfo">
+                  <p>Operator: {{ wellDetails.operator }}</p>
+                </div>
+                <div class="profileInfo">
+                  <p>Country: {{ wellDetails.country }}</p>
+                </div>
+                <div class="profileInfo">
+                  <p>Status: {{ wellDetails.status }}</p>
+                </div>
+                <div class="profileInfo">
+                    <p>Spud Date: {{ wellDetails.spudDate }}</p>
+                </div>
+                <div class="profileInfo">
+                  <p>Completion Date: {{ wellDetails.completionDate }}</p>
+                </div>
+              </div>
+              <div class="card-footer actions">
+                <div class="actionFirst">
+                    <mat-chip-list aria-label="Fish selection">
+                        <mat-chip>{{ wellDetails.latitude }}</mat-chip>
+                    </mat-chip-list> Latitude
+                </div>
+                <div class="actionSecond">
+                    <mat-chip-list aria-label="Fish selection">
+                        <mat-chip>{{ wellDetails.longitude }}</mat-chip>
+                    </mat-chip-list> Longitude
+                </div>
+                <div class="actionSecond">
+                    <mat-chip-list aria-label="Fish selection">
+                        <mat-chip>{{ wellDetails.wellNumber }}</mat-chip>
+                    </mat-chip-list> Number
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <div class='chartStyle' *ngIf="barChartData">
+        <canvas baseChart
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType"></canvas>
+    </div>
+    <div class='chartStyle' *ngIf="doughNutChartData">
+        <canvas baseChart
+            [data]="doughNutChartData"
+            [options]="doughNutChartOptions"
+            [labels]="barChartLabels"
+            [chartType]="doughNutChartType"></canvas>
+    </div>
+</div>

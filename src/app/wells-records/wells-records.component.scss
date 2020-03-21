@@ -1,0 +1,75 @@
+.wellsAccordion {
+    z-index: 1000;
+    position: absolute;
+    bottom: 0%;
+    width: 100%;
+}
+
+.wellsRecordTable{
+    width: 100%;
+}
+
+.customAccordionHeader {
+    width: 130px;
+    height: 25px;
+    font-size: 10px;
+    padding-bottom: 15px;
+    left: 10;
+    margin: auto;
+}
+
+.customAccordionPanel {
+    width: 170px;
+    height: 35px;
+    margin: auto;
+}
+
+.customExpandedAccordionHeader {
+    height: 15px !important;
+    padding-top: 20px;
+}
+
+.mat-panel-title {
+    margin-top: 20px !important;
+}
+
+.pointerClass {
+    cursor: pointer;
+    color: aliceblue;
+}
+
+a:visited 
+{
+    text-decoration: none;
+}
+
+tr.mat-header-row {
+    height: 30px;
+}
+
+tr.mat-row {
+    height: 30px;
+}
+
+.mat-cell, .mat-footer-cell {
+    font-size: 10px;
+    color: lightgreen;
+}
+
+.mat-table {
+    overflow-y: scroll;
+}
+
+.wellsTableContainer {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.mat-expansion-indicator {
+    padding-bottom: 30px;
+}
+
+.mat-header-cell {
+    color: aqua;
+}
+

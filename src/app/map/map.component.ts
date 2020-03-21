@@ -8,6 +8,10 @@ import * as L from 'leaflet';
 })
 export class MapComponent implements AfterViewInit {
   public map;
+  public tiles;
+  public cultureLayer;
+  public plssLayer;
+  public wellsLayer;
   constructor() { }
 
   ngAfterViewInit(): void {
@@ -17,14 +21,39 @@ export class MapComponent implements AfterViewInit {
   private initMap(): void {
     this.map = L.map('map', {
       center: [39.8282, -98.5795],
-      zoom: 3
+      zoom: 4
     });
-    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
+    this.tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      minZoom: 4,
+      maxZoom: 20,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
 
-    tiles.addTo(this.map);
+    this.tiles.addTo(this.map);
+
+    this.cultureLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/tx_plss/wms?', {
+       layers: 'Culture',
+       format: 'image/png8',
+       transparent: true,
+       styles: '',
+       attribution: null
+     }).addTo(this.map);
+
+    this.plssLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/tx_plss/wms?', {
+       layers: 'National_PLSS',
+       format: 'image/png8',
+       transparent: true,
+       styles: '',
+       attribution: null
+     }).addTo(this.map);
+
+     this.wellsLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/Wells/wms?', {
+       layers: 'OK_Wells',
+       format: 'image/png8',
+       transparent: true,
+       styles: '',
+       attribution: null
+     }).addTo(this.map);
   }
 
 }
