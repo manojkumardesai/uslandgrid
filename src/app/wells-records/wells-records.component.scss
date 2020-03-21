@@ -20,12 +20,13 @@
 
 .customAccordionPanel {
     width: 170px;
-    height: 50px;
+    height: 35px;
     margin: auto;
 }
 
 .customExpandedAccordionHeader {
-    height: 25px !important;
+    height: 15px !important;
+    padding-top: 20px;
 }
 
 .mat-panel-title {
@@ -34,9 +35,41 @@
 
 .pointerClass {
     cursor: pointer;
+    color: aliceblue;
 }
 
 a:visited 
 {
     text-decoration: none;
 }
+
+tr.mat-header-row {
+    height: 30px;
+}
+
+tr.mat-row {
+    height: 30px;
+}
+
+.mat-cell, .mat-footer-cell {
+    font-size: 10px;
+    color: lightgreen;
+}
+
+.mat-table {
+    overflow-y: scroll;
+}
+
+.wellsTableContainer {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.mat-expansion-indicator {
+    padding-bottom: 30px;
+}
+
+.mat-header-cell {
+    color: aqua;
+}
+

@@ -3,7 +3,7 @@
         <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [ngClass]="{'customAccordionPanel': !panelOpenState}">
             <mat-expansion-panel-header [ngClass]="{'customAccordionHeader': !panelOpenState,
             'customExpandedAccordionHeader': panelOpenState}">
-                <mat-panel-title>
+                <mat-panel-title *ngIf="!panelOpenState">
                     Wells Records
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -13,7 +13,7 @@
                     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
                   </mat-form-field>
                   
-                  <div class="mat-elevation-z8">
+                  <div class="mat-elevation-z8 wellsTableContainer">
                     <table class='wellsRecordTable' mat-table [dataSource]="dataSource" matSort>
                   
                       <!-- ID Column -->
@@ -98,13 +98,12 @@
                         </td>
                       </ng-container>
                   
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                       <tr mat-row *matRowDef="let row; columns: displayedColumns;">
                       </tr>
                     </table>
-                  
-                    <mat-paginator [length]="totalAvailableWellsCount" [pageSizeOptions]="[5]"></mat-paginator>
                   </div>
+                  <mat-paginator [length]="totalAvailableWellsCount" [pageSizeOptions]="[5,10,15]"></mat-paginator>
             </div>
         </mat-expansion-panel>
     </mat-accordion>
