@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-// import { LoginService } from './services/login.service';
+// import { LoginService } from './_services/login.service';
 import { Router } from '@angular/router';
+import { ThemeService } from 'ng2-charts';
+import { LoginService } from '../_services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -16,20 +18,24 @@ export class LoginComponent implements OnInit {
   });
   @Input() error: string | null;
 
-  constructor( private router: Router) { }
+  constructor( private router: Router, public loginService: LoginService) { }
 
   ngOnInit(): void {
   }
 
   login(): void {
-    this.form.controls.pwd.setValue(this.convertToBase64(this.form.controls.pwd.value));
-    // this.loginService.login(this.form.value).subscribe((res) => {
-    //   this.router.navigate(['/home']);
-    // });
-  }
-
-  convertToBase64(inputValue): string {
-    return btoa(inputValue); // JS built-in method for base64 conversion
+    console.log("hello");
+    if (this.form.value.username == 'admin' && this.form.value.pwd == 'Parra7969!') {
+      this.loginService.publishLoginResponseTrue();
+      this.router.navigate(['/home']);
+    } else {
+      this.loginService.publishLoginResponseFalse();
+      this.error = 'Invalid username/password';
+      this.form.reset();
+      setTimeout(()=>{
+        this.error = '';
+      }, 3000);
+    }
   }
 
 }

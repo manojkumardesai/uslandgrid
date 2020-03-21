@@ -16,7 +16,7 @@ const routes: Routes = [
     component: MapComponent
   },
   {
-    path: 'detail',
+    path: 'detail/:id',
     component: WellDetailComponent
   },
   {

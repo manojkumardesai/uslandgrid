@@ -42,7 +42,8 @@ export class WellsRecordsComponent implements OnInit {
     'completionDate',
     'country',
     'datumType',
-    'tvd'
+    'tvd',
+    'action'
   ];
   dataSource: MatTableDataSource<any>;
 
