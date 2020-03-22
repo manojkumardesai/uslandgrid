@@ -83,16 +83,16 @@ export class MapComponent implements AfterViewInit {
         // Make an AJAX request to the server and hope for the best
         var url = this.getFeatureInfoUrl(evt.latlng),
             showResults = L.Util.bind(this.showGetFeatureInfo, this);
-        $.ajax({
-          url: url,
-          success: function (data, status, xhr) {
-            var err = typeof data === 'string' ? null : data;
-            showResults(err, evt.latlng, data);
-          },
-          error: function (xhr, status, error) {
-            showResults(error);  
-          }
-        });
+        // $.ajax({
+        //   url: url,
+        //   success: function (data, status, xhr) {
+        //     var err = typeof data === 'string' ? null : data;
+        //     showResults(err, evt.latlng, data);
+        //   },
+        //   error: function (xhr, status, error) {
+        //     showResults(error);  
+        //   }
+        // });
       },
       
       getFeatureInfoUrl: function (latlng) {
