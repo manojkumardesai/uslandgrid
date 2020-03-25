@@ -60,7 +60,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       minZoom: 4,
       maxZoom: 20,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    });
+    }).addTo(this.map);
   }
 
   addCultureLayer() {
