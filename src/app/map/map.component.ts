@@ -78,6 +78,6 @@ export class MapComponent implements AfterViewInit {
   }
 
   homeLocation() {
-
+    this.map.setView(new L.LatLng(35.420372, -98.512855), 8);
   }
 }
