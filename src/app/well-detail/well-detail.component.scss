@@ -1,7 +1,7 @@
 .detailPage {
-    margin-top: 55px;
+    margin-top: 10%;
     display: flex;
-    padding: 3%
+    justify-content: center;
 }
 
 .chartStyle {
@@ -11,9 +11,8 @@
 }
 
 .main {
-    position: absolute;
-    top: 45%;
-    left: 17%;
+  position: absolute;
+  margin-top: 10%;
   }
   .profile {
     background-image: url("http://starkovtattoo.spb.ru/images/200/DSC100224440.png");
