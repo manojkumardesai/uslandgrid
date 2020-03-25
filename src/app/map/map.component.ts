@@ -27,6 +27,10 @@ export class MapComponent implements AfterViewInit {
     this.map.on('moveend', () => { 
      console.log(this.map.getBounds());
      });
+     this.addTileLayer();
+     this.addCultureLayer();
+     this.addPlssLayer();
+     this.addWellsLayer();
      // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
   }
