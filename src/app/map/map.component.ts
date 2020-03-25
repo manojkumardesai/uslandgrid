@@ -78,7 +78,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   currentLocation() {
-    
+    this.map.locate({setView: true});
   }
 
   homeLocation() {
