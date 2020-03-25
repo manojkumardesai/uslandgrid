@@ -3,7 +3,8 @@ import * as L from 'leaflet';
 import { BetterWMS } from '../utils/betterWms.util';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, filter } from 'rxjs/operators';
+import { ApiService } from '../_services/api.service';
 
 @Component({
   selector: 'app-map',
@@ -17,26 +18,41 @@ export class MapComponent implements AfterViewInit, OnInit {
   public plssLayer;
   public wellsLayer;
   myControl = new FormControl();
-  options: string[] = ['One', 'Two', 'Three'];
+  options: any[] = [];
   filteredOptions: Observable<string[]>;
-  constructor() { }
+  constructor(public apiService: ApiService) { }
 
   ngOnInit(): void {
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
-        map(value => this._filter(value))
+        map(value => typeof value === 'string' ? value : value.wellName),
+        map(name => name ? this._filter(name) : this.options.slice())
       );
   }
 
-  private _filter(value: string): string[] {
+  private _filter(value:any): string[] {
     const filterValue = value.toLowerCase();
-
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+    this.searchWellsByKey(filterValue);
+    return this.options.filter(option => option.wellName.toLowerCase().indexOf(filterValue) === 0);
   }
 
   ngAfterViewInit(): void {
     this.initMap();
+  }
+
+  searchWellsByKey(key) {
+    this.apiService.searchWells(key).subscribe((data) => {
+      this.options = data.wellDtos;
+    });
+  }
+
+  displayFn(well): string {
+    return well && well.wellName ? well.wellName : '';
+  }
+
+  goToSelectedWell(option) {
+    this.goToLocation(option.latitude, option.longitude);
   }
 
   private initMap(): void {
@@ -103,5 +119,9 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   homeLocation() {
     this.map.setView(new L.LatLng(35.420372, -98.512855), 8);
+  }
+
+  goToLocation(lat,lng) {
+    this.map.setView(new L.LatLng(lat, lng), 12);
   }
 }
