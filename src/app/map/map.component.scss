@@ -34,9 +34,16 @@
   }
 
   .filter {
-    margin-left: 5%;
+    margin-left: 3%;
   }
 
   .filterSearchWell {
     z-index: 1000;
+  }
+
+  .filterCard {
+    z-index: 1000;
+    width: fit-content;
+    height: 35px;
+    margin-top: 10px;
   }
