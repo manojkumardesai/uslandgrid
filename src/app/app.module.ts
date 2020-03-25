@@ -12,6 +12,7 @@ import { WellDetailComponent } from './well-detail/well-detail.component';
 import { ChartsModule } from 'ng2-charts';
 import { LoginComponent } from './login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FilterDialog } from './utils/matDialog/matDialog.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MapComponent,
     WellsRecordsComponent,
     WellDetailComponent,
-    LoginComponent
+    LoginComponent,
+    FilterDialog
   ],
   imports: [
     BrowserModule,
