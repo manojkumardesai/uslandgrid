@@ -3,24 +3,45 @@ import * as L from 'leaflet';
 import { BetterWMS } from '../utils/betterWms.util';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { startWith, map, filter } from 'rxjs/operators';
+import { startWith, map } from 'rxjs/operators';
 import { ApiService } from '../_services/api.service';
+import { MatDialog } from '@angular/material/dialog';
+import { FilterDialog } from '../utils/matDialog/matDialog.component';
+
+export interface DialogData {
+  animal: string;
+  name: string;
+}
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
+
 export class MapComponent implements AfterViewInit, OnInit {
   public map;
   public tiles;
   public cultureLayer;
   public plssLayer;
   public wellsLayer;
+  animal: string;
+  name: string;
   myControl = new FormControl();
   options: any[] = [];
   filteredOptions: Observable<string[]>;
-  constructor(public apiService: ApiService) { }
+  constructor(public apiService: ApiService,
+    public dialog: MatDialog) { }
+  openDialog(): void {
+    const dialogRef = this.dialog.open(FilterDialog, {
+      width: '250px',
+      data: { name: this.name, animal: this.animal }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.animal = result;
+    });
+  }
 
   ngOnInit(): void {
     this.filteredOptions = this.myControl.valueChanges
@@ -31,7 +52,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       );
   }
 
-  private _filter(value:any): string[] {
+  private _filter(value: any): string[] {
     const filterValue = value.toLowerCase();
     this.searchWellsByKey(filterValue);
     return this.options.filter(option => option.wellName.toLowerCase().indexOf(filterValue) === 0);
@@ -60,14 +81,14 @@ export class MapComponent implements AfterViewInit, OnInit {
       center: [35.420372, -98.512855],
       zoom: 8
     });
-    this.map.on('moveend', () => { 
-     console.log(this.map.getBounds());
-     });
-     this.addTileLayer();
-     this.addCultureLayer();
-     this.addPlssLayer();
-     this.addWellsLayer();
-     // Pass url and options to below function in the mentioned comment and uncomment it
+    this.map.on('moveend', () => {
+      console.log(this.map.getBounds());
+    });
+    this.addTileLayer();
+    this.addCultureLayer();
+    this.addPlssLayer();
+    this.addWellsLayer();
+    // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
   }
 
@@ -114,14 +135,14 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   currentLocation() {
-    this.map.locate({setView: true});
+    this.map.locate({ setView: true });
   }
 
   homeLocation() {
     this.map.setView(new L.LatLng(35.420372, -98.512855), 8);
   }
 
-  goToLocation(lat,lng) {
+  goToLocation(lat, lng) {
     this.map.setView(new L.LatLng(lat, lng), 12);
   }
 }

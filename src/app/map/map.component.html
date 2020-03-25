@@ -7,15 +7,18 @@
     <span class="material-icons leftIcon" (click)="currentLocation()">
         location_searching
     </span>
-    <hr style="
-    margin-top: 1px;
-    margin-bottom:  1px;"/>
+    <hr style="margin-top: 1px;margin-bottom:  1px;"/>
     <span class="material-icons leftIcon" (click)="homeLocation()">
         home
     </span>
 </div>
-<div class='filter'>
-    <mat-card class='filterCard'>
+<div class="filter">
+    <span class="material-icons leftIcon" (click)="openDialog()">
+        filter_list
+    </span>
+</div>
+<div class='search'>
+    <mat-card class='searchCard'>
         <form class="example-form">
             <mat-form-field class="example-full-width filterSearchWell">
               <input type="text"

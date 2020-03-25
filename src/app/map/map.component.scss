@@ -33,7 +33,7 @@
     cursor: pointer;
   }
 
-  .filter {
+  .search {
     margin-left: 3%;
   }
 
@@ -41,9 +41,21 @@
     z-index: 1000;
   }
 
-  .filterCard {
+  .searchCard {
     z-index: 1000;
     width: fit-content;
     height: 35px;
     margin-top: 10px;
+  }
+
+  .filter {
+    border: 1px solid grey;
+    position: absolute;
+    margin-top: 5%;
+    margin-left: 3%;
+    background-color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 6%;
+    z-index: 1000;
   }

@@ -1,0 +1,39 @@
+<h1 mat-dialog-title>Group Filter</h1>
+<form>
+  <p>
+    <mat-form-field>
+      <mat-label>Favorite food</mat-label>
+      <mat-select (selectionChange)="type($event)">
+        <mat-option *ngFor="let food of foods" [value]="food.value">
+          {{food.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Favorite food</mat-label>
+      <mat-select (selectionChange)="criteria($event)">
+        <mat-option *ngFor="let food of foods" [value]="food.value">
+          {{food.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Favorite food</mat-label>
+      <mat-select (selectionChange)="value($event)">
+        <mat-option *ngFor="let food of foods" [value]="food.value">
+          {{food.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+</form>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data">Apply</button>
+  <button mat-button [mat-dialog-close]="data">Generate Report</button>
+</div>
