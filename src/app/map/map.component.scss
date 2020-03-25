@@ -18,12 +18,13 @@
   .left-icons-placeholder {
     border: 1px solid grey;
     position: absolute;
-    margin-top: 7%;
-    margin-left: 0.9%;
+    margin-top: 5%;
+    margin-left: 0.7%;
     background-color: white;
     width: 30px;
     height: 68px;
     border-radius: 6%;
+    z-index: 1000;
   }
 
   .leftIcon {
