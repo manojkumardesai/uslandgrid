@@ -23,4 +23,13 @@ export class ApiService {
   fetchWellDetails(wellId): Observable<any> {
     return this.http.get(`http://mercury:8080/well/${wellId}`);
   }
+  fetchCounties(): Observable<any> {
+    return this.http.get(`http://mercury:8080/county`);
+  }
+  fetchOperators(): Observable<any> {
+    return this.http.get(`http://mercury:8080/operator`);
+  }
+  generateReport(payLoad): Observable<any> {
+    return this.http.get(`http://mercury:8080/report/well?state=Oklahoma&${payLoad.group}=${payLoad.value}&reportType=${payLoad.format}&`);
+  }
 }

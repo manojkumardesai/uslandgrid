@@ -34,12 +34,13 @@ export class MapComponent implements AfterViewInit, OnInit {
     public dialog: MatDialog) { }
   openDialog(): void {
     const dialogRef = this.dialog.open(FilterDialog, {
-      width: '250px',
-      data: { name: this.name, animal: this.animal }
+      width: '500px',
+      data: { }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       this.animal = result;
+      console.log('Result', result);
     });
   }
 

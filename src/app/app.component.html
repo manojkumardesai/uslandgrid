@@ -4,8 +4,11 @@
    <img src="../assets/logo.jpeg">
   </span>
   <div class="spacer"></div>
-  <span routerLink = '/login'>
+  <span  *ngIf='!isLoggedIn' routerLink = '/login'>
     Login
+  </span>
+  <span  *ngIf='isLoggedIn' routerLink = '/login'>
+    Admin
   </span>
   <span routerLink = '/detail' class="material-icons">
     layers

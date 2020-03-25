@@ -2,30 +2,40 @@
 <form>
   <p>
     <mat-form-field>
-      <mat-label>Favorite food</mat-label>
+      <mat-label>Choose Group</mat-label>
       <mat-select (selectionChange)="type($event)">
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{food.viewValue}}
+        <mat-option *ngFor="let group of groups" [value]="group.value">
+          {{group.value}}
         </mat-option>
       </mat-select>
     </mat-form-field>
   </p>
   <p>
     <mat-form-field>
-      <mat-label>Favorite food</mat-label>
+      <mat-label>Choose Condition</mat-label>
       <mat-select (selectionChange)="criteria($event)">
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{food.viewValue}}
+        <mat-option *ngFor="let criteria of criterias" [value]="criteria.value">
+          {{criteria.value}}
         </mat-option>
       </mat-select>
     </mat-form-field>
   </p>
   <p>
     <mat-form-field>
-      <mat-label>Favorite food</mat-label>
+      <mat-label>Choose Value</mat-label>
       <mat-select (selectionChange)="value($event)">
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{food.viewValue}}
+        <mat-option *ngFor="let value of values" [value]="value">
+          {{value}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Choose Format</mat-label>
+      <mat-select (selectionChange)="fileFormat($event)">
+        <mat-option *ngFor="let format of formats" [value]="format.value">
+          {{format.value}}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -34,6 +44,6 @@
 
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data">Apply</button>
-  <button mat-button [mat-dialog-close]="data">Generate Report</button>
+  <button mat-button [mat-dialog-close]="payLoad">Apply</button>
+  <button mat-button *ngIf="isLoggedIn" (click)="generateReport()">Generate Report</button>
 </div>
