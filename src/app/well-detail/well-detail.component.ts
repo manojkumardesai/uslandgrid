@@ -113,65 +113,55 @@ export class WellDetailComponent implements OnInit {
 
   fetchFtWellDetail(wellId) {
     this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsFT = data.map((innerData) => {
-        return Object.keys(innerData).map((res) => {
+      this.wellDetailsFT = Object.keys(data).map((res) => {
         return {
             key: res,
-            value: innerData[res]
+            value: data[res]
         }
-    });
     });
     });
   }
 
   fetchMcWellDetail(wellId) {
     this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsMC= data.map((innerData) => {
-        return Object.keys(innerData).map((res) => {
+      this.wellDetailsMC= Object.keys(data).map((res) => {
         return {
             key: res,
-            value: innerData[res]
+            value: data[res]
         }
-    });
     });
     });
   }
 
   fetchPfWellDetail(wellId) {
     this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsPF = data.map((innerData) => {
-        return Object.keys(innerData).map((res) => {
+      this.wellDetailsPF = Object.keys(data).map((res) => {
         return {
             key: res,
-            value: innerData[res]
+            value: data[res]
         }
-    });
     });
     });
   }
 
   fetchSurveyWellDetail(wellId) {
     this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsSurvey = data.map((innerData) => {
-        return Object.keys(innerData).map((res) => {
+      this.wellDetailsSurvey = Object.keys(data).map((res) => {
         return {
             key: res,
-            value: innerData[res]
+            value: data[res]
         }
-    });
     });
     });
   }
 
   fetchIpWellDetail(wellId) {
     this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsIP = data.map((innerData) => {
-        return Object.keys(innerData).map((res) => {
+      this.wellDetailsIP = Object.keys(data).map((res) => {
         return {
             key: res,
-            value: innerData[res]
+            value: data[res]
         }
-    });
     });
     });
   }
