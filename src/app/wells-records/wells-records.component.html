@@ -1,4 +1,5 @@
 <div class='wellsAccordion'>
+  {{ payLoadFromFilter | json }}
     <mat-accordion>
         <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [ngClass]="{'customAccordionPanel': !panelOpenState}">
             <mat-expansion-panel-header [ngClass]="{'customAccordionHeader': !panelOpenState,

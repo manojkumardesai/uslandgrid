@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -12,22 +12,12 @@ export interface UserData {
   color: string;
 }
 
-/** Constants used to fill up our data base. */
-const COLORS: string[] = [
-  'maroon', 'red', 'orange', 'yellow', 'olive', 'green', 'purple', 'fuchsia', 'lime', 'teal',
-  'aqua', 'blue', 'navy', 'black', 'gray'
-];
-const NAMES: string[] = [
-  'Maia', 'Asher', 'Olivia', 'Atticus', 'Amelia', 'Jack', 'Charlotte', 'Theodore', 'Isla', 'Oliver',
-  'Isabella', 'Jasper', 'Cora', 'Levi', 'Violet', 'Arthur', 'Mia', 'Thomas', 'Elizabeth'
-];
-
 @Component({
   selector: 'app-wells-records',
   templateUrl: './wells-records.component.html',
   styleUrls: ['./wells-records.component.scss']
 })
-export class WellsRecordsComponent implements OnInit {
+export class WellsRecordsComponent implements OnInit, OnChanges {
   panelOpenState = false;
   totalAvailableWellsCount: any;
   displayedColumns: string[] = [
@@ -46,12 +36,29 @@ export class WellsRecordsComponent implements OnInit {
     'action'
   ];
   dataSource: MatTableDataSource<any>;
+  @Input() payLoadFromFilter: any;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   constructor(public apiService: ApiService) { }
 
+  ngOnChanges(changes: SimpleChanges) {
+    const currentItem: SimpleChange = changes.payLoadFromFilter;
+    if(currentItem.currentValue) {
+      this.apiService.fetchWellsByPayLoad(this.payLoadFromFilter, 0, 5).subscribe((data) => {
+        this.dataSource = new MatTableDataSource(data.wellDtos);
+      });
+    } else {
+      this.apiService.fetchWellsData(0, 5).subscribe((data) => {
+        this.dataSource = new MatTableDataSource(data.wellDtos);
+        this.totalAvailableWellsCount = data.count;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
+    }
+  }
   ngOnInit() {
+    console.log(this.payLoadFromFilter);
     this.apiService.fetchWellsData(0, 5).subscribe((data) => {
       this.dataSource = new MatTableDataSource(data.wellDtos);
       this.totalAvailableWellsCount = data.count;

@@ -45,7 +45,7 @@ export class FilterDialog implements OnInit {
             this.operators = data;
         });
         this.loginService.user.subscribe((data) => {
-            this.isLoggedIn = data.loggedIn;
+            this.isLoggedIn = data && data.loggedIn ? data.loggedIn : false;
         });
     }
     onNoClick(): void {
