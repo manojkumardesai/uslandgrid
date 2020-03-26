@@ -35,4 +35,22 @@ export class ApiService {
     // const headers = new HttpHeaders();
     return `http://mercury:8080/report/well?state=Oklahoma&${payLoad.group}=${payLoad.value}&reportType=${payLoad.format}`;
   }
+  fetchMcWellDetails(wellId): Observable<any> {
+    return this.http.get(`http://mercury:8080/well/mc?wellId=${wellId}`);
+  }
+  fetchCpWellDetails(wellId): Observable<any> {
+    return this.http.get(`http://mercury:8080/well/cp?wellId=${wellId}`);
+  }
+  fetchFtWellDetails(wellId): Observable<any> {
+    return this.http.get(`http://mercury:8080/well/ft?wellId=${wellId}`);
+  }
+  fetchPfWellDetails(wellId): Observable<any> {
+    return this.http.get(`http://mercury:8080/well/pf?wellId=${wellId}`);
+  }
+  fetchSurveyWellDetails(wellId): Observable<any> {
+    return this.http.get(`http://mercury:8080/well/survey?wellId=${wellId}`);
+  }
+  fetchIpWellDetails(wellId): Observable<any> {
+    return this.http.get(`http://mercury:8080/well/ipvolume?wellId=${wellId}`);
+  }
 }

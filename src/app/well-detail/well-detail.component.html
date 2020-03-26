@@ -1,6 +1,8 @@
 <div class='detailPage'>
     <div class='chartStyle'>
-        <div class="container-fluid main">
+      <h3 style="position: relative;
+      margin-left: -42%;">Well Detail Data</h3>
+        <div class="container-fluid main" *ngIf='wellDetails != null'>
            
             <div class="card profile">
               <div class="card-header profileName">
@@ -50,6 +52,7 @@
           </div>
     </div>
     <div class='chartStyle' *ngIf="barChartData">
+      <h3>County Wise Wells Count</h3>
         <canvas baseChart
             [datasets]="barChartData"
             [labels]="barChartLabels"
@@ -58,10 +61,127 @@
             [chartType]="barChartType"></canvas>
     </div>
     <div class='chartStyle' *ngIf="doughNutChartData">
+      <h3>Wells Count</h3>
         <canvas baseChart
             [data]="doughNutChartData"
             [options]="doughNutChartOptions"
             [labels]="barChartLabels"
             [chartType]="doughNutChartType"></canvas>
     </div>
+</div>
+<div style="margin-top:12%" *ngIf='isLoggedIn'>
+  <mat-accordion *ngIf='wellDetailsMC != {}'>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          MC
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ul>
+        <li *ngFor="let value of wellDetailsMC">
+          <ul>
+            <li *ngFor="let val of value">
+              {{ val.key }} : {{ val.value }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+      
+    </mat-expansion-panel>
+  </mat-accordion>
+  <mat-accordion *ngIf='wellDetailsCP != {}'>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          CP
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ul>
+        <li *ngFor="let value of wellDetailsCP">
+          <ul>
+            <li *ngFor="let val of value">
+              {{ val.key }} : {{ val.value }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+      
+    </mat-expansion-panel>
+  </mat-accordion>
+  <mat-accordion *ngIf='wellDetailsFT != {}'>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          FT
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ul>
+        <li *ngFor="let value of wellDetailsFT">
+          <ul>
+            <li *ngFor="let val of value">
+              {{ val.key }} : {{ val.value }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+      
+    </mat-expansion-panel>
+  </mat-accordion>
+  <mat-accordion *ngIf='wellDetailsPF != {}'>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          PF
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ul>
+        <li *ngFor="let value of wellDetailsPF">
+          <ul>
+            <li *ngFor="let val of value">
+              {{ val.key }} : {{ val.value }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+      
+    </mat-expansion-panel>
+  </mat-accordion>
+  <mat-accordion *ngIf='wellDetailsSurvey != {}'>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Survey
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ul>
+        <li *ngFor="let value of wellDetailsSurvey">
+          <ul>
+            <li *ngFor="let val of value">
+              {{ val.key }} : {{ val.value }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+      
+    </mat-expansion-panel>
+  </mat-accordion>
+  <mat-accordion *ngIf='wellDetailsIP != {}'>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          IP Volume
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ul>
+        <li *ngFor="let value of wellDetailsIP">
+          <ul>
+            <li *ngFor="let val of value">
+              {{ val.key }} : {{ val.value }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+      
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>

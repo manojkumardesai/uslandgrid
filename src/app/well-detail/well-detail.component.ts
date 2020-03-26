@@ -3,6 +3,7 @@ import { ApiService } from '../_services/api.service';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { ActivatedRoute } from '@angular/router';
+import { LoginService } from '../_services/login.service';
 
 @Component({
   selector: 'app-well-detail',
@@ -47,17 +48,33 @@ export class WellDetailComponent implements OnInit {
   public chartReady = false;
   public wellId;
   public wellDetails;
+  public wellDetailsMC;
+  public wellDetailsCP;
+  public wellDetailsPF;
+  public wellDetailsFT;
+  public wellDetailsSurvey;
+  public wellDetailsIp;
+  public isLoggedIn = false;
 
   constructor(public apiService: ApiService,
-              public route: ActivatedRoute) { }
+              public route: ActivatedRoute, public loginService: LoginService) { }
 
   ngOnInit(): void {
     this.wellId = this.route.snapshot.paramMap.get("id");
+    this.loginService.user.subscribe((data) => {
+      this.isLoggedIn = data && data.loggedIn ? data.loggedIn  : false;
+  });
     if(this.wellId) {
       this.fetchDataForChart();
       this.fetchWellDetail(this.wellId);
+      this.fetchMcWellDetail(this.wellId);
+      this.fetchCpWellDetail(this.wellId);
+      this.fetchPfWellDetail(this.wellId);
+      this.fetchFtWellDetail(this.wellId);
+      this.fetchIpWellDetail(this.wellId);
+      this.fetchSurveyWellDetail(this.wellId);
     }
-  }
+      }
 
   fetchDataForChart() {
     this.apiService.fetchChartData().subscribe((data) => {
@@ -79,6 +96,83 @@ export class WellDetailComponent implements OnInit {
   fetchWellDetail(wellId) {
     this.apiService.fetchWellDetails(wellId).subscribe((data) => {
       this.wellDetails = data;
+    });
+  }
+
+  fetchCpWellDetail(wellId) {
+    this.apiService.fetchCpWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsCP = data.map((innerData) => {
+        return Object.keys(innerData).map((res) => {
+        return {
+            key: res,
+            value: innerData[res]
+        }
+    });
+    }); });
+  }
+
+  fetchFtWellDetail(wellId) {
+    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsFT = data.map((innerData) => {
+        return Object.keys(innerData).map((res) => {
+        return {
+            key: res,
+            value: innerData[res]
+        }
+    });
+    });
+    });
+  }
+
+  fetchMcWellDetail(wellId) {
+    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsMC= data.map((innerData) => {
+        return Object.keys(innerData).map((res) => {
+        return {
+            key: res,
+            value: innerData[res]
+        }
+    });
+    });
+    });
+  }
+
+  fetchPfWellDetail(wellId) {
+    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsPF = data.map((innerData) => {
+        return Object.keys(innerData).map((res) => {
+        return {
+            key: res,
+            value: innerData[res]
+        }
+    });
+    });
+    });
+  }
+
+  fetchSurveyWellDetail(wellId) {
+    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsSurvey = data.map((innerData) => {
+        return Object.keys(innerData).map((res) => {
+        return {
+            key: res,
+            value: innerData[res]
+        }
+    });
+    });
+    });
+  }
+
+  fetchIpWellDetail(wellId) {
+    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsIp = data.map((innerData) => {
+        return Object.keys(innerData).map((res) => {
+        return {
+            key: res,
+            value: innerData[res]
+        }
+    });
+    });
     });
   }
 

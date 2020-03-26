@@ -25,7 +25,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   public cultureLayer;
   public plssLayer;
   public wellsLayer;
-  payLoadFromFilter: string;
+  payLoadFromFilter = {};
   name: string;
   myControl = new FormControl();
   options: any[] = [];
@@ -35,11 +35,11 @@ export class MapComponent implements AfterViewInit, OnInit {
   openDialog(): void {
     const dialogRef = this.dialog.open(FilterDialog, {
       width: '400px',
-      data: { }
+      data: this.payLoadFromFilter
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.payLoadFromFilter = result;
+      this.payLoadFromFilter = JSON.parse(JSON.stringify(result));
     });
   }
 
@@ -85,7 +85,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       console.log(this.map.getBounds());
     });
     this.addTileLayer();
-    this.addCultureLayer();
+    // this.addCultureLayer();
     this.addPlssLayer();
     this.addWellsLayer();
     // Pass url and options to below function in the mentioned comment and uncomment it
