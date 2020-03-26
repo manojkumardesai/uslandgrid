@@ -53,7 +53,7 @@ export class WellDetailComponent implements OnInit {
   public wellDetailsPF;
   public wellDetailsFT;
   public wellDetailsSurvey;
-  public wellDetailsIp;
+  public wellDetailsIP;
   public isLoggedIn = false;
 
   constructor(public apiService: ApiService,
@@ -165,7 +165,7 @@ export class WellDetailComponent implements OnInit {
 
   fetchIpWellDetail(wellId) {
     this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsIp = data.map((innerData) => {
+      this.wellDetailsIP = data.map((innerData) => {
         return Object.keys(innerData).map((res) => {
         return {
             key: res,
