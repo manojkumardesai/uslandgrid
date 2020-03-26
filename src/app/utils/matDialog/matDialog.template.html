@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Group Filter</h1>
 <form>
-  <p>
+  <div>
     <mat-form-field>
       <mat-label>Choose Group</mat-label>
       <mat-select (selectionChange)="type($event)">
@@ -9,8 +9,8 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </p>
-  <p>
+  </div>
+  <div>
     <mat-form-field>
       <mat-label>Choose Condition</mat-label>
       <mat-select (selectionChange)="criteria($event)">
@@ -19,8 +19,8 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </p>
-  <p>
+  </div>
+  <div>
     <mat-form-field>
       <mat-label>Choose Value</mat-label>
       <mat-select (selectionChange)="value($event)">
@@ -29,8 +29,8 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </p>
-  <p>
+  </div>
+  <div *ngIf="isLoggedIn">
     <mat-form-field>
       <mat-label>Choose Format</mat-label>
       <mat-select (selectionChange)="fileFormat($event)">
@@ -39,11 +39,11 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </p>
+  </div>
 </form>
 
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button (click)="onNoClick()">Close</button>
   <button mat-button [mat-dialog-close]="payLoad">Apply</button>
   <button mat-button *ngIf="isLoggedIn" (click)="generateReport()">Generate Report</button>
 </div>

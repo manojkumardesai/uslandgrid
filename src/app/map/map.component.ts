@@ -34,7 +34,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     public dialog: MatDialog) { }
   openDialog(): void {
     const dialogRef = this.dialog.open(FilterDialog, {
-      width: '500px',
+      width: '400px',
       data: { }
     });
 
