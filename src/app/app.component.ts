@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from './_services/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { LoginService } from './_services/login.service';
 export class AppComponent implements OnInit {
   title = 'US Land Grid';
   isLoggedIn = false;
-  constructor(public loginService: LoginService) {
+  constructor(public loginService: LoginService, public router: Router) {
 
   }
 
@@ -17,6 +18,10 @@ export class AppComponent implements OnInit {
     this.loginService.user.subscribe((data) => {
       this.isLoggedIn = data && data.loggedIn ? data.loggedIn  : false;
   });
+  }
+
+  routeToLogin() {
+    this.router.navigate(['/login'], {queryParams : {returnUrl : this.router.routerState.snapshot.url}})
   }
 
 }
