@@ -11,8 +11,7 @@
     <span class="material-icons leftIcon" (click)="homeLocation()">
         home
     </span>
-</div>
-<div class="filter">
+    <hr style="margin-top: 1px;margin-bottom:  1px;"/>
     <span class="material-icons leftIcon" (click)="openDialog()">
         filter_list
     </span>
@@ -37,5 +36,5 @@
     </mat-card>
 </div>
 <div>
-    <app-wells-records></app-wells-records>
+    <app-wells-records [payLoadFromFilter]='payLoadFromFilter'></app-wells-records>
 </div>

@@ -43,9 +43,9 @@
 </form>
 
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Close</button>
+  <button mat-button [mat-dialog-close]="payLoad" (click)="onNoClick()">Close</button>
   <button mat-button [mat-dialog-close]="payLoad">Apply</button>
-  <button mat-button *ngIf="isLoggedIn" (click)="generateReport()">Generate Report</button>
+  <button mat-button [disabled]="!isLoggedIn" (click)="generateReport()">Export</button>
 </div>
 
 	

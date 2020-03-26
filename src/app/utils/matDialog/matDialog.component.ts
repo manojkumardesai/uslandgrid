@@ -38,6 +38,7 @@ export class FilterDialog implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: DialogData, public loginService: LoginService) { }
 
     ngOnInit() {
+        this.dialogRef.updatePosition({ top: '7.8%', left: '50px' });
         this.apiService.fetchCounties().subscribe((data) => {
             this.counties = data;
         });
@@ -45,7 +46,7 @@ export class FilterDialog implements OnInit {
             this.operators = data;
         });
         this.loginService.user.subscribe((data) => {
-            this.isLoggedIn = data.loggedIn;
+            this.isLoggedIn = data && data.loggedIn ? data.loggedIn : false;
         });
     }
     onNoClick(): void {

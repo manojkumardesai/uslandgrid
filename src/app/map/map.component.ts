@@ -25,7 +25,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   public cultureLayer;
   public plssLayer;
   public wellsLayer;
-  animal: string;
+  payLoadFromFilter: string;
   name: string;
   myControl = new FormControl();
   options: any[] = [];
@@ -39,8 +39,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.animal = result;
-      console.log('Result', result);
+      this.payLoadFromFilter = result;
     });
   }
 
@@ -87,8 +86,8 @@ export class MapComponent implements AfterViewInit, OnInit {
     });
     this.addTileLayer();
     this.addCultureLayer();
-    // this.addPlssLayer();
-    // this.addWellsLayer();
+    this.addPlssLayer();
+    this.addWellsLayer();
     // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
   }
