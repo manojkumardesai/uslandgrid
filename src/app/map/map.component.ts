@@ -87,8 +87,8 @@ export class MapComponent implements AfterViewInit, OnInit {
     });
     this.addTileLayer();
     this.addCultureLayer();
-    this.addPlssLayer();
-    this.addWellsLayer();
+    // this.addPlssLayer();
+    // this.addWellsLayer();
     // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
   }

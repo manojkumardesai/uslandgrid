@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,8 @@ export class ApiService {
   fetchOperators(): Observable<any> {
     return this.http.get(`http://mercury:8080/operator`);
   }
-  generateReport(payLoad): Observable<any> {
-    return this.http.get(`http://mercury:8080/report/well?state=Oklahoma&${payLoad.group}=${payLoad.value}&reportType=${payLoad.format}&`);
+  generateReport(payLoad) {
+    // const headers = new HttpHeaders();
+    return `http://mercury:8080/report/well?state=Oklahoma&${payLoad.group}=${payLoad.value}&reportType=${payLoad.format}`;
   }
 }
