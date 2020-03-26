@@ -45,7 +45,7 @@
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]="payLoad" (click)="onNoClick()">Close</button>
   <button mat-button [mat-dialog-close]="payLoad">Apply</button>
-  <button mat-button [disabled]="!isLoggedIn" (click)="generateReport()">Export</button>
+  <button mat-button title='Login to export data' [disabled]="!isLoggedIn" (click)="generateReport()">Export</button>
 </div>
 
 	
