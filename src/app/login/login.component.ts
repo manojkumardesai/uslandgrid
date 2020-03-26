@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    if (this.form.value.username == 'admin' && this.form.value.pwd == 'Parra7969!') {
+    if (this.form.value.username == 'admin' && this.form.value.pwd == 'USLG7969!') {
       this.openSnackBar('Login success', 'Dismiss');
       this.loginService.publishLoginResponseTrue();
       let returnUrl = this.activeRoute.snapshot.queryParamMap.get('returnUrl');
