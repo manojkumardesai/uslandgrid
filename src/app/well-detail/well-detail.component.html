@@ -1,5 +1,7 @@
 <div class='detailPage'>
     <div class='chartStyle'>
+      <h3 style="position: relative;
+      margin-left: -42%;">Well Detail Data</h3>
         <div class="container-fluid main">
            
             <div class="card profile">
@@ -50,6 +52,7 @@
           </div>
     </div>
     <div class='chartStyle' *ngIf="barChartData">
+      <h3>County Wise Wells Count</h3>
         <canvas baseChart
             [datasets]="barChartData"
             [labels]="barChartLabels"
@@ -58,6 +61,7 @@
             [chartType]="barChartType"></canvas>
     </div>
     <div class='chartStyle' *ngIf="doughNutChartData">
+      <h3>Wells Count</h3>
         <canvas baseChart
             [data]="doughNutChartData"
             [options]="doughNutChartOptions"
