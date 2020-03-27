@@ -3,7 +3,7 @@ import * as L from 'leaflet';
 import { BetterWMS } from '../utils/betterWms.util';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ApiService } from '../_services/api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FilterDialog } from '../utils/matDialog/matDialog.component';
@@ -29,7 +29,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   name: string;
   myControl = new FormControl();
   options: any[] = [];
-  filteredOptions: Observable<string[]>;
+  filteredOptions: Observable<any[]>;
   constructor(public apiService: ApiService,
     public dialog: MatDialog) { }
   openDialog(): void {
@@ -47,15 +47,19 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' ? value : value.wellName),
-        map(name => name ? this._filter(name) : this.options.slice())
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap(name => this._filter(name))
       );
   }
 
-  private _filter(value: any): string[] {
-    const filterValue = value.toLowerCase();
-    this.searchWellsByKey(filterValue);
-    return this.options.filter(option => option.wellName.toLowerCase().indexOf(filterValue) === 0);
+  private _filter(value: any): Observable<any[]> {
+    return this.apiService.searchWells(value).pipe(
+      map(response => response.wellDtos.filter(option => { 
+        return option
+      }))
+    )
+    
   }
 
   ngAfterViewInit(): void {
@@ -66,6 +70,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.apiService.searchWells(key).subscribe((data) => {
       this.options = data.wellDtos;
     });
+    return this.options;
   }
 
   displayFn(well): string {
