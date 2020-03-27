@@ -48,12 +48,12 @@ export class WellDetailComponent implements OnInit {
   public chartReady = false;
   public wellId;
   public wellDetails;
-  public wellDetailsMC;
-  public wellDetailsCP;
-  public wellDetailsPF;
-  public wellDetailsFT;
-  public wellDetailsSurvey;
-  public wellDetailsIP;
+  public wellDetailsMC = [];
+  public wellDetailsCP = [];
+  public wellDetailsPF = [];
+  public wellDetailsFT = [];
+  public wellDetailsSurvey = [];
+  public wellDetailsIP = [];
   public isLoggedIn = false;
 
   constructor(public apiService: ApiService,

@@ -70,7 +70,7 @@
     </div>
 </div>
 <div style="margin-top:12%" *ngIf='isLoggedIn'>
-  <mat-accordion *ngIf='wellDetailsMC != {}'>
+  <mat-accordion *ngIf='wellDetailsMC.length'>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -89,7 +89,7 @@
       
     </mat-expansion-panel>
   </mat-accordion>
-  <mat-accordion *ngIf='wellDetailsCP != {}'>
+  <mat-accordion *ngIf='wellDetailsCP.length'>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -108,7 +108,7 @@
       
     </mat-expansion-panel>
   </mat-accordion>
-  <mat-accordion *ngIf='wellDetailsFT != {}'>
+  <mat-accordion *ngIf='wellDetailsFT.length'>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -127,7 +127,7 @@
       
     </mat-expansion-panel>
   </mat-accordion>
-  <mat-accordion *ngIf='wellDetailsPF != {}'>
+  <mat-accordion *ngIf='wellDetailsPF.length'>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -146,7 +146,7 @@
       
     </mat-expansion-panel>
   </mat-accordion>
-  <mat-accordion *ngIf='wellDetailsSurvey != {}'>
+  <mat-accordion *ngIf='wellDetailsSurvey.length'>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -165,7 +165,7 @@
       
     </mat-expansion-panel>
   </mat-accordion>
-  <mat-accordion *ngIf='wellDetailsIP != {}'>
+  <mat-accordion *ngIf='wellDetailsIP.length'>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
