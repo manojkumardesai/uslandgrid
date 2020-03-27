@@ -79,11 +79,9 @@
       </mat-expansion-panel-header>
       <ul>
         <li *ngFor="let value of wellDetailsMC">
-          <ul>
-            <li *ngFor="let val of value">
-              {{ val.key }} : {{ val.value }}
-            </li>
-          </ul>
+          
+              {{ value.key | uppercase }} : {{ value.value }}
+
         </li>
       </ul>
       
@@ -100,7 +98,7 @@
         <li *ngFor="let value of wellDetailsCP">
           <ul>
             <li *ngFor="let val of value">
-              {{ val.key }} : {{ val.value }}
+              {{ val.key | uppercase  }} : {{ val.value }}
             </li>
           </ul>
         </li>
@@ -116,13 +114,11 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <ul>
-        <li *ngFor="let value of wellDetailsFT">
-          <ul>
-            <li *ngFor="let val of value">
-              {{ val.key }} : {{ val.value }}
+
+            <li *ngFor="let val of wellDetailsFT">
+              {{ val.key | uppercase  }} : {{ val.value }}
             </li>
-          </ul>
-        </li>
+
       </ul>
       
     </mat-expansion-panel>
@@ -134,15 +130,13 @@
           PF
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <ul>
-        <li *ngFor="let value of wellDetailsPF">
+
           <ul>
-            <li *ngFor="let val of value">
-              {{ val.key }} : {{ val.value }}
+            <li *ngFor="let val of wellDetailsPF">
+              {{ val.key | uppercase  }} : {{ val.value }}
             </li>
           </ul>
-        </li>
-      </ul>
+       
       
     </mat-expansion-panel>
   </mat-accordion>
@@ -154,14 +148,12 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <ul>
-        <li *ngFor="let value of wellDetailsSurvey">
-          <ul>
-            <li *ngFor="let val of value">
-              {{ val.key }} : {{ val.value }}
+
+            <li *ngFor="let val of wellDetailsSurvey">
+              {{ val.key | uppercase  }} : {{ val.value }}
             </li>
           </ul>
-        </li>
-      </ul>
+
       
     </mat-expansion-panel>
   </mat-accordion>
@@ -172,15 +164,13 @@
           IP Volume
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <ul>
-        <li *ngFor="let value of wellDetailsIP">
+
           <ul>
-            <li *ngFor="let val of value">
-              {{ val.key }} : {{ val.value }}
+            <li *ngFor="let val of wellDetailsIP">
+              {{ val.key | uppercase  }} : {{ val.value }}
             </li>
           </ul>
-        </li>
-      </ul>
+
       
     </mat-expansion-panel>
   </mat-accordion>
