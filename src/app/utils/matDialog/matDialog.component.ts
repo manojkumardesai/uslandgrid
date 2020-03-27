@@ -48,24 +48,31 @@ export class FilterDialog implements OnInit {
 
     ngOnInit() {
         this.dialogRef.updatePosition({ top: '7.8%', left: '50px' });
-        this.apiService.fetchCounties().subscribe((data) => {
-            this.counties = data;
-            this.setDefaultFOrmValues();
-        });
-        this.apiService.fetchOperators().subscribe((data) => {
-            this.operators = data;
-            this.setDefaultFOrmValues();
-        });
-        this.form.setValue({
-            group: this.data && this.data.group ? this.data.group : '',
-            format: this.data && this.data.format ? this.data.format : '',
-            criteria: this.data && this.data.criteria ? this.data.criteria : '',
-            value: this.data && this.data.value ? this.data.value : '',
-        })
-        
 
+        if(Object.keys(this.data).length) {
+            if(this.data.group == 'Operator') {
+                this.fetchOperators();
+            } else {
+                this.fetchCounties();
+            }
+            this.setDefaultFormValues();
+        }
         this.loginService.user.subscribe((data) => {
             this.isLoggedIn = data && data.loggedIn ? data.loggedIn : false;
+        });
+    }
+
+    fetchOperators() {
+        this.apiService.fetchOperators().subscribe((data) => {
+            this.operators = data.operators;
+            this.values = data.operators;
+        })
+    }
+
+    fetchCounties() {
+        this.apiService.fetchCounties().subscribe((data) => {
+            this.counties = data;
+            this.values = data;
         });
     }
     onNoClick(): void {
@@ -78,22 +85,22 @@ export class FilterDialog implements OnInit {
         this.dialogRef.close();
     }
 
-    setDefaultFOrmValues() {
-        if(this.data) {
-            this.type();
-            setTimeout(()=> {
-                this.form.setValue({
-                    group: this.data && this.data.group ? this.data.group : '',
-                    format: this.data && this.data.format ? this.data.format : '',
-                    criteria: this.data && this.data.criteria ? this.data.criteria : '',
-                    value: this.data && this.data.value ? this.data.value : '',
-                });
-            }, 1000)
-            
-        }
+    setDefaultFormValues() {
+        setTimeout(()=> {
+            this.form.setValue({
+                group: this.data && this.data.group ? this.data.group : '',
+                format: this.data && this.data.format ? this.data.format : '',
+                criteria: this.data && this.data.criteria ? this.data.criteria : '',
+                value: this.data && this.data.value ? this.data.value : '',
+            });
+        }, 1000)
     }
     type() {
-        this.values = this.form.value.group == 'Operator' ? this.operators : this.counties;
+        if(this.form.value.group == 'Operator') {
+            this.fetchOperators();
+        } else {
+            this.fetchCounties();
+        }
         this.payLoad['group'] = this.form.value.group.toLowerCase();
     }
     criteria() {

@@ -59,7 +59,6 @@ export class MapComponent implements AfterViewInit, OnInit {
         return option
       }))
     )
-    
   }
 
   ngAfterViewInit(): void {

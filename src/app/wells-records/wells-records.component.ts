@@ -44,7 +44,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     const currentItem: SimpleChange = changes.payLoadFromFilter;
-    if(currentItem.currentValue) {
+    if(Object.keys(currentItem.currentValue).length) {
       this.apiService.fetchWellsByPayLoad(this.payLoadFromFilter, 0, 5).subscribe((data) => {
         this.dataSource = new MatTableDataSource(data.wellDtos);
       });
