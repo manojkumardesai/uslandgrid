@@ -55,4 +55,7 @@ export class ApiService {
   fetchIpWellDetails(wellId): Observable<any> {
     return this.http.get(this.baseUrl + `well/ipvolume?wellId=${wellId}`);
   }
+  fetchInfoPoint({lat, lng}) {
+    return this.http.post(this.baseUrl + `well/info`, {latitude: lat, longitude: lng});
+  }
 }

@@ -21,6 +21,7 @@ export interface DialogData {
 
 export class MapComponent implements AfterViewInit, OnInit {
   public map;
+  public infoPointMarker;
   public tiles;
   public cultureLayer;
   public plssLayer;
@@ -32,7 +33,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   filteredOptions: Observable<any[]>;
   constructor(public apiService: ApiService,
     public dialog: MatDialog) { }
-  openDialog(): void {
+
+  openFilterDialog(): void {
     const dialogRef = this.dialog.open(FilterDialog, {
       width: '400px',
       data: this.payLoadFromFilter
@@ -55,7 +57,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   private _filter(value: any): Observable<any[]> {
     return this.apiService.searchWells(value).pipe(
-      map(response => response.wellDtos.filter(option => { 
+      map(response => response.wellDtos.filter(option => {
         return option
       }))
     )
@@ -87,6 +89,48 @@ export class MapComponent implements AfterViewInit, OnInit {
     });
     this.map.on('moveend', () => {
       console.log(this.map.getBounds());
+    });
+    this.map.on('click', (ev) => {
+      this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
+        console.log('infoPoint', data);
+        if (this.infoPointMarker) {
+          this.map.removeLayer(this.infoPointMarker);
+        }
+        if (data.length) {
+          this.infoPointMarker = new L.Marker(ev.latlng, {
+            draggable: true
+          });
+
+
+          this.map.addLayer(this.infoPointMarker);
+          this.infoPointMarker.bindPopup(`
+          <style>
+          div > label {
+            display: block;
+          }
+          </style>
+          <div>
+            <h3>Info Window</h3>
+            <div>
+            <label>Well Id: ${data[0].wellId}</label>
+            <label>Well Name: ${data[0].wellName}</label>
+            <label>Operator: ${data[0].operator}</label>
+            <label>Well Number: ${data[0].wellNumber}</label>
+            <label>Status: ${data[0].status}</label>
+            <label>Latitude: ${data[0].latitude}</label>
+            <label>Longitude: ${data[0].longitude}</label>
+            <label>Spud Date: ${data[0].spudDate}</label>
+            <label>Completion Date: ${data[0].completionDate}</label>
+            <label>Country: ${data[0].country}</label>
+            <label>Datum Type: ${data[0].datumType}</label>
+            <label>TVD: ${data[0].tvd}</label>
+            <label>State: ${data[0].state}</label>
+            <label>County: ${data[0].county}</label>
+          </div>
+            `).openPopup();
+
+        }
+      });
     });
     this.addTileLayer();
     // this.addCultureLayer();
