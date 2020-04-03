@@ -105,8 +105,15 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.map.addLayer(this.infoPointMarker);
           this.infoPointMarker.bindPopup(`
           <style>
+          h3 {
+            background-color: crimson;
+            color: white;
+            margin: auto;
+          }
           div > label {
             display: block;
+            border: 1px solid grey;
+            color: crimson;
           }
           </style>
           <div>
