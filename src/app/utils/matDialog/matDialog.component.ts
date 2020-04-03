@@ -22,7 +22,7 @@ export class FilterDialog implements OnInit {
         format: new FormControl(''),
         criteria: new FormControl(''),
         value: new FormControl(''),
-      });
+    });
     groups = [
         { value: 'County' },
         { value: 'Operator' }
@@ -31,7 +31,8 @@ export class FilterDialog implements OnInit {
         { value: 'CSV' },
         { value: 'XLSX' },
         { value: 'TXT' },
-        { value: 'WB4' }
+        { value: 'WB4' },
+        { value: 'WB2' }
     ];
     criterias = [{
         value: 'CONTAINS'
@@ -49,8 +50,8 @@ export class FilterDialog implements OnInit {
     ngOnInit() {
         this.dialogRef.updatePosition({ top: '7.8%', left: '50px' });
 
-        if(Object.keys(this.data).length) {
-            if(this.data.group == 'Operator') {
+        if (Object.keys(this.data).length) {
+            if (this.data.group == 'Operator') {
                 this.fetchOperators();
             } else {
                 this.fetchCounties();
@@ -86,7 +87,7 @@ export class FilterDialog implements OnInit {
     }
 
     setDefaultFormValues() {
-        setTimeout(()=> {
+        setTimeout(() => {
             this.form.setValue({
                 group: this.data && this.data.group ? this.data.group : '',
                 format: this.data && this.data.format ? this.data.format : '',
@@ -96,7 +97,7 @@ export class FilterDialog implements OnInit {
         }, 1000)
     }
     type() {
-        if(this.form.value.group == 'Operator') {
+        if (this.form.value.group == 'Operator') {
             this.fetchOperators();
         } else {
             this.fetchCounties();
