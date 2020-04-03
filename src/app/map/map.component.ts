@@ -121,7 +121,6 @@ export class MapComponent implements AfterViewInit, OnInit {
             <label>Longitude: ${data[0].longitude}</label>
             <label>Spud Date: ${data[0].spudDate}</label>
             <label>Completion Date: ${data[0].completionDate}</label>
-            <label>Country: ${data[0].country}</label>
             <label>Datum Type: ${data[0].datumType}</label>
             <label>TVD: ${data[0].tvd}</label>
             <label>State: ${data[0].state}</label>
