@@ -1,15 +1,24 @@
-<mat-toolbar class='toolbar'>
-    <span class="material-icons pointerClass" routerLink = '/home'>
-     <img src="../assets/logo.jpeg">
-    </span>
-    <div class="spacer"></div>
-    <span  *ngIf='!isLoggedIn' (click)='routeToLogin()'>
-      Login
-    </span>
-    <span  *ngIf='isLoggedIn' (click)='routeToLogin()'>
-      Admin
-    </span>
-    <span routerLink = '/detail' class="material-icons">
-      layers
-    </span>
+<mat-toolbar class='navBar'>
+    <div>
+        <span class="pointerClass" routerLink = '/home'>
+            <img class="logo" src="../assets/logo.jpeg">
+           </span>
+    </div>
+    <div>
+        <button mat-button  *ngIf='!isLoggedIn' (click)='routeToLogin()'>
+            <span>
+                Login
+            </span>
+        </button>
+        <button  *ngIf='isLoggedIn'>
+            <span>
+                Admin
+            </span>
+        </button>
+        <button mat-button>
+            <mat-icon>
+                layers
+            </mat-icon>
+        </button>
+    </div>
 </mat-toolbar>
