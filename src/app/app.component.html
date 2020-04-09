@@ -1,17 +1,5 @@
 <!-- Toolbar -->
-<mat-toolbar class='toolbar'>
-  <span class="material-icons pointerClass" routerLink = '/home'>
-   <img src="../assets/logo.jpeg">
-  </span>
-  <div class="spacer"></div>
-  <span  *ngIf='!isLoggedIn' (click)='routeToLogin()'>
-    Login
-  </span>
-  <span  *ngIf='isLoggedIn' (click)='routeToLogin()'>
-    Admin
-  </span>
-  <span routerLink = '/detail' class="material-icons">
-    layers
-  </span>
-</mat-toolbar>
+<div>
+  <app-header></app-header>
+</div>
 <router-outlet></router-outlet>

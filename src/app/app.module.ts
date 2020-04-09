@@ -13,6 +13,7 @@ import { ChartsModule } from 'ng2-charts';
 import { LoginComponent } from './login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterDialog } from './utils/matDialog/matDialog.component';
+import { HeaderComponent } from './header/header.component';
 // import { RouterStateSnapshot } from '@angular/router';
 
 
@@ -23,7 +24,8 @@ import { FilterDialog } from './utils/matDialog/matDialog.component';
     WellsRecordsComponent,
     WellDetailComponent,
     LoginComponent,
-    FilterDialog
+    FilterDialog,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
