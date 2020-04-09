@@ -1,6 +1,7 @@
 
 .navBar {
     justify-content: space-between;
+    height: 50px;
 }
 
 button {
@@ -10,48 +11,7 @@ button {
 .logo {
     height: 30px;
 }
-//   a,
-//   a:visited,
-//   a:hover {
-//     color: #1976d2;
-//     text-decoration: none;
-//   }
 
-//   a:hover {
-//     color: #125699;
-//   }
-
-//   footer {
-//     margin-top: 8px;
-//     display: flex;
-//     align-items: center;
-//     line-height: 20px;
-//   }
-
-//   footer a {
-//     display: flex;
-//     align-items: center;
-//   }
-
-
-  /* Responsive Styles */
-  @media screen and (max-width: 767px) {
-
-    .card-container > *:not(.circle-link) ,
-    .terminal {
-      width: 100%;
-    }
-
-    .card:not(.highlight-card) {
-      height: 16px;
-      margin: 8px 0;
-    }
-
-    .card.highlight-card span {
-      margin-left: 72px;
-    }
-  }
-
-  .pointerClass {
+.pointerClass {
     cursor: pointer;
-  }
+}

@@ -1,8 +1,6 @@
 <mat-toolbar class='navBar'>
     <div>
-        <span class="pointerClass" routerLink = '/home'>
-            <img class="logo" src="../assets/logo.jpeg">
-           </span>
+        <img class="logo pointerClass" routerLink = '/home' src="../assets/logo.jpeg">
     </div>
     <div>
         <button mat-button  *ngIf='!isLoggedIn' (click)='routeToLogin()'>
@@ -15,7 +13,7 @@
                 Admin
             </span>
         </button>
-        <button mat-button>
+        <button mat-button (click)='openLegends()'>
             <mat-icon>
                 layers
             </mat-icon>

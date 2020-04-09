@@ -185,6 +185,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     // this.addCultureLayer();
     this.addPlssLayer();
     this.addWellsLayer();
+    this.layerControl();
     // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
   }
@@ -198,7 +199,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       minZoom: 4,
       maxZoom: 20,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(this.map);
+    });
+    this.map.addLayer(this.tiles);
   }
 
   addCultureLayer() {
@@ -208,7 +210,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       transparent: true,
       styles: '',
       attribution: null
-    }).addTo(this.map);
+    });
+    this.map.addLayer(this.cultureLayer);
   }
 
   addPlssLayer() {
@@ -218,7 +221,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       transparent: true,
       styles: '',
       attribution: null
-    }).addTo(this.map);
+    });
+    this.map.addLayer(this.plssLayer);
   }
 
   addWellsLayer() {
@@ -228,7 +232,20 @@ export class MapComponent implements AfterViewInit, OnInit {
       transparent: true,
       styles: '',
       attribution: null
-    }).addTo(this.map);
+    });
+    this.map.addLayer(this.wellsLayer);
+  }
+
+  layerControl() {
+    let baseLayerMaps = {
+      'Tiles': this.tiles,
+      // 'Culture': this.cultureLayer,
+      'PLSS': this.plssLayer,
+    };
+    let overLay = {
+      'Wells Layer': this.wellsLayer
+    }
+    L.control.layers(baseLayerMaps, overLay).addTo(this.map);
   }
 
   betterWmsFunction(url?, options?) {

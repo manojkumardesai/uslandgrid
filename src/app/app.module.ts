@@ -14,6 +14,7 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterDialog } from './utils/matDialog/matDialog.component';
 import { HeaderComponent } from './header/header.component';
+import { MapLegendComponent } from './map-legend/map-legend.component';
 // import { RouterStateSnapshot } from '@angular/router';
 
 
@@ -25,7 +26,8 @@ import { HeaderComponent } from './header/header.component';
     WellDetailComponent,
     LoginComponent,
     FilterDialog,
-    HeaderComponent
+    HeaderComponent,
+    MapLegendComponent
   ],
   imports: [
     BrowserModule,
