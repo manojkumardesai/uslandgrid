@@ -24,6 +24,7 @@
     "@types/leaflet": "^1.5.12",
     "chart.js": "^2.9.3",
     "leaflet": "1.5.1",
+    "leaflet-mouse-position": "^1.2.0",
     "ng2-charts": "^2.3.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",

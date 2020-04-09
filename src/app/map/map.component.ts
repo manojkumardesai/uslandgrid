@@ -7,6 +7,7 @@ import { startWith, map, debounceTime, distinctUntilChanged, switchMap } from 'r
 import { ApiService } from '../_services/api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FilterDialog } from '../utils/matDialog/matDialog.component';
+import "leaflet-mouse-position";
 
 export interface DialogData {
   animal: string;
@@ -246,6 +247,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       'Wells Layer': this.wellsLayer
     }
     L.control.layers(baseLayerMaps, overLay).addTo(this.map);
+    // L.control.mousePosition().addTo(map);
   }
 
   betterWmsFunction(url?, options?) {
