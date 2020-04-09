@@ -81,6 +81,13 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   goToSelectedWell(option) {
     this.goToLocation(option.latitude, option.longitude);
+    const event = {
+      latlng: {
+        lat: option.latitude,
+        lng: option.longitude
+      }
+    };
+    this.showInfoPoint(event);
   }
 
   private initMap(): void {
@@ -92,95 +99,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       console.log(this.map.getBounds());
     });
     this.map.on('click', (ev) => {
-      this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
-        console.log('infoPoint', data);
-        if (this.infoPointMarker) {
-          this.map.removeLayer(this.infoPointMarker);
-        }
-        if (data.length) {
-          this.infoPointMarker = new L.Marker(ev.latlng, {
-            draggable: true
-          });
-
-
-          this.map.addLayer(this.infoPointMarker);
-          this.infoPointMarker.bindPopup(`
-          <style>
-          .hzLine {
-            border: none;
-            border-top: 1px solid #333333;
-            margin-top: 6px;
-            margin-bottom: 6px;
-          }
-          .attrName {
-            color: #888888;
-            padding-right: 5px;
-          }
-          </style>
-          <div>
-            <div class="header">USLandgrid Well: ${data[0].wellName}</div>
-            <div class="hzLine"></div>
-            <div>
-            <table>
-              <tr>
-                <td class="attrName">well_id</td>
-                <td>${data[0].wellId}</td>
-              </tr>
-              <tr>
-                <td class="attrName">well_name</td>
-                <td>${data[0].wellName}</td>
-              </tr>
-              <tr>
-                <td class="attrName">operator</td>
-                <td>${data[0].operator}</td>
-              </tr>
-              <tr>
-                <td class="attrName">well_number</td>
-                <td>${data[0].wellNumber}</td>
-              </tr>
-              <tr>
-                <td class="attrName">status</td>
-                <td>${data[0].status}</td>
-              </tr>
-              <tr>
-                <td class="attrName">latitude</td>
-                <td>${data[0].latitude}</td>
-              </tr>
-              <tr>
-                <td class="attrName">longitude</td>
-                <td>${data[0].longitude}</td>
-              </tr>
-              <tr>
-                <td class="attrName">spud_date</td>
-                <td>${data[0].spudDate}</td>
-              </tr>
-              <tr>
-                <td class="attrName">completion_date</td>
-                <td>${data[0].completionDate}</td>
-              </tr>
-              <tr>
-                <td class="attrName">datum_type</td>
-                <td>${data[0].datumType}</td>
-              </tr>
-              <tr>
-                <td class="attrName">tvd</td>
-                <td>${data[0].tvd}</td>
-              </tr>
-              <tr>
-                <td class="attrName">state</td>
-                <td>${data[0].state}</td>
-              </tr>
-              <tr>
-                <td class="attrName">county</td>
-                <td>${data[0].county}</td>
-              </tr>
-            </table>
-            <button (click)="test()">Button</button>
-          </div>
-            `).openPopup();
-
-        }
-      });
+      this.showInfoPoint(ev);
     });
     this.addTileLayer();
     // this.addCultureLayer();
@@ -264,5 +183,93 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   goToLocation(lat, lng) {
     this.map.setView(new L.LatLng(lat, lng), 12);
+  }
+
+  showInfoPoint(ev) {
+    this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
+      if (this.infoPointMarker) {
+        this.map.removeLayer(this.infoPointMarker);
+      }
+      if (data.length) {
+        this.infoPointMarker = new L.Marker(ev.latlng, {
+          opacity: 0,
+          draggable: true,
+        });
+        this.map.addLayer(this.infoPointMarker);
+        this.infoPointMarker.bindPopup(`
+        <style>
+        .hzLine {
+          border: none;
+          border-top: 1px solid #333333;
+          margin-top: 6px;
+          margin-bottom: 6px;
+        }
+        .attrName {
+          color: #888888;
+          padding-right: 5px;
+        }
+        </style>
+        <div>
+          <div class="header">USLandgrid Well: ${data[0].wellName}</div>
+          <div class="hzLine"></div>
+          <div>
+          <table>
+            <tr>
+              <td class="attrName">well_id</td>
+              <td>${data[0].wellId}</td>
+            </tr>
+            <tr>
+              <td class="attrName">well_name</td>
+              <td>${data[0].wellName}</td>
+            </tr>
+            <tr>
+              <td class="attrName">operator</td>
+              <td>${data[0].operator}</td>
+            </tr>
+            <tr>
+              <td class="attrName">well_number</td>
+              <td>${data[0].wellNumber}</td>
+            </tr>
+            <tr>
+              <td class="attrName">status</td>
+              <td>${data[0].status}</td>
+            </tr>
+            <tr>
+              <td class="attrName">latitude</td>
+              <td>${data[0].latitude}</td>
+            </tr>
+            <tr>
+              <td class="attrName">longitude</td>
+              <td>${data[0].longitude}</td>
+            </tr>
+            <tr>
+              <td class="attrName">spud_date</td>
+              <td>${data[0].spudDate}</td>
+            </tr>
+            <tr>
+              <td class="attrName">completion_date</td>
+              <td>${data[0].completionDate}</td>
+            </tr>
+            <tr>
+              <td class="attrName">datum_type</td>
+              <td>${data[0].datumType}</td>
+            </tr>
+            <tr>
+              <td class="attrName">tvd</td>
+              <td>${data[0].tvd}</td>
+            </tr>
+            <tr>
+              <td class="attrName">state</td>
+              <td>${data[0].state}</td>
+            </tr>
+            <tr>
+              <td class="attrName">county</td>
+              <td>${data[0].county}</td>
+            </tr>
+          </table>
+        </div>
+        `).openPopup();
+      }
+    });
   }
 }
