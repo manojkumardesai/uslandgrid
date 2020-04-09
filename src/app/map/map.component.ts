@@ -105,33 +105,76 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.map.addLayer(this.infoPointMarker);
           this.infoPointMarker.bindPopup(`
           <style>
-          h3 {
-            background-color: crimson;
-            color: white;
-            margin: auto;
+          .hzLine {
+            border: none;
+            border-top: 1px solid #333333;
+            margin-top: 6px;
+            margin-bottom: 6px;
           }
-          div > label {
-            display: block;
-            border: 1px solid grey;
-            color: crimson;
+          .attrName {
+            color: #888888;
+            padding-right: 5px;
           }
           </style>
           <div>
-            <h3>Info Window</h3>
+            <div class="header">USLandgrid Well: ${data[0].wellName}</div>
+            <div class="hzLine"></div>
             <div>
-            <label>Well Id: ${data[0].wellId}</label>
-            <label>Well Name: ${data[0].wellName}</label>
-            <label>Operator: ${data[0].operator}</label>
-            <label>Well Number: ${data[0].wellNumber}</label>
-            <label>Status: ${data[0].status}</label>
-            <label>Latitude: ${data[0].latitude}</label>
-            <label>Longitude: ${data[0].longitude}</label>
-            <label>Spud Date: ${data[0].spudDate}</label>
-            <label>Completion Date: ${data[0].completionDate}</label>
-            <label>Datum Type: ${data[0].datumType}</label>
-            <label>TVD: ${data[0].tvd}</label>
-            <label>State: ${data[0].state}</label>
-            <label>County: ${data[0].county}</label>
+            <table>
+              <tr>
+                <td class="attrName">well_id</td>
+                <td>${data[0].wellId}</td>
+              </tr>
+              <tr>
+                <td class="attrName">well_name</td>
+                <td>${data[0].wellName}</td>
+              </tr>
+              <tr>
+                <td class="attrName">operator</td>
+                <td>${data[0].operator}</td>
+              </tr>
+              <tr>
+                <td class="attrName">well_number</td>
+                <td>${data[0].wellNumber}</td>
+              </tr>
+              <tr>
+                <td class="attrName">status</td>
+                <td>${data[0].status}</td>
+              </tr>
+              <tr>
+                <td class="attrName">latitude</td>
+                <td>${data[0].latitude}</td>
+              </tr>
+              <tr>
+                <td class="attrName">longitude</td>
+                <td>${data[0].longitude}</td>
+              </tr>
+              <tr>
+                <td class="attrName">spud_date</td>
+                <td>${data[0].spudDate}</td>
+              </tr>
+              <tr>
+                <td class="attrName">completion_date</td>
+                <td>${data[0].completionDate}</td>
+              </tr>
+              <tr>
+                <td class="attrName">datum_type</td>
+                <td>${data[0].datumType}</td>
+              </tr>
+              <tr>
+                <td class="attrName">tvd</td>
+                <td>${data[0].tvd}</td>
+              </tr>
+              <tr>
+                <td class="attrName">state</td>
+                <td>${data[0].state}</td>
+              </tr>
+              <tr>
+                <td class="attrName">county</td>
+                <td>${data[0].county}</td>
+              </tr>
+            </table>
+            <button (click)="test()">Button</button>
           </div>
             `).openPopup();
 
@@ -144,6 +187,10 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.addWellsLayer();
     // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
+  }
+
+  test() {
+    console.log('Tets');
   }
 
   addTileLayer() {
