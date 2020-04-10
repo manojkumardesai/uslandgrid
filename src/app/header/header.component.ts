@@ -3,6 +3,7 @@ import { LoginService } from '../_services/login.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MapLegendComponent } from '../map-legend/map-legend.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +13,7 @@ import { MapLegendComponent } from '../map-legend/map-legend.component';
 export class HeaderComponent implements OnInit {
   isLoggedIn = false;
   constructor(public loginService: LoginService, public router: Router,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog, public _snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.loginService.user.subscribe((data) => {
@@ -37,6 +38,15 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     this.loginService.publishLoginResponseFalse();
+    this.openSnackBar('Logged out successfully', 'Dismiss');
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+      verticalPosition: 'top',
+      horizontalPosition: 'right'
+    });
   }
 
 }
