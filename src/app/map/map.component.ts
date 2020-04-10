@@ -163,16 +163,14 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   layerControl() {
     let baseLayerMaps = {
-      'Tiles': this.tiles,
-      // 'Culture': this.cultureLayer,
-
+      'Layers': this.tiles
     };
     let overLay = {
       'Wells Layer': this.wellsLayer,
       'PLSS': this.plssLayer,
     }
     L.control.layers(baseLayerMaps, overLay).addTo(this.map);
-    // L.control.mousePosition().addTo(map);
+    L.control.mousePosition().addTo(this.map);
   }
 
   betterWmsFunction(url?, options?) {

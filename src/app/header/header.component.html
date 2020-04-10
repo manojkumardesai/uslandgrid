@@ -8,9 +8,9 @@
                 Login
             </span>
         </button>
-        <button  *ngIf='isLoggedIn'>
+        <button  mat-button *ngIf='isLoggedIn' (click)='logout()'>
             <span>
-                Admin
+                Logout
             </span>
         </button>
         <!-- <button mat-button (click)='openLegends()'>

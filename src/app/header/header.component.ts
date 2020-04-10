@@ -35,4 +35,8 @@ export class HeaderComponent implements OnInit {
     dialogRef.afterClosed().subscribe(console.log);
   }
 
+  logout() {
+    this.loginService.publishLoginResponseFalse();
+  }
+
 }

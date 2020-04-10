@@ -12,15 +12,17 @@ export class LoginService {
 
   public publishLoginResponseTrue(): void {
     const user = {
-        loggedIn: true
+      loggedIn: true
     };
     this.user.next(user);
+    sessionStorage.setItem('logInState', 'true');
   }
-  
+
   public publishLoginResponseFalse(): void {
     const user = {
-        loggedIn: false
+      loggedIn: false
     };
     this.user.next(user);
+    sessionStorage.removeItem('logInState');
   }
 }
