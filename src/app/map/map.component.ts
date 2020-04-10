@@ -101,6 +101,11 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map.on('click', (ev) => {
       this.showInfoPoint(ev);
     });
+    this.map.on('map-container-resize', () => {
+      setTimeout(() => {
+        this.map.invalidateSize();
+      }, 400)
+    });
     this.addTileLayer();
     // this.addCultureLayer();
     this.addPlssLayer();
@@ -160,10 +165,11 @@ export class MapComponent implements AfterViewInit, OnInit {
     let baseLayerMaps = {
       'Tiles': this.tiles,
       // 'Culture': this.cultureLayer,
-      'PLSS': this.plssLayer,
+
     };
     let overLay = {
-      'Wells Layer': this.wellsLayer
+      'Wells Layer': this.wellsLayer,
+      'PLSS': this.plssLayer,
     }
     L.control.layers(baseLayerMaps, overLay).addTo(this.map);
     // L.control.mousePosition().addTo(map);
