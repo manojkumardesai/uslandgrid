@@ -168,7 +168,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       'Layers': this.tiles
     };
     let overLay = {
-      'Wells Layer': this.wellsLayer,
+      'Wells': this.wellsLayer,
       'PLSS': this.plssLayer,
     }
     L.control.layers(baseLayerMaps, overLay).addTo(this.map);
