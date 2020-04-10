@@ -173,6 +173,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
     L.control.layers(baseLayerMaps, overLay).addTo(this.map);
     L.control.mousePosition().addTo(this.map);
+    L.control.scale().addTo(this.map);
   }
 
   betterWmsFunction(url?, options?) {
