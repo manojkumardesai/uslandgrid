@@ -43,7 +43,7 @@
 </form>
 
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="form.value" (click)="onNoClick()">Close</button>
+  <button mat-button [mat-dialog-close]="form.value" (click)="onNoClick()">Reset</button>
   <button mat-button [mat-dialog-close]="form.value">Apply</button>
   <button mat-button title='Login to export data' [disabled]="!isLoggedIn" (click)="generateReport()">Export</button>
 </div>

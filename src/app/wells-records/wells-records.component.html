@@ -13,7 +13,7 @@
                     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
                   </mat-form-field> -->
                   
-                  <div class="mat-elevation-z8 wellsTableContainer">
+                  <div class="wellsTableContainer">
                     <table class='wellsRecordTable' mat-table [dataSource]="dataSource" matSort>
                   
                       <!-- ID Column -->
@@ -103,7 +103,7 @@
                       </tr>
                     </table>
                   </div>
-                  <mat-paginator [length]="totalAvailableWellsCount" [pageSizeOptions]="[5,10,15]"></mat-paginator>
+                  <mat-paginator  [length]="totalAvailableWellsCount" [pageSizeOptions]="[5,10,15]"></mat-paginator>
             </div>
         </mat-expansion-panel>
     </mat-accordion>

@@ -19,7 +19,7 @@ export interface UserData {
 })
 export class WellsRecordsComponent implements OnInit, OnChanges {
   panelOpenState = false;
-  totalAvailableWellsCount: any;
+  totalAvailableWellsCount = 400;
   displayedColumns: string[] = [
     'wellId',
     'wellName',
@@ -44,27 +44,21 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     const currentItem: SimpleChange = changes.payLoadFromFilter;
-    if(Object.keys(currentItem.currentValue).length) {
+    if (Object.keys(currentItem.currentValue).length) {
       this.apiService.fetchWellsByPayLoad(this.payLoadFromFilter, 0, 5).subscribe((data) => {
         this.dataSource = new MatTableDataSource(data.wellDtos);
+        this.totalAvailableWellsCount = data.count;
+        this.dataSource.sort = this.sort;
       });
     } else {
       this.apiService.fetchWellsData(0, 5).subscribe((data) => {
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
-        this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
     }
   }
   ngOnInit() {
-    console.log(this.payLoadFromFilter);
-    this.apiService.fetchWellsData(0, 5).subscribe((data) => {
-      this.dataSource = new MatTableDataSource(data.wellDtos);
-      this.totalAvailableWellsCount = data.count;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
 
   }
 
@@ -85,9 +79,11 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     }
   }
 
-  loadWells(offset=0, limit=0) {
+  loadWells(offset = 0, limit = 0) {
     this.apiService.fetchWellsData(offset, limit).subscribe((data) => {
       this.dataSource = new MatTableDataSource(data.wellDtos);
+      this.totalAvailableWellsCount = data.count;
+      this.dataSource.sort = this.sort;
     });
   }
 }
