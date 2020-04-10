@@ -38,6 +38,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   openFilterDialog(): void {
     const dialogRef = this.dialog.open(FilterDialog, {
       width: '400px',
+      hasBackdrop: false,
       data: this.payLoadFromFilter
     });
 

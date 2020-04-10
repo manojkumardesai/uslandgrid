@@ -48,7 +48,7 @@ export class FilterDialog implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: DialogData, public loginService: LoginService) { }
 
     ngOnInit() {
-        this.dialogRef.updatePosition({ top: '7.8%', left: '50px' });
+        this.dialogRef.updatePosition({ top: '7.8%', left: '3%' });
 
         if (Object.keys(this.data).length) {
             if (this.data.group == 'Operator') {
