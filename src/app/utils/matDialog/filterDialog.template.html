@@ -1,44 +1,49 @@
 <h1 mat-dialog-title>Group Filter</h1>
+
 <form [formGroup]="form">
-  <div>
-    <mat-form-field>
-      <mat-label>Choose Group</mat-label>
-      <mat-select (selectionChange)="type()" formControlName="group">
-        <mat-option *ngFor="let group of groups" [value]="group.value" >
-          {{group.value}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field>
-      <mat-label>Choose Condition</mat-label>
-      <mat-select (selectionChange)="criteria()" formControlName="criteria">
-        <mat-option *ngFor="let criteria of criterias" [value]="criteria.value" >
-          {{criteria.value}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field>
-      <mat-label>Choose Value</mat-label>
-      <mat-select (selectionChange)="value()" formControlName="value">
-        <mat-option *ngFor="let value of values" [value]="value" >
-          {{value}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-  <div *ngIf="isLoggedIn">
-    <mat-form-field>
-      <mat-label>Choose Format</mat-label>
-      <mat-select (selectionChange)="fileFormat()" formControlName="format">
-        <mat-option *ngFor="let format of formats" [value]="format.value" >
-          {{format.value}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+  <div formArrayName='filters'>
+    <div formGroup='0'>
+      <div>
+        <mat-form-field>
+          <mat-label>Choose Group</mat-label>
+          <mat-select (selectionChange)="type()" formControlName="group">
+            <mat-option *ngFor="let group of groups" [value]="group.value" >
+              {{group.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <mat-label>Choose Condition</mat-label>
+          <mat-select (selectionChange)="criteria()" formControlName="criteria">
+            <mat-option *ngFor="let criteria of criterias" [value]="criteria.value" >
+              {{criteria.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <mat-label>Choose Value</mat-label>
+          <mat-select (selectionChange)="value()" formControlName="value">
+            <mat-option *ngFor="let value of values" [value]="value" >
+              {{value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngIf="isLoggedIn">
+        <mat-form-field>
+          <mat-label>Choose Format</mat-label>
+          <mat-select (selectionChange)="fileFormat()" formControlName="format">
+            <mat-option *ngFor="let format of formats" [value]="format.value" >
+              {{format.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
   </div>
 </form>
 

@@ -2,7 +2,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, Inject, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ApiService } from 'src/app/_services/api.service';
 import { LoginService } from 'src/app/_services/login.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 
 export interface DialogData {
     group: string;
@@ -17,12 +17,7 @@ export interface DialogData {
 })
 export class FilterDialog implements OnInit {
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
-    form: FormGroup = new FormGroup({
-        group: new FormControl(''),
-        format: new FormControl(''),
-        criteria: new FormControl(''),
-        value: new FormControl(''),
-    });
+    form: any;
     groups = [
         { value: 'County' },
         { value: 'Operator' },
@@ -58,9 +53,15 @@ export class FilterDialog implements OnInit {
 
     constructor(
         public dialogRef: MatDialogRef<FilterDialog>, public apiService: ApiService,
-        @Inject(MAT_DIALOG_DATA) public data: DialogData, public loginService: LoginService) { }
+        @Inject(MAT_DIALOG_DATA) public data: DialogData, public loginService: LoginService,
+        public fb: FormBuilder) { }
 
     ngOnInit() {
+        this.form = this.fb.group({
+            filters: this.fb.array([
+                this.addFilterCriteria()
+            ])
+        })
         this.dialogRef.updatePosition({ top: '7.8%', left: '3%' });
 
         if (Object.keys(this.data).length) {
@@ -134,6 +135,15 @@ export class FilterDialog implements OnInit {
         link.click();
         window.URL.revokeObjectURL(url);
         this.dialogRef.close();
+    }
+
+    addFilterCriteria(): FormGroup {
+        return this.fb.group({
+            group: new FormControl(''),
+            format: new FormControl(''),
+            criteria: new FormControl(''),
+            value: new FormControl(''),
+        });
     }
 
 }
