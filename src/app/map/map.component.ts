@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { startWith, map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ApiService } from '../_services/api.service';
 import { MatDialog } from '@angular/material/dialog';
-import { FilterDialog } from '../utils/matDialog/matDialog.component';
+import { FilterDialog } from '../utils/matDialog/filterDialog.component';
 import "leaflet-mouse-position";
 
 export interface DialogData {

@@ -13,7 +13,7 @@ export interface DialogData {
 
 @Component({
     selector: 'app-filter-dialog',
-    templateUrl: './matDialog.template.html',
+    templateUrl: './filterDialog.template.html',
 })
 export class FilterDialog implements OnInit {
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
@@ -25,7 +25,9 @@ export class FilterDialog implements OnInit {
     });
     groups = [
         { value: 'County' },
-        { value: 'Operator' }
+        { value: 'Operator' },
+        { value: 'Frac Type' },
+        { value: 'Frac Date' },
     ];
     formats = [
         { value: 'CSV' },
@@ -34,9 +36,20 @@ export class FilterDialog implements OnInit {
         { value: 'WB4' },
         { value: 'WB2' }
     ];
-    criterias = [{
-        value: 'CONTAINS'
-    }];
+    criterias = [
+        { value: 'EQUALS' },
+        { value: 'NOT EQUAL' },
+        { value: 'GREATER THAN' },
+        { value: 'GREATER THAN OR EQUAL' },
+        { value: 'LESS THAN' },
+        { value: 'LESS THAN OR EQUAL' },
+        { value: 'BEGINS WITH' },
+        { value: 'ENDS WITH' },
+        { value: 'CONTAINS' },
+        { value: 'DOES NOT CONTAIN' },
+        { value: 'IS ON OR BEFORE' },
+        { value: 'IS ON OR AFTER' }
+    ];
     operators = [];
     counties = [];
     values = [];
