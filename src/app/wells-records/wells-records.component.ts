@@ -81,7 +81,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   loadWells(offset = 0, limit = 0) {
     if (Object.keys(this.payLoadFromFilter).length) {
-      this.apiService.fetchWellsByPayLoad(this.payLoadFromFilter, 0, 5).subscribe((data) => {
+      this.apiService.fetchWellsByPayLoad(this.payLoadFromFilter, offset, limit).subscribe((data) => {
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
         this.dataSource.sort = this.sort;
