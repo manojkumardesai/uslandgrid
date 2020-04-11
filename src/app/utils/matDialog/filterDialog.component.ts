@@ -21,8 +21,8 @@ export class FilterDialog implements OnInit {
     groups = [
         { value: 'County' },
         { value: 'Operator' },
-        { value: 'Frac Type' },
-        { value: 'Frac Date' },
+        // { value: 'Frac Type' },
+        // { value: 'Frac Date' },
     ];
     formats = [
         { value: 'CSV' },
@@ -32,18 +32,18 @@ export class FilterDialog implements OnInit {
         { value: 'WB2' }
     ];
     criterias = [
-        { value: 'EQUALS' },
-        { value: 'NOT EQUAL' },
-        { value: 'GREATER THAN' },
-        { value: 'GREATER THAN OR EQUAL' },
-        { value: 'LESS THAN' },
-        { value: 'LESS THAN OR EQUAL' },
-        { value: 'BEGINS WITH' },
-        { value: 'ENDS WITH' },
+        // { value: 'EQUALS' },
+        // { value: 'NOT EQUAL' },
+        // { value: 'GREATER THAN' },
+        // { value: 'GREATER THAN OR EQUAL' },
+        // { value: 'LESS THAN' },
+        // { value: 'LESS THAN OR EQUAL' },
+        // { value: 'BEGINS WITH' },
+        // { value: 'ENDS WITH' },
         { value: 'CONTAINS' },
-        { value: 'DOES NOT CONTAIN' },
-        { value: 'IS ON OR BEFORE' },
-        { value: 'IS ON OR AFTER' }
+        // { value: 'DOES NOT CONTAIN' },
+        // { value: 'IS ON OR BEFORE' },
+        // { value: 'IS ON OR AFTER' }
     ];
     operators = [];
     counties = [];
