@@ -1,12 +1,12 @@
 <h1 mat-dialog-title>Group Filter</h1>
 
 <form [formGroup]="form">
-  <div formArrayName='filters'>
-    <div formGroup='0'>
+  <div formArrayName='wellsCriteria'>
+    <div formGroupName='0'>
       <div>
         <mat-form-field>
           <mat-label>Choose Group</mat-label>
-          <mat-select (selectionChange)="type()" formControlName="group">
+          <mat-select (selectionChange)="type()" formControlName="field">
             <mat-option *ngFor="let group of groups" [value]="group.value" >
               {{group.value}}
             </mat-option>

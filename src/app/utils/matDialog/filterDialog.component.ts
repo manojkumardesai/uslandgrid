@@ -59,10 +59,10 @@ export class FilterDialog implements OnInit {
 
     ngOnInit() {
         this.form = this.fb.group({
-            filters: this.fb.array([
+            wellsCriteria: this.fb.array([
                 this.addFilterCriteria()
             ])
-        })
+        });
         this.dialogRef.updatePosition({ top: '7.8%', left: '3%' });
 
         if (Object.keys(this.data).length) {
