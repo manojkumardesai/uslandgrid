@@ -5,9 +5,10 @@ import { LoginService } from 'src/app/_services/login.service';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 
 export interface DialogData {
-    group: string;
+    field: string;
     format: string;
     criteria: string;
+    operator: string;
     value: string;
 }
 
@@ -21,8 +22,8 @@ export class FilterDialog implements OnInit {
     groups = [
         { value: 'County' },
         { value: 'Operator' },
-        // { value: 'Frac Type' },
-        // { value: 'Frac Date' },
+        { value: 'Frac Type' },
+        { value: 'Frac Date' },
     ];
     formats = [
         { value: 'CSV' },
@@ -32,18 +33,18 @@ export class FilterDialog implements OnInit {
         { value: 'WB2' }
     ];
     criterias = [
-        // { value: 'EQUALS' },
-        // { value: 'NOT EQUAL' },
-        // { value: 'GREATER THAN' },
-        // { value: 'GREATER THAN OR EQUAL' },
-        // { value: 'LESS THAN' },
-        // { value: 'LESS THAN OR EQUAL' },
-        // { value: 'BEGINS WITH' },
-        // { value: 'ENDS WITH' },
+        { value: 'EQUALS' },
+        { value: 'NOT EQUAL' },
+        { value: 'GREATER THAN' },
+        { value: 'GREATER THAN OR EQUAL' },
+        { value: 'LESS THAN' },
+        { value: 'LESS THAN OR EQUAL' },
+        { value: 'BEGINS WITH' },
+        { value: 'ENDS WITH' },
         { value: 'CONTAINS' },
-        // { value: 'DOES NOT CONTAIN' },
-        // { value: 'IS ON OR BEFORE' },
-        // { value: 'IS ON OR AFTER' }
+        { value: 'DOES NOT CONTAIN' },
+        { value: 'IS ON OR BEFORE' },
+        { value: 'IS ON OR AFTER' }
     ];
     operators = [];
     counties = [];
@@ -65,7 +66,7 @@ export class FilterDialog implements OnInit {
         this.dialogRef.updatePosition({ top: '7.8%', left: '3%' });
 
         if (Object.keys(this.data).length) {
-            if (this.data.group == 'Operator') {
+            if (this.data.field == 'Operator') {
                 this.fetchOperators();
             } else {
                 this.fetchCounties();
@@ -92,7 +93,7 @@ export class FilterDialog implements OnInit {
     }
     onNoClick(): void {
         this.form.setValue({
-            group: '',
+            field: '',
             format: '',
             criteria: '',
             value: '',
@@ -103,7 +104,7 @@ export class FilterDialog implements OnInit {
     setDefaultFormValues() {
         setTimeout(() => {
             this.form.setValue({
-                group: this.data && this.data.group ? this.data.group : '',
+                field: this.data && this.data.field ? this.data.field : '',
                 format: this.data && this.data.format ? this.data.format : '',
                 criteria: this.data && this.data.criteria ? this.data.criteria : '',
                 value: this.data && this.data.value ? this.data.value : '',
@@ -111,12 +112,12 @@ export class FilterDialog implements OnInit {
         }, 1000)
     }
     type() {
-        if (this.form.value.group == 'Operator') {
+        if (this.form.value.field == 'Operator') {
             this.fetchOperators();
         } else {
             this.fetchCounties();
         }
-        this.payLoad['group'] = this.form.value.group.toLowerCase();
+        this.payLoad['field'] = this.form.value.field.toLowerCase();
     }
     criteria() {
         this.payLoad['criteria'] = this.form.value.criteria.toLowerCase();
@@ -139,10 +140,10 @@ export class FilterDialog implements OnInit {
 
     addFilterCriteria(): FormGroup {
         return this.fb.group({
-            group: new FormControl(''),
-            format: new FormControl(''),
+            field: new FormControl(''),
             criteria: new FormControl(''),
             value: new FormControl(''),
+            operator: new FormControl('')
         });
     }
 

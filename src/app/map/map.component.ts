@@ -59,7 +59,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   private _filter(value: any): Observable<any[]> {
-    return this.apiService.searchWells(value).pipe(
+    return this.apiService.fetchWellsData({ searchKey: value }).pipe(
       map(response => response.wellDtos.filter(option => {
         return option
       }))
@@ -71,7 +71,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   searchWellsByKey(key) {
-    this.apiService.searchWells(key).subscribe((data) => {
+    this.apiService.fetchWellsData({ searchKey: key }).subscribe((data) => {
       this.options = data.wellDtos;
     });
     return this.options;
