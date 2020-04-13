@@ -37,7 +37,8 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   openFilterDialog(): void {
     const dialogRef = this.dialog.open(FilterDialog, {
-      width: '400px',
+      width: '350px',
+      maxWidth: 350,
       backdropClass: 'cdk-overlay-transparent-backdrop',
       hasBackdrop: true,
       data: this.payLoadFromFilter

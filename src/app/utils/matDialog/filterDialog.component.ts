@@ -2,7 +2,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, Inject, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ApiService } from 'src/app/_services/api.service';
 import { LoginService } from 'src/app/_services/login.service';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, FormArray } from '@angular/forms';
 
 export interface DialogData {
     field: string;
@@ -15,10 +15,11 @@ export interface DialogData {
 @Component({
     selector: 'app-filter-dialog',
     templateUrl: './filterDialog.template.html',
+    styleUrls: ['./filterDialog.component.scss']
 })
 export class FilterDialog implements OnInit {
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
-    form: any;
+    form: FormGroup;
     groups = [
         { value: 'County' },
         { value: 'Operator' },
@@ -46,6 +47,7 @@ export class FilterDialog implements OnInit {
         { value: 'IS ON OR BEFORE' },
         { value: 'IS ON OR AFTER' }
     ];
+    conditions = ["AND", "OR"];
     operators = [];
     counties = [];
     values = [];
@@ -60,7 +62,7 @@ export class FilterDialog implements OnInit {
     ngOnInit() {
         this.form = this.fb.group({
             wellsCriteria: this.fb.array([
-                this.addFilterCriteria()
+                this.addFilterCriteriaFormGroup()
             ])
         });
         this.dialogRef.updatePosition({ top: '7.8%', left: '3%' });
@@ -138,13 +140,29 @@ export class FilterDialog implements OnInit {
         this.dialogRef.close();
     }
 
-    addFilterCriteria(): FormGroup {
+    addFilterCriteriaFormGroup(): FormGroup {
         return this.fb.group({
             field: new FormControl(''),
             criteria: new FormControl(''),
             value: new FormControl(''),
-            operator: new FormControl('')
+            condition: new FormControl('')
         });
+    }
+
+    addCriteria() {
+        (<FormArray>this.form.get('wellsCriteria')).push(this.addFilterCriteriaFormGroup());
+    }
+
+    get formData() {
+        return <FormArray>this.form.get('wellsCriteria');
+    }
+
+    removeCriteria(wellsCriteriaIndex) {
+        (<FormArray>this.form.get('wellsCriteria')).removeAt(wellsCriteriaIndex);
+    }
+
+    isConditionAdded(i) {
+        return (i + 1) < this.formData.length && this.formData.length > 1
     }
 
 }
