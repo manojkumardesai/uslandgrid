@@ -20,7 +20,7 @@ export interface DialogData {
 export class FilterDialog implements OnInit {
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
     form: FormGroup;
-    groups = [
+    fields = [
         { value: 'County' },
         { value: 'Operator' },
         { value: 'Frac Type' },
@@ -33,7 +33,7 @@ export class FilterDialog implements OnInit {
         { value: 'WB4' },
         { value: 'WB2' }
     ];
-    criterias = [
+    conditions = [
         { value: 'EQUALS' },
         { value: 'NOT EQUAL' },
         { value: 'GREATER THAN' },
@@ -47,8 +47,7 @@ export class FilterDialog implements OnInit {
         { value: 'IS ON OR BEFORE' },
         { value: 'IS ON OR AFTER' }
     ];
-    conditions = ["AND", "OR"];
-    operators = [];
+    operators = ["AND", "OR"];
     counties = [];
     values = [];
     payLoad = {};
@@ -61,6 +60,7 @@ export class FilterDialog implements OnInit {
 
     ngOnInit() {
         this.form = this.fb.group({
+            reportType: '',
             wellsCriteria: this.fb.array([
                 this.addFilterCriteriaFormGroup()
             ])
@@ -82,24 +82,17 @@ export class FilterDialog implements OnInit {
 
     fetchOperators() {
         this.apiService.fetchOperators().subscribe((data) => {
-            this.operators = data.operators;
             this.values = data.operators;
         })
     }
 
     fetchCounties() {
         this.apiService.fetchCounties().subscribe((data) => {
-            this.counties = data;
             this.values = data;
         });
     }
     onNoClick(): void {
-        this.form.setValue({
-            field: '',
-            format: '',
-            criteria: '',
-            value: '',
-        })
+        debugger;
         this.dialogRef.close();
     }
 
@@ -113,20 +106,14 @@ export class FilterDialog implements OnInit {
             });
         }, 1000)
     }
-    type() {
-        if (this.form.value.field == 'Operator') {
+    type(i) {
+        if (this.form.value["wellsCriteria"][i].field == 'Operator') {
             this.fetchOperators();
         } else {
             this.fetchCounties();
         }
-        this.payLoad['field'] = this.form.value.field.toLowerCase();
     }
-    criteria() {
-        this.payLoad['criteria'] = this.form.value.criteria.toLowerCase();
-    }
-    value() {
-        this.payLoad['value'] = this.form.value.value.toLowerCase();
-    }
+
     fileFormat() {
         this.payLoad['format'] = this.form.value.format.toLowerCase();
     }
@@ -143,9 +130,9 @@ export class FilterDialog implements OnInit {
     addFilterCriteriaFormGroup(): FormGroup {
         return this.fb.group({
             field: new FormControl(''),
-            criteria: new FormControl(''),
             value: new FormControl(''),
-            condition: new FormControl('')
+            condition: new FormControl(''),
+            operator: new FormControl('')
         });
     }
 

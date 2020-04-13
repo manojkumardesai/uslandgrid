@@ -13,10 +13,10 @@
       </div>
       <div>
         <mat-form-field>
-          <mat-label>Choose Group</mat-label>
-          <mat-select (selectionChange)="type()" formControlName="field" id="{{'field' + i}}">
-            <mat-option *ngFor="let group of groups" [value]="group.value" >
-              {{group.value}}
+          <mat-label>Choose Field</mat-label>
+          <mat-select (selectionChange)="type(i)" formControlName="field" id="{{'field' + i}}">
+            <mat-option *ngFor="let field of fields" [value]="field.value" >
+              {{field.value}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -24,9 +24,9 @@
       <div>
         <mat-form-field>
           <mat-label>Choose Condition</mat-label>
-          <mat-select (selectionChange)="criteria()" formControlName="criteria" id="{{'criteria' + i}}">
-            <mat-option *ngFor="let criteria of criterias" [value]="criteria.value" >
-              {{criteria.value}}
+          <mat-select formControlName="condition" id="{{'criteria' + i}}">
+            <mat-option *ngFor="let condition of conditions" [value]="condition.value" >
+              {{condition.value}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -34,7 +34,7 @@
       <div>
         <mat-form-field>
           <mat-label>Choose Value</mat-label>
-          <mat-select (selectionChange)="value()" formControlName="value" id="{{'value' + i}}">
+          <mat-select formControlName="value" id="{{'value' + i}}">
             <mat-option *ngFor="let value of values" [value]="value" >
               {{value}}
             </mat-option>
@@ -43,10 +43,10 @@
       </div>
       <div *ngIf="isConditionAdded(i)">
         <mat-form-field>
-          <mat-label>Choose Condition</mat-label>
-          <mat-select (selectionChange)="value()" formControlName="condition" id="{{'condition' + i}}">
-            <mat-option *ngFor="let condition of conditions" [value]="condition" >
-              {{condition}}
+          <mat-label>Choose Operator</mat-label>
+          <mat-select formControlName="operator" id="{{'operator' + i}}">
+            <mat-option *ngFor="let operator of operators" [value]="operator" >
+              {{operator}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -56,7 +56,7 @@
   <div *ngIf="isLoggedIn">
     <mat-form-field>
       <mat-label>Choose Format</mat-label>
-      <mat-select (selectionChange)="fileFormat()" formControlName="format">
+      <mat-select formControlName="reportType">
         <mat-option *ngFor="let format of formats" [value]="format.value" >
           {{format.value}}
         </mat-option>
