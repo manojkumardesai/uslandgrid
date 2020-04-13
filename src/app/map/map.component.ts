@@ -37,7 +37,8 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   openFilterDialog(): void {
     const dialogRef = this.dialog.open(FilterDialog, {
-      width: '400px',
+      width: '350px',
+      maxWidth: 350,
       backdropClass: 'cdk-overlay-transparent-backdrop',
       hasBackdrop: true,
       data: this.payLoadFromFilter
@@ -54,12 +55,15 @@ export class MapComponent implements AfterViewInit, OnInit {
         startWith(''),
         debounceTime(300),
         distinctUntilChanged(),
-        switchMap(name => this._filter(name))
+        switchMap((name) => {
+          return this._filter(name);
+        })
       );
   }
 
   private _filter(value: any): Observable<any[]> {
-    return this.apiService.searchWells(value).pipe(
+    const key = value.length ? value : value.wellName;
+    return this.apiService.fetchWellsData({ searchKey: key }).pipe(
       map(response => response.wellDtos.filter(option => {
         return option
       }))
@@ -68,13 +72,6 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     this.initMap();
-  }
-
-  searchWellsByKey(key) {
-    this.apiService.searchWells(key).subscribe((data) => {
-      this.options = data.wellDtos;
-    });
-    return this.options;
   }
 
   displayFn(well): string {

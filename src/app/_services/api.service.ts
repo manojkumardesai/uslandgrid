@@ -12,14 +12,11 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  fetchWellsData(offset, limit): Observable<any> {
-    return this.http.get(this.baseUrl + `wells?offset=${offset}&limit=${limit}`);
-  }
   fetchWellsByPayLoad(payLoad, offset, limit): Observable<any> {
     return this.http.get(this.baseUrl + `wells?${payLoad.group}=${payLoad.value}&offset=${offset}&limit=${limit}`);
   }
-  searchWells(key): Observable<any> {
-    return this.http.get(this.baseUrl + `wells?searchKey=${key}`);
+  fetchWellsData(wellPayLoad): Observable<any> {
+    return this.http.post(this.baseUrl + 'wells', wellPayLoad);
   }
   fetchChartData(): Observable<any> {
     return this.http.get(this.baseUrl + `chart/county`);
@@ -55,7 +52,7 @@ export class ApiService {
   fetchIpWellDetails(wellId): Observable<any> {
     return this.http.get(this.baseUrl + `well/ipvolume?wellId=${wellId}`);
   }
-  fetchInfoPoint({lat, lng}) {
-    return this.http.post(this.baseUrl + `well/info`, {latitude: lat, longitude: lng});
+  fetchInfoPoint({ lat, lng }) {
+    return this.http.post(this.baseUrl + `well/info`, { latitude: lat, longitude: lng });
   }
 }

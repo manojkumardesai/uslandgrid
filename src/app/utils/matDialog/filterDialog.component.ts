@@ -2,32 +2,31 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, Inject, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ApiService } from 'src/app/_services/api.service';
 import { LoginService } from 'src/app/_services/login.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, FormArray } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 export interface DialogData {
-    group: string;
+    field: string;
     format: string;
     criteria: string;
+    operator: string;
     value: string;
 }
 
 @Component({
     selector: 'app-filter-dialog',
     templateUrl: './filterDialog.template.html',
+    styleUrls: ['./filterDialog.component.scss']
 })
 export class FilterDialog implements OnInit {
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
-    form: FormGroup = new FormGroup({
-        group: new FormControl(''),
-        format: new FormControl(''),
-        criteria: new FormControl(''),
-        value: new FormControl(''),
-    });
-    groups = [
+    form: FormGroup;
+    filterView = true;
+    fields = [
         { value: 'County' },
         { value: 'Operator' },
-        // { value: 'Frac Type' },
-        // { value: 'Frac Date' },
+        { value: 'Frac Type' },
+        { value: 'Frac Date' },
     ];
     formats = [
         { value: 'CSV' },
@@ -36,35 +35,43 @@ export class FilterDialog implements OnInit {
         { value: 'WB4' },
         { value: 'WB2' }
     ];
-    criterias = [
-        // { value: 'EQUALS' },
-        // { value: 'NOT EQUAL' },
-        // { value: 'GREATER THAN' },
-        // { value: 'GREATER THAN OR EQUAL' },
-        // { value: 'LESS THAN' },
-        // { value: 'LESS THAN OR EQUAL' },
-        // { value: 'BEGINS WITH' },
-        // { value: 'ENDS WITH' },
+    conditions = [
+        { value: 'EQUALS' },
+        { value: 'NOT EQUAL' },
+        { value: 'GREATER THAN' },
+        { value: 'GREATER THAN OR EQUAL' },
+        { value: 'LESS THAN' },
+        { value: 'LESS THAN OR EQUAL' },
+        { value: 'BEGINS WITH' },
+        { value: 'ENDS WITH' },
         { value: 'CONTAINS' },
-        // { value: 'DOES NOT CONTAIN' },
-        // { value: 'IS ON OR BEFORE' },
-        // { value: 'IS ON OR AFTER' }
+        { value: 'DOES NOT CONTAIN' },
+        { value: 'IS ON OR BEFORE' },
+        { value: 'IS ON OR AFTER' }
     ];
-    operators = [];
+    operators = ["AND", "OR"];
     counties = [];
     values = [];
     payLoad = {};
     isLoggedIn = false;
+    downloadJsonHref: SafeUrl = '';
 
     constructor(
         public dialogRef: MatDialogRef<FilterDialog>, public apiService: ApiService,
-        @Inject(MAT_DIALOG_DATA) public data: DialogData, public loginService: LoginService) { }
+        @Inject(MAT_DIALOG_DATA) public data: DialogData, public loginService: LoginService,
+        public fb: FormBuilder, public sanitizer: DomSanitizer) { }
 
     ngOnInit() {
+        this.form = this.fb.group({
+            reportType: '',
+            wellsCriteria: this.fb.array([
+                this.addFilterCriteriaFormGroup()
+            ])
+        });
         this.dialogRef.updatePosition({ top: '7.8%', left: '3%' });
 
         if (Object.keys(this.data).length) {
-            if (this.data.group == 'Operator') {
+            if (this.data.field == 'Operator') {
                 this.fetchOperators();
             } else {
                 this.fetchCounties();
@@ -78,51 +85,38 @@ export class FilterDialog implements OnInit {
 
     fetchOperators() {
         this.apiService.fetchOperators().subscribe((data) => {
-            this.operators = data.operators;
             this.values = data.operators;
         })
     }
 
     fetchCounties() {
         this.apiService.fetchCounties().subscribe((data) => {
-            this.counties = data;
             this.values = data;
         });
     }
     onNoClick(): void {
-        this.form.setValue({
-            group: '',
-            format: '',
-            criteria: '',
-            value: '',
-        })
+        debugger;
         this.dialogRef.close();
     }
 
     setDefaultFormValues() {
         setTimeout(() => {
             this.form.setValue({
-                group: this.data && this.data.group ? this.data.group : '',
+                field: this.data && this.data.field ? this.data.field : '',
                 format: this.data && this.data.format ? this.data.format : '',
                 criteria: this.data && this.data.criteria ? this.data.criteria : '',
                 value: this.data && this.data.value ? this.data.value : '',
             });
         }, 1000)
     }
-    type() {
-        if (this.form.value.group == 'Operator') {
+    type(i) {
+        if (this.form.value["wellsCriteria"][i].field == 'Operator') {
             this.fetchOperators();
         } else {
             this.fetchCounties();
         }
-        this.payLoad['group'] = this.form.value.group.toLowerCase();
     }
-    criteria() {
-        this.payLoad['criteria'] = this.form.value.criteria.toLowerCase();
-    }
-    value() {
-        this.payLoad['value'] = this.form.value.value.toLowerCase();
-    }
+
     fileFormat() {
         this.payLoad['format'] = this.form.value.format.toLowerCase();
     }
@@ -134,6 +128,46 @@ export class FilterDialog implements OnInit {
         link.click();
         window.URL.revokeObjectURL(url);
         this.dialogRef.close();
+    }
+
+    addFilterCriteriaFormGroup(): FormGroup {
+        return this.fb.group({
+            field: new FormControl(''),
+            value: new FormControl(''),
+            condition: new FormControl(''),
+            operator: new FormControl('')
+        });
+    }
+
+    addCriteria() {
+        (<FormArray>this.form.get('wellsCriteria')).push(this.addFilterCriteriaFormGroup());
+    }
+
+    get formData() {
+        return <FormArray>this.form.get('wellsCriteria');
+    }
+
+    removeCriteria(wellsCriteriaIndex) {
+        (<FormArray>this.form.get('wellsCriteria')).removeAt(wellsCriteriaIndex);
+    }
+
+    isConditionAdded(i) {
+        return (i + 1) < this.formData.length && this.formData.length > 1
+    }
+
+    toggleView() {
+        this.filterView = !this.filterView
+    }
+
+    saveFile() {
+        var sJson = JSON.stringify(this.form.value);
+        var element = document.createElement('a');
+        element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
+        element.setAttribute('download', "group-filter-options.json");
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click(); // simulate click
+        document.body.removeChild(element);
     }
 
 }
