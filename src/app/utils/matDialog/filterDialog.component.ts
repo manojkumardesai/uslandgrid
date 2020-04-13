@@ -3,6 +3,7 @@ import { Component, Inject, OnInit, ElementRef, ViewChild } from '@angular/core'
 import { ApiService } from 'src/app/_services/api.service';
 import { LoginService } from 'src/app/_services/login.service';
 import { FormGroup, FormControl, FormBuilder, FormArray } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 export interface DialogData {
     field: string;
@@ -20,6 +21,7 @@ export interface DialogData {
 export class FilterDialog implements OnInit {
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
     form: FormGroup;
+    filterView = true;
     fields = [
         { value: 'County' },
         { value: 'Operator' },
@@ -52,11 +54,12 @@ export class FilterDialog implements OnInit {
     values = [];
     payLoad = {};
     isLoggedIn = false;
+    downloadJsonHref: SafeUrl = '';
 
     constructor(
         public dialogRef: MatDialogRef<FilterDialog>, public apiService: ApiService,
         @Inject(MAT_DIALOG_DATA) public data: DialogData, public loginService: LoginService,
-        public fb: FormBuilder) { }
+        public fb: FormBuilder, public sanitizer: DomSanitizer) { }
 
     ngOnInit() {
         this.form = this.fb.group({
@@ -150,6 +153,21 @@ export class FilterDialog implements OnInit {
 
     isConditionAdded(i) {
         return (i + 1) < this.formData.length && this.formData.length > 1
+    }
+
+    toggleView() {
+        this.filterView = !this.filterView
+    }
+
+    saveFile() {
+        var sJson = JSON.stringify(this.form.value);
+        var element = document.createElement('a');
+        element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
+        element.setAttribute('download', "group-filter-options.json");
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click(); // simulate click
+        document.body.removeChild(element);
     }
 
 }

@@ -1,5 +1,18 @@
 <div>
-<h1 mat-dialog-title>Group Filter</h1>
+  <div class='titleOptions'>
+    <div>
+      <h1 mat-dialog-title>Group Filter</h1>
+    </div>
+    <div>
+      <button mat-flat-button (click)="toggleView()">
+        <span class="material-icons">
+          settings
+        </span>
+      </button>
+    </div>
+  </div>
+
+<div *ngIf="filterView">
 <div class="criteriaForm">
 <form [formGroup]="form">
   <div formArrayName='wellsCriteria' *ngFor="let wellCriteria of formData.controls; let i = index">
@@ -75,7 +88,9 @@
   <button mat-button [mat-dialog-close]="form.value">Apply</button>
   <button mat-button title='Login to export data' [disabled]="!isLoggedIn" (click)="generateReport()">Export</button>
 </div>
-
-	
+</div>
+<div *ngIf="!filterView">
+  <button mat-button (click)="saveFile()" title="Save Filter Choices" disabled='!formData.length'>Save Filter Choice</button>
+</div>
 <a style="display: none;" class="download-zip-link" #downloadZipLink></a>
 </div>
