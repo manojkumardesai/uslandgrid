@@ -48,7 +48,7 @@
         <mat-form-field>
           <mat-label>Choose Value</mat-label>
           <mat-select formControlName="value" id="{{'value' + i}}">
-            <mat-option *ngFor="let value of values" [value]="value" >
+            <mat-option *ngFor="let value of values[i]" [value]="value" >
               {{value}}
             </mat-option>
           </mat-select>
@@ -90,7 +90,16 @@
 </div>
 </div>
 <div *ngIf="!filterView">
-  <button mat-button (click)="saveFile()" title="Save Filter Choices" disabled='!formData.length'>Save Filter Choice</button>
+  <div>
+    <label>Download Filter Options Chosen:
+      <button mat-button (click)="saveFile()" title="Save Filter Choices">Save Filter Choice</button>
+    </label>
+  </div>
+  <div>
+    <label>Download Filter Options Chosen:
+      <input type='file' accept=".json" (change)="log($event)">
+    </label>
+  </div>
 </div>
 <a style="display: none;" class="download-zip-link" #downloadZipLink></a>
 </div>

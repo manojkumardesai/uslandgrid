@@ -51,6 +51,7 @@ export class FilterDialog implements OnInit {
     ];
     operators = ["AND", "OR"];
     counties = [];
+    wellOperators = [];
     values = [];
     payLoad = {};
     isLoggedIn = false;
@@ -69,15 +70,16 @@ export class FilterDialog implements OnInit {
             ])
         });
         this.dialogRef.updatePosition({ top: '7.8%', left: '3%' });
-
-        if (Object.keys(this.data).length) {
-            if (this.data.field == 'Operator') {
-                this.fetchOperators();
-            } else {
-                this.fetchCounties();
-            }
-            this.setDefaultFormValues();
-        }
+        this.fetchCounties();
+        this.fetchOperators();
+        // if (Object.keys(this.data).length) {
+        //     if (this.data.field == 'Operator') {
+        //         this.fetchOperators();
+        //     } else {
+        //         this.fetchCounties();
+        //     }
+        //     this.setDefaultFormValues();
+        // }
         this.loginService.user.subscribe((data) => {
             this.isLoggedIn = data && data.loggedIn ? data.loggedIn : false;
         });
@@ -85,13 +87,13 @@ export class FilterDialog implements OnInit {
 
     fetchOperators() {
         this.apiService.fetchOperators().subscribe((data) => {
-            this.values = data.operators;
+            this.wellOperators = data.operators;
         })
     }
 
     fetchCounties() {
         this.apiService.fetchCounties().subscribe((data) => {
-            this.values = data;
+            this.counties = data;
         });
     }
     onNoClick(): void {
@@ -111,9 +113,9 @@ export class FilterDialog implements OnInit {
     }
     type(i) {
         if (this.form.value["wellsCriteria"][i].field == 'Operator') {
-            this.fetchOperators();
+            this.values[i] = this.wellOperators;
         } else {
-            this.fetchCounties();
+            this.values[i] = this.counties;
         }
     }
 
@@ -170,4 +172,21 @@ export class FilterDialog implements OnInit {
         document.body.removeChild(element);
     }
 
+    log(event) {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            const data = JSON.parse(<string>e.target.result);
+            for (let line = 0; line < data.wellsCriteria.length; line++) {
+                const linesFormArray = this.form.get("wellsCriteria") as FormArray;
+                linesFormArray.push(this.addFilterCriteriaFormGroup());
+            }
+            this.form.patchValue(data);
+            data.wellsCriteria.map((val, index) => {
+                this.type(index);
+            });
+            this.form.controls.wellsCriteria.patchValue(data.wellsCriteria);
+            this.filterView = true;
+        }
+        reader.readAsText(event.target.files[0]);
+    }
 }
