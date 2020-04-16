@@ -97,7 +97,7 @@ export class FilterDialog implements OnInit {
         });
     }
     onNoClick(): void {
-        debugger;
+        this.form.reset();
         this.dialogRef.close();
     }
 

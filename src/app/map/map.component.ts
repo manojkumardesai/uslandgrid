@@ -45,7 +45,13 @@ export class MapComponent implements AfterViewInit, OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.payLoadFromFilter = result ? JSON.parse(JSON.stringify(result)) : {};
+      const wellsCriteria = result ? JSON.parse(JSON.stringify(result)).wellsCriteria : {};
+      if (Object.keys(wellsCriteria).length) {
+        delete wellsCriteria[wellsCriteria.length - 1].operator;
+        this.payLoadFromFilter = wellsCriteria;
+      } else {
+        this.payLoadFromFilter = {};
+      }
     });
   }
 

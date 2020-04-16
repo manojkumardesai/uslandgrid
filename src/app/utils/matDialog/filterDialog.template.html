@@ -17,14 +17,14 @@
 <form [formGroup]="form">
   <div formArrayName='wellsCriteria' *ngFor="let wellCriteria of formData.controls; let i = index">
     <div [formGroupName]=i>
-      <div *ngIf="formData.length > 1">
+      <div *ngIf="formData.length > 1" class="close">
         <button mat-button (click)="removeCriteria(i)">
           <span class="material-icons">
             close
           </span>
         </button>
       </div>
-      <div>
+      <div class="field">
         <mat-form-field>
           <mat-label>Choose Field</mat-label>
           <mat-select (selectionChange)="type(i)" formControlName="field" id="{{'field' + i}}">
