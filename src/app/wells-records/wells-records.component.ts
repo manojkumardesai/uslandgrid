@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges, SimpleChange, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ApiService } from '../_services/api.service';
 import { tap } from 'rxjs/operators';
+import { SelectionModel } from '@angular/cdk/collections';
 
 export interface UserData {
   id: string;
@@ -21,6 +22,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   panelOpenState = false;
   totalAvailableWellsCount = 400;
   displayedColumns: string[] = [
+    'select',
     'wellId',
     'wellName',
     'operator',
@@ -37,26 +39,42 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   ];
   dataSource: MatTableDataSource<any>;
   @Input() payLoadFromFilter: any;
-
+  @Input() mapExtent: any;
+  @Output() filterByExtent = new EventEmitter();
+  @Output() zoomTo = new EventEmitter();
+  @Output() clearSelection = new EventEmitter();
+  @Output() refresh = new EventEmitter();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  selection = new SelectionModel<any>(true, []);
   constructor(public apiService: ApiService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     const currentItem: SimpleChange = changes.payLoadFromFilter;
-    if (Object.keys(currentItem.currentValue).length) {
-      const payLoad = {
+    const mapExtentValue: SimpleChange = changes.mapExtent;
+    let payLoad;
+    if (currentItem && Object.keys(currentItem.currentValue).length) {
+      payLoad = {
         offset: 0,
         limit: 5,
         wellsCriteria: this.payLoadFromFilter
       };
+    }
+    if (mapExtentValue && mapExtentValue.currentValue.length) {
+      payLoad = {
+        offset: 0,
+        limit: 5,
+        points: this.mapExtent
+      };
+    }
+    if (payLoad) {
       this.apiService.fetchWellsData(payLoad).subscribe((data) => {
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
         this.dataSource.sort = this.sort;
       });
     } else {
-      const payLoad = {
+      payLoad = {
         offset: 0,
         limit: 5
       }
@@ -106,6 +124,48 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         this.totalAvailableWellsCount = data.count;
         this.dataSource.sort = this.sort;
       });
+    }
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+  filterEmit() {
+    this.filterByExtent.emit('true');
+  }
+
+  clear() {
+    this.clearSelection.emit('true');
+    this.masterToggle();
+  }
+
+  refreshEmit() {
+    this.refresh.emit('true');
+    this.masterToggle();
+  }
+
+  zoomToEmit() {
+    if (this.selection.selected.length) {
+      this.zoomTo.emit(this.selection.selected);
     }
   }
 }

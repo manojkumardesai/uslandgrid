@@ -12,10 +12,39 @@
                     <mat-label>Filter</mat-label>
                     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
                   </mat-form-field> -->
-                  
+                  <div class='options'>
+                    <div class='actionButtons'>
+                        <button mat-raised-button (click)="filterEmit()">Filter By Map Extent</button>
+                    </div>
+                    <div class='actionButtons'>
+                        <button mat-raised-button (click)="zoomToEmit()">Zoom To</button>
+                    </div>
+                    <div class='actionButtons' (click)="clear()">
+                        <button mat-raised-button>Clear Selection</button>
+                    </div>
+                    <div class='actionButtons' (click)="refreshEmit()">
+                        <button mat-raised-button>Refresh</button>
+                    </div>
+                  </div>
                   <div class="wellsTableContainer">
                     <table class='wellsRecordTable' mat-table [dataSource]="dataSource" matSort>
-                  
+                      <!-- Check Box Code-->
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle() : null"
+                                        [checked]="selection.hasValue() && isAllSelected()"
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                        [aria-label]="checkboxLabel()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        [checked]="selection.isSelected(row)"
+                                        [aria-label]="checkboxLabel(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
                       <!-- ID Column -->
                       <ng-container matColumnDef="wellId">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Well ID </th>

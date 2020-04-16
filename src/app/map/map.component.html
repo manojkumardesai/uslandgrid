@@ -36,5 +36,10 @@
     </mat-card>
 </div>
 <div>
-    <app-wells-records [payLoadFromFilter]='payLoadFromFilter'></app-wells-records>
+    <app-wells-records [payLoadFromFilter]='payLoadFromFilter' [mapExtent]='mapExtent'
+    (filterByExtent)="filterEmit($event)"
+    (zoomTo)="zoomToEmit($event)"
+    (clearSelection)="clear($event)"
+    (refresh)="refreshEmit($event)"
+    ></app-wells-records>
 </div>
