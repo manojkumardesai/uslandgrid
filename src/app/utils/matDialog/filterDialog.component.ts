@@ -176,7 +176,7 @@ export class FilterDialog implements OnInit {
         let reader = new FileReader();
         reader.onload = (e) => {
             const data = JSON.parse(<string>e.target.result);
-            for (let line = 0; line < data.wellsCriteria.length; line++) {
+            for (let line = 1; line < data.wellsCriteria.length; line++) {
                 const linesFormArray = this.form.get("wellsCriteria") as FormArray;
                 linesFormArray.push(this.addFilterCriteriaFormGroup());
             }
