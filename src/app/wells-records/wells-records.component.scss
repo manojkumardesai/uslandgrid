@@ -73,3 +73,12 @@ tr.mat-row {
     color: aqua;
 }
 
+
+.options {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .actionButtons {
+      margin-right: 10px;
+  }

@@ -22,6 +22,7 @@ export class FilterDialog implements OnInit {
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
     form: FormGroup;
     filterView = true;
+    persist = false;
     fields = [
         { value: 'County' },
         { value: 'Operator' },
@@ -37,7 +38,7 @@ export class FilterDialog implements OnInit {
     ];
     conditions = [
         { value: 'EQUALS' },
-        { value: 'NOT EQUAL' },
+        { value: 'NOT EQUALS' },
         { value: 'GREATER THAN' },
         { value: 'GREATER THAN OR EQUAL' },
         { value: 'LESS THAN' },
@@ -72,17 +73,14 @@ export class FilterDialog implements OnInit {
         this.dialogRef.updatePosition({ top: '7.8%', left: '3%' });
         this.fetchCounties();
         this.fetchOperators();
-        // if (Object.keys(this.data).length) {
-        //     if (this.data.field == 'Operator') {
-        //         this.fetchOperators();
-        //     } else {
-        //         this.fetchCounties();
-        //     }
-        //     this.setDefaultFormValues();
-        // }
         this.loginService.user.subscribe((data) => {
             this.isLoggedIn = data && data.loggedIn ? data.loggedIn : false;
         });
+        if (Object.keys(this.data).length) {
+            setTimeout(() => {
+                this.setValues(this.data);
+            }, 600);
+        }
     }
 
     fetchOperators() {
@@ -97,8 +95,10 @@ export class FilterDialog implements OnInit {
         });
     }
     onNoClick(): void {
-        debugger;
-        this.dialogRef.close();
+        if (!this.persist) {
+            this.form.reset();
+        }
+        this.dialogRef.close(this.form.value);
     }
 
     setDefaultFormValues() {
@@ -119,12 +119,8 @@ export class FilterDialog implements OnInit {
         }
     }
 
-    fileFormat() {
-        this.payLoad['format'] = this.form.value.format.toLowerCase();
-    }
-
     generateReport() {
-        const url = this.apiService.generateReport(this.payLoad);
+        const url = this.apiService.generateReport(this.form.value);
         const link = this.downloadZipLink.nativeElement;
         link.href = url
         link.click();
@@ -139,6 +135,10 @@ export class FilterDialog implements OnInit {
             condition: new FormControl(''),
             operator: new FormControl('')
         });
+    }
+
+    refreshData() {
+        this.form.reset();
     }
 
     addCriteria() {
@@ -176,17 +176,25 @@ export class FilterDialog implements OnInit {
         let reader = new FileReader();
         reader.onload = (e) => {
             const data = JSON.parse(<string>e.target.result);
-            for (let line = 0; line < data.wellsCriteria.length; line++) {
-                const linesFormArray = this.form.get("wellsCriteria") as FormArray;
-                linesFormArray.push(this.addFilterCriteriaFormGroup());
-            }
-            this.form.patchValue(data);
-            data.wellsCriteria.map((val, index) => {
-                this.type(index);
-            });
-            this.form.controls.wellsCriteria.patchValue(data.wellsCriteria);
-            this.filterView = true;
+            this.setValues(data.wellsCriteria);
         }
         reader.readAsText(event.target.files[0]);
+    }
+
+    persistChanges(event) {
+        this.persist = event.checked;
+    }
+
+    setValues(wellsCriteria) {
+        for (let line = 1; line < wellsCriteria.length; line++) {
+            const linesFormArray = this.form.get("wellsCriteria") as FormArray;
+            linesFormArray.push(this.addFilterCriteriaFormGroup());
+        }
+        this.form.controls.wellsCriteria.patchValue(wellsCriteria);
+        wellsCriteria.map((val, index) => {
+            this.type(index);
+        });
+        this.form.controls.wellsCriteria.patchValue(wellsCriteria);
+        this.filterView = true;
     }
 }

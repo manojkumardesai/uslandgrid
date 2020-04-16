@@ -17,14 +17,14 @@
 <form [formGroup]="form">
   <div formArrayName='wellsCriteria' *ngFor="let wellCriteria of formData.controls; let i = index">
     <div [formGroupName]=i>
-      <div *ngIf="formData.length > 1">
+      <div *ngIf="formData.length > 1" class="close">
         <button mat-button (click)="removeCriteria(i)">
           <span class="material-icons">
             close
           </span>
         </button>
       </div>
-      <div>
+      <div class="field">
         <mat-form-field>
           <mat-label>Choose Field</mat-label>
           <mat-select (selectionChange)="type(i)" formControlName="field" id="{{'field' + i}}">
@@ -66,7 +66,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="isLoggedIn">
+  <!-- <div *ngIf="isLoggedIn">
     <mat-form-field>
       <mat-label>Choose Format</mat-label>
       <mat-select formControlName="reportType">
@@ -75,7 +75,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </div>
+  </div> -->
 </form>
 </div>
 <div class="form-group">
@@ -90,15 +90,29 @@
 </div>
 </div>
 <div *ngIf="!filterView">
-  <div>
-    <label>Download Filter Options Chosen:
-      <button mat-button (click)="saveFile()" title="Save Filter Choices">Save Filter Choice</button>
-    </label>
+  <div class="options">
+    <div>Save current settings</div>
+    <button mat-button mat-flat-button (click)="saveFile()" title="Save Filter Choices">
+      <span class="material-icons">
+        save_alt
+      </span>
+    </button>
   </div>
-  <div>
-    <label>Download Filter Options Chosen:
+  <div class="options">
+    <div>Upload a saved file</div>
       <input type='file' accept=".json" (change)="log($event)">
-    </label>
+  </div>
+  <div class="options">
+    <div>Filter Options</div>
+    <mat-checkbox (change)="persistChanges($event)">Persist After Widget is Closed</mat-checkbox>
+  </div>
+  <div class="options">
+    <div>Refresh Data</div>
+    <span>
+      <span class="material-icons clickable" mat-flat-button (click)="refreshData()">
+      refresh
+    </span> Refresh Values in Drop Down
+    </span>
   </div>
 </div>
 <a style="display: none;" class="download-zip-link" #downloadZipLink></a>

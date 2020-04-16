@@ -7,3 +7,22 @@
     display: flex;
     justify-content: space-between;
 }
+
+.close {
+    float: right;
+    display: inline;
+}
+
+.field {
+    display: inline;
+}
+
+.options {
+    margin-bottom: 15px;
+    font-weight: normal;
+    line-height: 2;
+}
+
+.clickable {
+    cursor: pointer;
+}

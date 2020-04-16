@@ -27,7 +27,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   public cultureLayer;
   public plssLayer;
   public wellsLayer;
-  payLoadFromFilter = {};
+  payLoadFromFilter = [];
+  public mapExtent = [];
   name: string;
   myControl = new FormControl();
   options: any[] = [];
@@ -45,7 +46,13 @@ export class MapComponent implements AfterViewInit, OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.payLoadFromFilter = result ? JSON.parse(JSON.stringify(result)) : {};
+      const wellsCriteria = result ? JSON.parse(JSON.stringify(result)).wellsCriteria : {};
+      if (Object.keys(wellsCriteria).length && wellsCriteria[0].field) {
+        delete wellsCriteria[wellsCriteria.length - 1].operator;
+        this.payLoadFromFilter = wellsCriteria;
+      } else {
+        this.payLoadFromFilter = [];
+      }
     });
   }
 
@@ -112,10 +119,6 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.layerControl();
     // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
-  }
-
-  test() {
-    console.log('Tets');
   }
 
   addTileLayer() {
@@ -275,5 +278,27 @@ export class MapComponent implements AfterViewInit, OnInit {
         `).openPopup();
       }
     });
+  }
+
+  filterEmit(event) {
+    const extent = this.map.getBounds();
+    const points = [{
+      lat: extent._southWest.lat,
+      lng: extent._southWest.lng
+    }, {
+      lat: extent._northEast.lat,
+      lng: extent._northEast.lng
+    }]
+    this.mapExtent = points;
+    console.log('filter', event);
+  }
+  zoomToEmit(event) {
+    this.goToSelectedWell(event[0]);
+  }
+  clear(event) {
+    console.log('clear', event);
+  }
+  refreshEmit(event) {
+    console.log('refresh', event);
   }
 }
