@@ -283,11 +283,20 @@ export class MapComponent implements AfterViewInit, OnInit {
   filterEmit(event) {
     const extent = this.map.getBounds();
     const points = [{
-      lat: extent._southWest.lat,
-      lng: extent._southWest.lng
+      lat: extent.getNorthWest().lat,
+      lon: extent.getNorthWest().lng
     }, {
       lat: extent._northEast.lat,
-      lng: extent._northEast.lng
+      lon: extent._northEast.lng
+    }, {
+      lat: extent.getSouthEast().lat,
+      lon: extent.getSouthEast().lng
+    }, {
+      lat: extent._southWest.lat,
+      lon: extent._southWest.lng
+    }, {
+      lat: extent.getNorthWest().lat,
+      lon: extent.getNorthWest().lng
     }]
     this.mapExtent = points;
     console.log('filter', event);
