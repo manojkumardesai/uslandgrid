@@ -320,7 +320,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.circleMarker.remove();
     } else {
       let { latitude, longitude } = $event;
-      this.goToLocation(latitude, longitude);
+      // this.goToLocation(latitude, longitude);
       this.circleMarker = L.circle([latitude, longitude], {
         color: 'blue',
         fillColor: '#00f',
