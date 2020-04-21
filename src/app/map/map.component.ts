@@ -309,10 +309,10 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.goToLocation(event[0].latitude, event[0].longitude);
   }
   clear(event) {
-    console.log('clear', event);
+    this.markWell(null);
   }
   refreshEmit(event) {
-    console.log('refresh', event);
+    this.mapExtent = [];
   }
 
   markWell($event) {
