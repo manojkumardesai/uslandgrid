@@ -165,7 +165,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   clear() {
     this.clearSelection.emit('true');
-    this.masterToggle();
+    this.selection.clear();
   }
 
   refreshEmit() {

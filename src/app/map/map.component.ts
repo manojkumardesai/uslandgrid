@@ -306,7 +306,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
   }
   zoomToEmit(event) {
-    this.goToSelectedWell(event[0]);
+    this.goToLocation(event[0].latitude, event[0].longitude);
   }
   clear(event) {
     console.log('clear', event);
@@ -322,8 +322,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       let { latitude, longitude } = $event;
       // this.goToLocation(latitude, longitude);
       this.circleMarker = L.circle([latitude, longitude], {
-        color: 'blue',
-        fillColor: '#00f',
+        color: '#0ff',
+        fillColor: '#0ff',
         fillOpacity: 0.2,
         radius: 200
       }).addTo(this.map);
