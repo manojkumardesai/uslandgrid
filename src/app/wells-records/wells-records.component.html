@@ -14,7 +14,7 @@
                   </mat-form-field> -->
                   <div class='options'>
                     <div class='actionButtons'>
-                        <button mat-raised-button (click)="filterEmit()">Filter By Map Extent</button>
+                        <button mat-raised-button [ngClass]="{'active': filterByMapExtentFlag}" (click)="filterEmit()">Filter By Map Extent</button>
                     </div>
                     <div class='actionButtons'>
                         <button mat-raised-button (click)="zoomToEmit()">Zoom To</button>
@@ -27,6 +27,7 @@
                     </div>
                   </div>
                   <div class="wellsTableContainer">
+                      <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar>
                     <table class='wellsRecordTable' mat-table [dataSource]="dataSource" matSort>
                       <!-- Check Box Code-->
                       <ng-container matColumnDef="select">

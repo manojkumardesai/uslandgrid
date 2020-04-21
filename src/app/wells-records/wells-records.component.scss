@@ -81,4 +81,8 @@ tr.mat-row {
 
   .actionButtons {
       margin-right: 10px;
+    .active {
+        border: 1px solid aqua;
+        border-radius: 5px;
+    }
   }

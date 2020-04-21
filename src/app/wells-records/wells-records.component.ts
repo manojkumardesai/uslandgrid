@@ -47,9 +47,12 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   selection = new SelectionModel<any>(true, []);
+  filterByMapExtentFlag: boolean;
+  isLoading: boolean;
   constructor(public apiService: ApiService) { }
 
   ngOnChanges(changes: SimpleChanges) {
+    this.isLoading = true;
     const currentItem: SimpleChange = changes.payLoadFromFilter;
     const mapExtentValue: SimpleChange = changes.mapExtent;
     let payLoad;
@@ -69,6 +72,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     }
     if (payLoad) {
       this.apiService.fetchWellsData(payLoad).subscribe((data) => {
+        this.isLoading = false;
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
         this.dataSource.sort = this.sort;
@@ -79,6 +83,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         limit: 5
       }
       this.apiService.fetchWellsData(payLoad).subscribe((data) => {
+        this.isLoading = false;
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
         this.dataSource.sort = this.sort;
@@ -107,6 +112,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   }
 
   loadWells(offset = 0, limit = 0) {
+    this.isLoading = true;
     if (Object.keys(this.payLoadFromFilter).length) {
       const payLoad = {
         offset,
@@ -114,12 +120,14 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         wellsCriteria: this.payLoadFromFilter
       }
       this.apiService.fetchWellsData(payLoad).subscribe((data) => {
+        this.isLoading = false;
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
         this.dataSource.sort = this.sort;
       });
     } else {
       this.apiService.fetchWellsData({ offset, limit }).subscribe((data) => {
+        this.isLoading = false;
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
         this.dataSource.sort = this.sort;
@@ -150,7 +158,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   }
 
   filterEmit() {
-    this.filterByExtent.emit('true');
+    this.filterByMapExtentFlag = !this.filterByMapExtentFlag;
+    this.filterByExtent.emit(this.filterByMapExtentFlag);
   }
 
   clear() {
