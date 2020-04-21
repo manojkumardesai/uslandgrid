@@ -27,6 +27,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   public cultureLayer;
   public plssLayer;
   public wellsLayer;
+  public circleMarker;
   payLoadFromFilter = [];
   public mapExtent = [];
   name: string;
@@ -312,5 +313,20 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
   refreshEmit(event) {
     console.log('refresh', event);
+  }
+
+  markWell($event) {
+    if (!$event) {
+      this.circleMarker.remove();
+    } else {
+      let { latitude, longitude } = $event;
+      this.goToLocation(latitude, longitude);
+      this.circleMarker = L.circle([latitude, longitude], {
+        color: 'blue',
+        fillColor: '#00f',
+        fillOpacity: 0.2,
+        radius: 200
+      }).addTo(this.map);
+    }
   }
 }
