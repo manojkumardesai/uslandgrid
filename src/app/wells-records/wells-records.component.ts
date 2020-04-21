@@ -44,6 +44,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   @Output() zoomTo = new EventEmitter();
   @Output() clearSelection = new EventEmitter();
   @Output() refresh = new EventEmitter();
+  @Output() selectedRowEmit = new EventEmitter();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   selection = new SelectionModel<any>(true, []);
@@ -175,6 +176,14 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   zoomToEmit() {
     if (this.selection.selected.length) {
       this.zoomTo.emit(this.selection.selected);
+    }
+  }
+
+  rowToggle($event) {
+    if ($event.checked) {
+      this.selectedRowEmit.emit(this.selection.selected[0]);
+    } else {
+      this.selectedRowEmit.emit(null);
     }
   }
 }
