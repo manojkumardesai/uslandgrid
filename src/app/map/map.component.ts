@@ -281,25 +281,28 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   filterEmit(event) {
-    const extent = this.map.getBounds();
-    const points = [{
-      lat: extent.getNorthWest().lat,
-      lon: extent.getNorthWest().lng
-    }, {
-      lat: extent._northEast.lat,
-      lon: extent._northEast.lng
-    }, {
-      lat: extent.getSouthEast().lat,
-      lon: extent.getSouthEast().lng
-    }, {
-      lat: extent._southWest.lat,
-      lon: extent._southWest.lng
-    }, {
-      lat: extent.getNorthWest().lat,
-      lon: extent.getNorthWest().lng
-    }]
-    this.mapExtent = points;
-    console.log('filter', event);
+    if (event) {
+      const extent = this.map.getBounds();
+      const points = [{
+        lat: extent.getNorthWest().lat,
+        lon: extent.getNorthWest().lng
+      }, {
+        lat: extent._northEast.lat,
+        lon: extent._northEast.lng
+      }, {
+        lat: extent.getSouthEast().lat,
+        lon: extent.getSouthEast().lng
+      }, {
+        lat: extent._southWest.lat,
+        lon: extent._southWest.lng
+      }, {
+        lat: extent.getNorthWest().lat,
+        lon: extent.getNorthWest().lng
+      }];
+      this.mapExtent = points; // Sends new points to child component
+    } else {
+      this.mapExtent = [];
+    }
   }
   zoomToEmit(event) {
     this.goToSelectedWell(event[0]);
