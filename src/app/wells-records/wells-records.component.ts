@@ -138,9 +138,11 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    if (this.dataSource) {
+      const numSelected = this.selection.selected.length;
+      const numRows = this.dataSource.data.length;
+      return numSelected === numRows;
+    }
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
@@ -165,12 +167,12 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   clear() {
     this.clearSelection.emit('true');
-    this.masterToggle();
+    this.selection.clear();
   }
 
   refreshEmit() {
     this.refresh.emit('true');
-    this.masterToggle();
+    this.selection.clear();
   }
 
   zoomToEmit() {
