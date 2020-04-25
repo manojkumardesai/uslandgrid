@@ -312,7 +312,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.markWell(null);
   }
   refreshEmit(event) {
-    this.mapExtent = [];
+    // this.mapExtent = [];
   }
 
   markWell($event) {
