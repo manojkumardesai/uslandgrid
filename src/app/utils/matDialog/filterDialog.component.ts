@@ -26,8 +26,8 @@ export class FilterDialog implements OnInit {
     fields = [
         { value: 'County' },
         { value: 'Operator' },
-        { value: 'Frac Type' },
-        { value: 'Frac Date' },
+        // { value: 'Frac Type' },
+        // { value: 'Frac Date' },
     ];
     formats = [
         { value: 'CSV' },

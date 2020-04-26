@@ -50,6 +50,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   selection = new SelectionModel<any>(true, []);
   filterByMapExtentFlag: boolean;
   isLoading: boolean;
+  payLoadWithParams: any = {};
   constructor(public apiService: ApiService) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -90,6 +91,9 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         this.dataSource.sort = this.sort;
       });
     }
+    if (Object.keys(payLoad).length) {
+      Object.assign(this.payLoadWithParams, payLoad);
+    }
   }
   ngOnInit() {
 
@@ -112,7 +116,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     }
   }
 
-  loadWells(offset = 0, limit = 0) {
+  loadWells(offset = 0, limit = 5) {
     this.isLoading = true;
     if (Object.keys(this.payLoadFromFilter).length) {
       const payLoad = {
@@ -173,6 +177,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   refreshEmit() {
     this.refresh.emit('true');
     this.selection.clear();
+    this.fetchData(this.payLoadWithParams);
   }
 
   zoomToEmit() {
@@ -187,6 +192,15 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     } else {
       this.selectedRowEmit.emit(null);
     }
+  }
+
+  fetchData(payLoad) {
+    this.apiService.fetchWellsData(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.dataSource = new MatTableDataSource(data.wellDtos);
+      this.totalAvailableWellsCount = data.count;
+      this.dataSource.sort = this.sort;
+    });
   }
 }
 
