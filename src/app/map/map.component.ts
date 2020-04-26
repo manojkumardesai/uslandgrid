@@ -274,6 +274,10 @@ export class MapComponent implements AfterViewInit, OnInit {
               <td class="attrName">county</td>
               <td>${data[0].county}</td>
             </tr>
+            <tr>
+              <td class="attrName">reports</td>
+              <td><a href="/detail/${data[0].wellId}">Reports Page</a></td>
+            </tr>
           </table>
         </div>
         `).openPopup();
