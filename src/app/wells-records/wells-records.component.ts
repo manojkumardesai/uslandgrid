@@ -124,14 +124,24 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         limit,
         wellsCriteria: this.payLoadFromFilter
       }
-      this.apiService.fetchWellsData(payLoad).subscribe((data) => {
+      if (Object.keys(payLoad).length) {
+        Object.assign(this.payLoadWithParams, payLoad);
+      }
+      this.apiService.fetchWellsData(this.payLoadWithParams).subscribe((data) => {
         this.isLoading = false;
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
         this.dataSource.sort = this.sort;
       });
     } else {
-      this.apiService.fetchWellsData({ offset, limit }).subscribe((data) => {
+      const payLoad = {
+        offset,
+        limit
+      }
+      if (Object.keys(payLoad).length) {
+        Object.assign(this.payLoadWithParams, payLoad);
+      }
+      this.apiService.fetchWellsData(this.payLoadWithParams).subscribe((data) => {
         this.isLoading = false;
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
