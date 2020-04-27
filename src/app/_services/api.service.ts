@@ -30,9 +30,13 @@ export class ApiService {
   fetchOperators(): Observable<any> {
     return this.http.get(this.baseUrl + `operator`);
   }
+  // generateReport(payLoad) {
+  //   // const headers = new HttpHeaders();
+  //   return this.baseUrl + `report/well?state=Oklahoma&${payLoad.group}=${payLoad.value}&reportType=${payLoad.format}`;
+  // }
   generateReport(payLoad) {
     // const headers = new HttpHeaders();
-    return this.baseUrl + `report/well?state=Oklahoma&${payLoad.group}=${payLoad.value}&reportType=${payLoad.format}`;
+    return this.http.post(this.baseUrl + `report/well`, payLoad, { responseType: 'arraybuffer' });
   }
   fetchMcWellDetails(wellId): Observable<any> {
     return this.http.get(this.baseUrl + `well/mc?wellId=${wellId}`);

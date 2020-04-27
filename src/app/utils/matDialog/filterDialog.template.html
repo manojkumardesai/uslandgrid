@@ -66,7 +66,7 @@
       </div>
     </div>
   </div>
-  <!-- <div *ngIf="isLoggedIn">
+  <div *ngIf="isLoggedIn">
     <mat-form-field>
       <mat-label>Choose Format</mat-label>
       <mat-select formControlName="reportType">
@@ -75,7 +75,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </div> -->
+  </div>
 </form>
 </div>
 <div class="form-group">
@@ -86,7 +86,7 @@
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]="form.value" (click)="onNoClick()">Reset</button>
   <button mat-button [mat-dialog-close]="form.value">Apply</button>
-  <button mat-button title='Login to export data' [disabled]="!isLoggedIn" (click)="generateReport()">Export</button>
+  <button mat-button [title]='titleMsg' [disabled]="!isLoggedIn || !this.form.value.reportType" (click)="generateReport()">Export</button>
 </div>
 </div>
 <div *ngIf="!filterView">
@@ -115,5 +115,4 @@
     </span>
   </div>
 </div>
-<a style="display: none;" class="download-zip-link" #downloadZipLink></a>
 </div>
