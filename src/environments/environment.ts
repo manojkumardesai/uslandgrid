@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://cloud.uslandgrid.com/usland/uslandgrid/'
+  baseUrl: 'http://mercury:8080/uslandgrid/'
   // baseUrl: 'http://127.0.0.1:8082/uslandgrid/'
 };
 

@@ -276,7 +276,7 @@ export class MapComponent implements AfterViewInit, OnInit {
             </tr>
             <tr>
               <td class="attrName">reports</td>
-              <td><a href="/detail/${data[0].wellId}">Reports Page</a></td>
+              <td><a target="_blank" href="#/detail/${data[0].wellId}">Reports Page</a></td>
             </tr>
           </table>
         </div>

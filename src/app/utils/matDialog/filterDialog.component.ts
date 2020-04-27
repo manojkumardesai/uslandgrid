@@ -4,6 +4,7 @@ import { ApiService } from 'src/app/_services/api.service';
 import { LoginService } from 'src/app/_services/login.service';
 import { FormGroup, FormControl, FormBuilder, FormArray } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { saveAs } from 'file-saver';
 
 export interface DialogData {
     field: string;
@@ -23,6 +24,7 @@ export class FilterDialog implements OnInit {
     form: FormGroup;
     filterView = true;
     persist = false;
+    titleMsg = "Login to export data";
     fields = [
         { value: 'County' },
         { value: 'Operator' },
@@ -75,6 +77,7 @@ export class FilterDialog implements OnInit {
         this.fetchOperators();
         this.loginService.user.subscribe((data) => {
             this.isLoggedIn = data && data.loggedIn ? data.loggedIn : false;
+            this.titleMsg = "Choose format to download report";
         });
         if (Object.keys(this.data).length) {
             setTimeout(() => {
@@ -120,12 +123,10 @@ export class FilterDialog implements OnInit {
     }
 
     generateReport() {
-        const url = this.apiService.generateReport(this.form.value);
-        const link = this.downloadZipLink.nativeElement;
-        link.href = url
-        link.click();
-        window.URL.revokeObjectURL(url);
-        this.dialogRef.close();
+        this.apiService.generateReport(this.form.value).subscribe((data) => {
+            const blobCont = new File([data], "Report." + this.form.value.reportType.toLowerCase(), { type: this.form.value.reportType.toLowerCase() });
+            saveAs(blobCont);
+        })
     }
 
     addFilterCriteriaFormGroup(): FormGroup {
@@ -162,14 +163,15 @@ export class FilterDialog implements OnInit {
     }
 
     saveFile() {
-        var sJson = JSON.stringify(this.form.value);
-        var element = document.createElement('a');
-        element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
-        element.setAttribute('download', "group-filter-options.json");
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        element.click(); // simulate click
-        document.body.removeChild(element);
+        // var sJson = JSON.stringify(this.form.value);
+        // var element = document.createElement('a');
+        // element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
+        // element.setAttribute('download', "group-filter-options.json");
+        // element.style.display = 'none';
+        // document.body.appendChild(element);
+        // element.click(); // simulate click
+        // document.body.removeChild(element);
+        debugger;
     }
 
     log(event) {
