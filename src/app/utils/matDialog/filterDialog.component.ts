@@ -2,7 +2,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, Inject, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ApiService } from 'src/app/_services/api.service';
 import { LoginService } from 'src/app/_services/login.service';
-import { FormGroup, FormControl, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
 
@@ -25,6 +25,7 @@ export class FilterDialog implements OnInit {
     filterView = true;
     persist = false;
     titleMsg = "Login to export data";
+    applyMsg = "Choose criteria to apply";
     fields = [
         { value: 'County' },
         { value: 'Operator' },
@@ -131,9 +132,9 @@ export class FilterDialog implements OnInit {
 
     addFilterCriteriaFormGroup(): FormGroup {
         return this.fb.group({
-            field: new FormControl(''),
-            value: new FormControl(''),
-            condition: new FormControl(''),
+            field: new FormControl('', Validators.required),
+            value: new FormControl('', Validators.required),
+            condition: new FormControl('', Validators.required),
             operator: new FormControl('')
         });
     }
