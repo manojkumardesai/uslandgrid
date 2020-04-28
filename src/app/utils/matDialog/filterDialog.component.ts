@@ -188,4 +188,15 @@ export class FilterDialog implements OnInit {
         this.form.controls.wellsCriteria.patchValue(wellsCriteria);
         this.filterView = true;
     }
+
+    saveJsonFile() {
+        var sJson = JSON.stringify(this.form.value);
+        var element = document.createElement('a');
+        element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
+        element.setAttribute('download', "group-filter-options.json");
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click(); // simulate click
+        document.body.removeChild(element);
+    }
 }

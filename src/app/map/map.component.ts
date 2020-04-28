@@ -333,4 +333,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       }).addTo(this.map);
     }
   }
+
+  clearSearchInput() {
+    this.myControl.patchValue('');
+  }
 }
