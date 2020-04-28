@@ -163,18 +163,6 @@ export class FilterDialog implements OnInit {
         this.filterView = !this.filterView
     }
 
-    saveFile() {
-        // var sJson = JSON.stringify(this.form.value);
-        // var element = document.createElement('a');
-        // element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
-        // element.setAttribute('download', "group-filter-options.json");
-        // element.style.display = 'none';
-        // document.body.appendChild(element);
-        // element.click(); // simulate click
-        // document.body.removeChild(element);
-        debugger;
-    }
-
     log(event) {
         let reader = new FileReader();
         reader.onload = (e) => {
