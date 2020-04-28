@@ -37,21 +37,22 @@ export class FilterDialog implements OnInit {
         { value: 'XLSX' },
         { value: 'TXT' },
         { value: 'WB4' },
-        { value: 'WB2' }
+        { value: 'WB2' },
+        { value: 'SHP' },
     ];
     conditions = [
-        { value: 'EQUALS' },
-        { value: 'NOT EQUALS' },
-        { value: 'GREATER THAN' },
-        { value: 'GREATER THAN OR EQUAL' },
-        { value: 'LESS THAN' },
-        { value: 'LESS THAN OR EQUAL' },
+        // { value: 'EQUALS' },
+        // { value: 'NOT EQUALS' },
+        // { value: 'GREATER THAN' },
+        // { value: 'GREATER THAN OR EQUAL' },
+        // { value: 'LESS THAN' },
+        // { value: 'LESS THAN OR EQUAL' },
         { value: 'BEGINS WITH' },
         { value: 'ENDS WITH' },
         { value: 'CONTAINS' },
         { value: 'DOES NOT CONTAIN' },
-        { value: 'IS ON OR BEFORE' },
-        { value: 'IS ON OR AFTER' }
+        // { value: 'IS ON OR BEFORE' },
+        // { value: 'IS ON OR AFTER' }
     ];
     operators = ["AND", "OR"];
     counties = [];
@@ -163,18 +164,6 @@ export class FilterDialog implements OnInit {
         this.filterView = !this.filterView
     }
 
-    saveFile() {
-        // var sJson = JSON.stringify(this.form.value);
-        // var element = document.createElement('a');
-        // element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
-        // element.setAttribute('download', "group-filter-options.json");
-        // element.style.display = 'none';
-        // document.body.appendChild(element);
-        // element.click(); // simulate click
-        // document.body.removeChild(element);
-        debugger;
-    }
-
     log(event) {
         let reader = new FileReader();
         reader.onload = (e) => {
@@ -199,5 +188,16 @@ export class FilterDialog implements OnInit {
         });
         this.form.controls.wellsCriteria.patchValue(wellsCriteria);
         this.filterView = true;
+    }
+
+    saveJsonFile() {
+        var sJson = JSON.stringify(this.form.value);
+        var element = document.createElement('a');
+        element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
+        element.setAttribute('download', "group-filter-options.json");
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click(); // simulate click
+        document.body.removeChild(element);
     }
 }

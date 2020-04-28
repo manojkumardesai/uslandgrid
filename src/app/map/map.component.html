@@ -26,6 +26,9 @@
                      matInput
                      [formControl]="myControl"
                      [matAutocomplete]="auto">
+                     <button mat-button *ngIf="this.myControl.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearchInput()">
+                        <mat-icon>close</mat-icon>
+                      </button>
               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="goToSelectedWell($event.option.value)">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                     {{option.wellName}}
