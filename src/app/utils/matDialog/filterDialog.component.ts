@@ -37,7 +37,8 @@ export class FilterDialog implements OnInit {
         { value: 'XLSX' },
         { value: 'TXT' },
         { value: 'WB4' },
-        { value: 'WB2' }
+        { value: 'WB2' },
+        { value: 'SHP' },
     ];
     conditions = [
         // { value: 'EQUALS' },
