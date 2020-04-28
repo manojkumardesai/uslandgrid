@@ -40,18 +40,18 @@ export class FilterDialog implements OnInit {
         { value: 'WB2' }
     ];
     conditions = [
-        { value: 'EQUALS' },
-        { value: 'NOT EQUALS' },
-        { value: 'GREATER THAN' },
-        { value: 'GREATER THAN OR EQUAL' },
-        { value: 'LESS THAN' },
-        { value: 'LESS THAN OR EQUAL' },
+        // { value: 'EQUALS' },
+        // { value: 'NOT EQUALS' },
+        // { value: 'GREATER THAN' },
+        // { value: 'GREATER THAN OR EQUAL' },
+        // { value: 'LESS THAN' },
+        // { value: 'LESS THAN OR EQUAL' },
         { value: 'BEGINS WITH' },
         { value: 'ENDS WITH' },
         { value: 'CONTAINS' },
         { value: 'DOES NOT CONTAIN' },
-        { value: 'IS ON OR BEFORE' },
-        { value: 'IS ON OR AFTER' }
+        // { value: 'IS ON OR BEFORE' },
+        // { value: 'IS ON OR AFTER' }
     ];
     operators = ["AND", "OR"];
     counties = [];
