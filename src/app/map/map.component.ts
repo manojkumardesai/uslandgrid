@@ -103,7 +103,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       zoom: 8
     });
     this.map.on('moveend', () => {
-      console.log(this.map.getBounds());
+      this.filterEmit(true);
     });
     this.map.on('click', (ev) => {
       this.showInfoPoint(ev);
