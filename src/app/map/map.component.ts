@@ -114,7 +114,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       }, 400)
     });
     this.addTileLayer();
-    // this.addCultureLayer();
+    this.addCultureLayer();
     this.addPlssLayer();
     this.addWellsLayer();
     this.layerControl();
@@ -133,7 +133,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   addCultureLayer() {
     this.cultureLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/culture1/wms?', {
-      layers: 'Culture',
+      layers: 'culture',
       format: 'image/png8',
       transparent: true,
       styles: '',
@@ -166,11 +166,13 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   layerControl() {
     let baseLayerMaps = {
-      'Layers': this.tiles
+
     };
     let overLay = {
+      'Base Layer': this.tiles,
       'Wells': this.wellsLayer,
       'PLSS': this.plssLayer,
+      'Culture': this.cultureLayer
     }
     L.control.layers(baseLayerMaps, overLay).addTo(this.map);
     L.control.mousePosition().addTo(this.map);
