@@ -126,7 +126,8 @@ export class FilterDialog implements OnInit {
 
     generateReport() {
         this.apiService.generateReport(this.form.value).subscribe((data) => {
-            const blobCont = new File([data], "Report." + this.form.value.reportType.toLowerCase(), { type: this.form.value.reportType.toLowerCase() });
+            const extension = this.form.value.reportType.toLowerCase() == 'shp' ? '.zip' : this.form.value.reportType.toLowerCase();
+            const blobCont = new File([data], "Report." + extension, { type: extension });
             saveAs(blobCont);
         })
     }

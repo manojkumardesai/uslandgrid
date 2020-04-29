@@ -28,6 +28,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   public plssLayer;
   public wellsLayer;
   public circleMarker;
+  public isMapExtentApplied = false;
   payLoadFromFilter = [];
   public mapExtent = [];
   name: string;
@@ -103,7 +104,9 @@ export class MapComponent implements AfterViewInit, OnInit {
       zoom: 8
     });
     this.map.on('moveend', () => {
-      this.filterEmit(true);
+      if (this.isMapExtentApplied) {
+        this.filterEmit(this.isMapExtentApplied);
+      }
     });
     this.map.on('click', (ev) => {
       this.showInfoPoint(ev);
@@ -114,7 +117,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       }, 400)
     });
     this.addTileLayer();
-    this.addCultureLayer();
+    // this.addCultureLayer();
     this.addPlssLayer();
     this.addWellsLayer();
     this.layerControl();
@@ -132,8 +135,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   addCultureLayer() {
-    this.cultureLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/culture1/wms?', {
-      layers: 'culture',
+    this.cultureLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/Culture1/wms?', {
+      layers: 'Culture',
       format: 'image/png8',
       transparent: true,
       styles: '',
@@ -169,10 +172,9 @@ export class MapComponent implements AfterViewInit, OnInit {
 
     };
     let overLay = {
-      'Base Layer': this.tiles,
+      'Base Map': this.tiles,
       'Wells': this.wellsLayer,
-      'PLSS': this.plssLayer,
-      'Culture': this.cultureLayer
+      'PLSS': this.plssLayer
     }
     L.control.layers(baseLayerMaps, overLay).addTo(this.map);
     L.control.mousePosition().addTo(this.map);
@@ -289,6 +291,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   filterEmit(event) {
     if (event) {
+      this.isMapExtentApplied = true;
       const extent = this.map.getBounds();
       const points = [{
         lat: extent.getNorthWest().lat,
@@ -308,6 +311,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       }];
       this.mapExtent = points; // Sends new points to child component
     } else {
+      this.isMapExtentApplied = false;
       this.mapExtent = [];
     }
   }
