@@ -84,7 +84,7 @@ export class FilterDialog implements OnInit {
         if (Object.keys(this.data).length) {
             setTimeout(() => {
                 this.setValues(this.data);
-            }, 600);
+            }, 1000);
         }
         this.persist = sessionStorage.getItem('persist') == 'true' ? true : false;
     }
@@ -181,6 +181,7 @@ export class FilterDialog implements OnInit {
     }
 
     setValues(wellsCriteria) {
+        this.form.value.wellsCriteria = [];
         for (let line = 1; line < wellsCriteria.length; line++) {
             const linesFormArray = this.form.get("wellsCriteria") as FormArray;
             linesFormArray.push(this.addFilterCriteriaFormGroup());
