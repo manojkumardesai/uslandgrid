@@ -104,7 +104,7 @@
   </div>
   <div class="options">
     <div>Filter Options</div>
-    <mat-checkbox (change)="persistChanges($event)">Persist After Widget is Closed</mat-checkbox>
+    <mat-checkbox (change)="persistChanges($event)" [(ngModel)]="persist">Persist After Widget is Closed</mat-checkbox>
   </div>
   <div class="options">
     <div>Refresh Data</div>
