@@ -50,7 +50,6 @@ export class MapComponent implements AfterViewInit, OnInit {
     dialogRef.afterClosed().subscribe(result => {
       const wellsCriteria = result ? JSON.parse(JSON.stringify(result)).wellsCriteria : {};
       if (Object.keys(wellsCriteria).length && wellsCriteria[0].field) {
-        delete wellsCriteria[wellsCriteria.length - 1].operator;
         this.payLoadFromFilter = wellsCriteria;
       } else {
         this.payLoadFromFilter = [];

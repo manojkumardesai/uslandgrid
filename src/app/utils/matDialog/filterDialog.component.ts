@@ -159,7 +159,7 @@ export class FilterDialog implements OnInit {
     }
 
     isConditionAdded(i) {
-        return (i + 1) < this.formData.length && this.formData.length > 1
+        return (i + 1) >= this.formData.length && this.formData.length > 1
     }
 
     toggleView() {

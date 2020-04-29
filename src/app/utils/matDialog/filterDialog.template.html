@@ -24,7 +24,17 @@
           </span>
         </button>
       </div>
-      <div class="field">
+      <div class="field" *ngIf="isConditionAdded(i)">
+        <mat-form-field>
+          <mat-label>Choose Operator</mat-label>
+          <mat-select formControlName="operator" id="{{'operator' + i}}">
+            <mat-option *ngFor="let operator of operators" [value]="operator" >
+              {{operator}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
         <mat-form-field>
           <mat-label>Choose Field</mat-label>
           <mat-select (selectionChange)="type(i)" formControlName="field" id="{{'field' + i}}">
@@ -50,16 +60,6 @@
           <mat-select formControlName="value" id="{{'value' + i}}">
             <mat-option *ngFor="let value of values[i]" [value]="value" >
               {{value}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div *ngIf="isConditionAdded(i)">
-        <mat-form-field>
-          <mat-label>Choose Operator</mat-label>
-          <mat-select formControlName="operator" id="{{'operator' + i}}">
-            <mat-option *ngFor="let operator of operators" [value]="operator" >
-              {{operator}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -104,7 +104,7 @@
   </div>
   <div class="options">
     <div>Filter Options</div>
-    <mat-checkbox (change)="persistChanges($event)">Persist After Widget is Closed</mat-checkbox>
+    <mat-checkbox (change)="persistChanges($event)" [(ngModel)]="persist">Persist After Widget is Closed</mat-checkbox>
   </div>
   <div class="options">
     <div>Refresh Data</div>
