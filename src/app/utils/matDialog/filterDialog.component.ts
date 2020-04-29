@@ -50,7 +50,7 @@ export class FilterDialog implements OnInit {
         { value: 'BEGINS WITH' },
         { value: 'ENDS WITH' },
         { value: 'CONTAINS' },
-        { value: 'DOES NOT CONTAIN' },
+        { value: 'NOT CONTAINS' },
         // { value: 'IS ON OR BEFORE' },
         // { value: 'IS ON OR AFTER' }
     ];
@@ -86,6 +86,7 @@ export class FilterDialog implements OnInit {
                 this.setValues(this.data);
             }, 600);
         }
+        this.persist = sessionStorage.getItem('persist') == 'true' ? true : false;
     }
 
     fetchOperators() {
@@ -126,7 +127,7 @@ export class FilterDialog implements OnInit {
 
     generateReport() {
         this.apiService.generateReport(this.form.value).subscribe((data) => {
-            const extension = this.form.value.reportType.toLowerCase() == 'shp' ? '.zip' : this.form.value.reportType.toLowerCase();
+            const extension = this.form.value.reportType.toLowerCase() == 'shp' ? 'zip' : this.form.value.reportType.toLowerCase();
             const blobCont = new File([data], "Report." + extension, { type: extension });
             saveAs(blobCont);
         })
@@ -176,6 +177,7 @@ export class FilterDialog implements OnInit {
 
     persistChanges(event) {
         this.persist = event.checked;
+        sessionStorage.setItem('persis', '' + this.persist);
     }
 
     setValues(wellsCriteria) {

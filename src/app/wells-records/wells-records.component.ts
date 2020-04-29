@@ -32,7 +32,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     'longitude',
     'spudDate',
     'completionDate',
-    'country',
+    'county',
     'datumType',
     'tvd',
     'action'
@@ -57,7 +57,12 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.isLoading = true;
     const currentItem: SimpleChange = changes.payLoadFromFilter;
     const mapExtentValue: SimpleChange = changes.mapExtent;
-    let payLoad;
+    let payLoad: any = {
+      offset: 0,
+      limit: 5,
+      points: [],
+      wellsCriteria: []
+    };
     if (currentItem && Object.keys(currentItem.currentValue).length) {
       payLoad = {
         offset: 0,
@@ -72,27 +77,16 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         points: this.mapExtent
       };
     }
-    if (payLoad) {
-      this.apiService.fetchWellsData(payLoad).subscribe((data) => {
-        this.isLoading = false;
-        this.dataSource = new MatTableDataSource(data.wellDtos);
-        this.totalAvailableWellsCount = data.count;
-        this.dataSource.sort = this.sort;
-      });
-    } else {
-      payLoad = {
-        offset: 0,
-        limit: 5
-      }
-      this.apiService.fetchWellsData(payLoad).subscribe((data) => {
-        this.isLoading = false;
-        this.dataSource = new MatTableDataSource(data.wellDtos);
-        this.totalAvailableWellsCount = data.count;
-        this.dataSource.sort = this.sort;
-      });
-    }
     if (Object.keys(payLoad).length) {
       Object.assign(this.payLoadWithParams, payLoad);
+    }
+    if (Object.keys(this.payLoadWithParams).length) {
+      this.apiService.fetchWellsData(this.payLoadWithParams).subscribe((data) => {
+        this.isLoading = false;
+        this.dataSource = new MatTableDataSource(data.wellDtos);
+        this.totalAvailableWellsCount = data.count;
+        this.dataSource.sort = this.sort;
+      });
     }
   }
   ngOnInit() {
@@ -205,6 +199,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   }
 
   fetchData(payLoad) {
+    this.isLoading = true;
     this.apiService.fetchWellsData(payLoad).subscribe((data) => {
       this.isLoading = false;
       this.dataSource = new MatTableDataSource(data.wellDtos);
