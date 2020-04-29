@@ -177,7 +177,7 @@ export class FilterDialog implements OnInit {
 
     persistChanges(event) {
         this.persist = event.checked;
-        sessionStorage.setItem('persis', '' + this.persist);
+        sessionStorage.setItem('persist', JSON.stringify(this.persist));
     }
 
     setValues(wellsCriteria) {
