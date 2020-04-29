@@ -84,7 +84,7 @@
   </div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="form.value" (click)="onNoClick()">Reset</button>
+  <button mat-button (click)="onNoClick()">Reset</button>
   <button mat-button [title]='applyMsg' [mat-dialog-close]="form.value" [disabled]="!this.form.valid">Apply</button>
   <button mat-button [title]='titleMsg' [disabled]="!isLoggedIn || !this.form.value.reportType || !this.form.valid" (click)="generateReport()">Export</button>
 </div>

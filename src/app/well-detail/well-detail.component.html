@@ -34,12 +34,12 @@
               <div class="card-footer actions">
                 <div class="actionFirst">
                     <mat-chip-list aria-label="Fish selection">
-                        <mat-chip>{{ wellDetails.latitude }}</mat-chip>
+                        <mat-chip>{{ wellDetails.latitude | number:'.1-6' }} </mat-chip>
                     </mat-chip-list> Latitude
                 </div>
                 <div class="actionSecond">
                     <mat-chip-list aria-label="Fish selection">
-                        <mat-chip>{{ wellDetails.longitude }}</mat-chip>
+                        <mat-chip>{{ wellDetails.longitude | number:'.1-6' }}</mat-chip>
                     </mat-chip-list> Longitude
                 </div>
                 <div class="actionSecond">
