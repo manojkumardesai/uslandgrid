@@ -106,6 +106,8 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map.on('moveend', () => {
       if (this.isMapExtentApplied) {
         this.filterEmit(this.isMapExtentApplied);
+      } else {
+        this.filterEmit(false);
       }
     });
     this.map.on('click', (ev) => {
