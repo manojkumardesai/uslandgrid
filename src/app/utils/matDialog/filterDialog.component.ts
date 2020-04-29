@@ -33,12 +33,12 @@ export class FilterDialog implements OnInit {
         // { value: 'Frac Date' },
     ];
     formats = [
+        { value: 'SHP' },
+        { value: 'WB2' },
+        { value: 'WB4' },
         { value: 'CSV' },
         { value: 'XLSX' },
         { value: 'TXT' },
-        { value: 'WB4' },
-        { value: 'WB2' },
-        { value: 'SHP' },
     ];
     conditions = [
         // { value: 'EQUALS' },
