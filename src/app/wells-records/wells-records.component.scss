@@ -86,3 +86,7 @@ tr.mat-row {
         border-radius: 5px;
     }
   }
+
+  ::ng-deep .mat-menu-content {
+    height: 250px;
+  }

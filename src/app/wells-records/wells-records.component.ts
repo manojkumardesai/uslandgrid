@@ -35,7 +35,23 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     'county',
     'datumType',
     'tvd',
-    'action'
+    'reports'
+  ];
+  availableColumns: string[] = [
+    'select',
+    'wellId',
+    'wellName',
+    'operator',
+    'wellNumber',
+    'status',
+    'latitude',
+    'longitude',
+    'spudDate',
+    'completionDate',
+    'county',
+    'datumType',
+    'tvd',
+    'reports'
   ];
   dataSource: MatTableDataSource<any>;
   @Input() payLoadFromFilter: any;
@@ -206,6 +222,20 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.totalAvailableWellsCount = data.count;
       this.dataSource.sort = this.sort;
     });
+  }
+
+  selectedColumn(column) {
+    return this.displayedColumns.indexOf(column) > -1;
+  }
+
+  modifyDisplayedColumns(column) {
+    const indexOfColumn = this.displayedColumns.indexOf(column);
+    const originalIndexOfColumn = this.availableColumns.indexOf(column);
+    if (indexOfColumn > -1) {
+      this.displayedColumns.splice(indexOfColumn, 1);
+    } else {
+      this.displayedColumns.splice(originalIndexOfColumn, 0, column);
+    }
   }
 }
 
