@@ -36,6 +36,9 @@
                     <div class='actionButtons' (click)="refreshEmit()">
                         <button mat-raised-button>Refresh</button>
                     </div>
+                    <div class='actionButtons' (click)="filterAdvanced()">
+                        <button mat-raised-button>Filter</button>
+                    </div>
                   </div>
                   <div class="wellsTableContainer">
                       <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar>

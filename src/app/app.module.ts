@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterDialog } from './utils/matDialog/filterDialog.component';
 import { HeaderComponent } from './header/header.component';
 import { MapLegendComponent } from './map-legend/map-legend.component';
+import { AdvancedFilterComponent } from './wells-records/advFilterDialog/advanced-filter/advanced-filter.component';
 // import { RouterStateSnapshot } from '@angular/router';
 
 
@@ -27,7 +28,8 @@ import { MapLegendComponent } from './map-legend/map-legend.component';
     LoginComponent,
     FilterDialog,
     HeaderComponent,
-    MapLegendComponent
+    MapLegendComponent,
+    AdvancedFilterComponent
   ],
   imports: [
     BrowserModule,

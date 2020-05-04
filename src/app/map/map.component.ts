@@ -130,12 +130,12 @@ export class MapComponent implements AfterViewInit, OnInit {
       maxZoom: 20,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
-    this.map.addLayer(this.tiles);
+    //this.map.addLayer(this.tiles);
   }
 
   addCultureLayer() {
     this.cultureLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/Culture1/wms?', {
-      layers: 'Culture',
+      layers: 'Culture1:Culture',
       format: 'image/png8',
       transparent: true,
       styles: '',
@@ -146,13 +146,13 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   addPlssLayer() {
     this.plssLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/national_plss/wms?', {
-      layers: 'National_PLSS',
+      layers: 'national_plss:National_PLSS_Layers',
       format: 'image/png8',
       transparent: true,
       styles: '',
       attribution: null
     });
-    this.map.addLayer(this.plssLayer);
+    //this.map.addLayer(this.plssLayer);
   }
 
   addWellsLayer() {
@@ -163,7 +163,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       styles: '',
       attribution: null
     });
-    this.map.addLayer(this.wellsLayer);
+    //this.map.addLayer(this.wellsLayer);
   }
 
   layerControl() {
