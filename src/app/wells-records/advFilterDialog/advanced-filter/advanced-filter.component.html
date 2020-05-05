@@ -1,16 +1,21 @@
 <div class="header">
-    <div><h1 mat-dialog-title>Hi</h1></div>
-    <div>X</div>
+    <div><h3 mat-dialog-title>Filter</h3></div>
+    <div>
+        <mat-icon>close</mat-icon>
+    </div>
 </div>
 
-<div mat-dialog-content>
-  <p>What's your favorite animal?</p>
-  <mat-form-field>
-    <mat-label>Favorite Animal</mat-label>
-    <input matInput [(ngModel)]="data.animal">
-  </mat-form-field>
+<div mat-dialog-content class='auto-width'>
+    <mat-form-field>
+        <mat-label>Select condition</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let conditions of globalLogicalConditions" [value]="conditions.value">
+            {{conditions.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+<div mat-dialog-actions align="right">
+  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Apply</button>
+  <button mat-button (click)="onNoClick()">Cancel</button>
 </div>
