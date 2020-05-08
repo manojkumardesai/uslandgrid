@@ -14,6 +14,16 @@
           </mat-option>
         </mat-select>
     </mat-form-field>
+    <div formArrayName='exp'>
+      <div *ngFor='let exp of expForms.controls; let i=index;' [formGroupName]="i">
+
+      </div>
+    </div>
+    <div formArrayName='set'>
+      <div *ngFor='let exp of set Forms.controls; let i=index;' [formGroupName]="i">
+
+      </div>
+    </div>
 </div>
 <div mat-dialog-actions align="right">
   <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Apply</button>
