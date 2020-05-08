@@ -5,6 +5,12 @@
     </div>
 </div>
 
+<button mat-button>
+  <mat-icon color="primary">add</mat-icon> Add Expression
+</button>
+<button mat-button>
+  <mat-icon color="primary">add</mat-icon> Add Set
+</button>
 <div mat-dialog-content class='auto-width'>
     <mat-form-field>
         <mat-label>Select condition</mat-label>
@@ -14,16 +20,44 @@
           </mat-option>
         </mat-select>
     </mat-form-field>
-    <div formArrayName='exp'>
-      <div *ngFor='let exp of expForms.controls; let i=index;' [formGroupName]="i">
-
+    <form [formGroup]="advanceFilterForm">
+      <div formArrayName='exp'>
+        <div *ngFor='let exp of expForms.controls; let i=index;' [formGroupName]="i">
+          <mat-form-field>
+            <input matInput
+            placeholder="Column"
+            aria-label="Column"
+            [matAutocomplete]="auto"
+            formControlName="column">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let column of columns | async" [value]="column.value">
+                <span>{{column.name}}</span>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <!-- <mat-form-field>
+  
+          </mat-form-field>
+          <mat-form-field>
+  
+          </mat-form-field>
+          <mat-form-field>
+            
+          </mat-form-field>
+          <mat-form-field>
+  
+          </mat-form-field>
+          <mat-form-field>
+  
+          </mat-form-field> -->
+        </div>
       </div>
-    </div>
-    <div formArrayName='set'>
-      <div *ngFor='let exp of set Forms.controls; let i=index;' [formGroupName]="i">
-
+      <div formArrayName='set'>
+        <div *ngFor='let exp of setForms.controls; let i=index;' [formGroupName]="i">
+  
+        </div>
       </div>
-    </div>
+    </form>
 </div>
 <div mat-dialog-actions align="right">
   <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Apply</button>
