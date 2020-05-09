@@ -1,65 +1,87 @@
-<div class="header">
+<div cdkDrag>
+  <div class="header">
     <div><h3 mat-dialog-title>Filter</h3></div>
     <div>
         <mat-icon>close</mat-icon>
     </div>
-</div>
-
-<button mat-button>
-  <mat-icon color="primary">add</mat-icon> Add Expression
-</button>
-<button mat-button>
-  <mat-icon color="primary">add</mat-icon> Add Set
-</button>
-<div mat-dialog-content class='auto-width'>
-    <mat-form-field>
-        <mat-label>Select condition</mat-label>
-        <mat-select [(value)]="selected">
-          <mat-option *ngFor="let conditions of globalLogicalConditions" [value]="conditions.value">
-            {{conditions.viewValue}}
-          </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <form [formGroup]="advanceFilterForm">
-      <div formArrayName='exp'>
-        <div *ngFor='let exp of expForms.controls; let i=index;' [formGroupName]="i">
-          <mat-form-field>
-            <input matInput
-            placeholder="Column"
-            aria-label="Column"
-            [matAutocomplete]="auto"
-            formControlName="column">
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option *ngFor="let column of columns | async" [value]="column.value">
-                <span>{{column.name}}</span>
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <!-- <mat-form-field>
-  
-          </mat-form-field>
-          <mat-form-field>
-  
-          </mat-form-field>
-          <mat-form-field>
+  </div>
+  <div class='actionButtons'>
+    <button mat-button (click)="addExpressionToExp()">
+      <mat-icon color="primary">add</mat-icon> Add Expression
+    </button>
+    <button mat-button (click)="addSetToSetForm()">
+      <mat-icon color="primary">add</mat-icon> Add Set
+    </button>
+  </div>
+  <div mat-dialog-content class='auto-width'>
+      <mat-form-field>
+          <mat-label>Select condition</mat-label>
+          <mat-select [(value)]="selected">
+            <mat-option *ngFor="let conditions of globalLogicalConditions" [value]="conditions.value">
+              {{conditions.viewValue}}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+      <form [formGroup]="advanceFilterForm">
+        <div formArrayName='exp'>
+          <div class ="expFields" *ngFor='let exp of expForms.controls; let i=index;' [formGroupName]="i">
+            <mat-form-field>
+              <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
+              formControlName="column">
+              <mat-autocomplete #columnsAutoComplete="matAutocomplete">
+                <mat-option *ngFor="let column of columns" [value]="column.value">
+                  <span>{{column.name}}</span>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Condition" aria-label="Condition" [matAutocomplete]="conditionsAutoComplete"
+              formControlName="condition">
+              <mat-autocomplete #conditionsAutoComplete="matAutocomplete">
+                <mat-option *ngFor="let condition of conditions" [value]="condition.value">
+                  <span>{{condition.name}}</span>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Enter filter term here" aria-label="Value" [matAutocomplete]="valuesAutoComplete"
+              formControlName="condition">
+              <mat-autocomplete #valuesAutoComplete="matAutocomplete">
+                <mat-option *ngFor="let value of values" [value]="value.value">
+                  <span>{{value.name}}</span>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+              <mat-icon>settings</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <span>Set Input Type</span>
+              <button mat-menu-item>
+                Value
+              </button>
+              <button mat-menu-item>
+                Field
+              </button>
+              <button mat-menu-item>
+                Unique
+              </button>
+            </mat-menu>
+            <button mat-icon-button (click)="deleteExpFromExpArray(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
             
-          </mat-form-field>
-          <mat-form-field>
-  
-          </mat-form-field>
-          <mat-form-field>
-  
-          </mat-form-field> -->
+          </div>
         </div>
-      </div>
-      <div formArrayName='set'>
-        <div *ngFor='let exp of setForms.controls; let i=index;' [formGroupName]="i">
-  
+        <div formArrayName='set'>
+          <div *ngFor='let exp of setForms.controls; let i=index;' [formGroupName]="i">
+    
+          </div>
         </div>
-      </div>
-    </form>
-</div>
-<div mat-dialog-actions align="right">
-  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Apply</button>
-  <button mat-button (click)="onNoClick()">Cancel</button>
+      </form>
+  </div>
+  <div mat-dialog-actions align="right">
+    <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Apply</button>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+  </div>
 </div>

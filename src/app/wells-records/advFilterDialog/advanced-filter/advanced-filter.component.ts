@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
+
 @Component({
   selector: 'app-advanced-filter',
   templateUrl: './advanced-filter.component.html',
@@ -14,6 +15,8 @@ export class AdvancedFilterComponent implements OnInit {
   ];
   selected;
   columns;
+  conditions;
+  values = [];
   advanceFilterForm: FormGroup;
   constructor(public dialogRef: MatDialogRef<AdvancedFilterComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -21,74 +24,124 @@ export class AdvancedFilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.columns = [
-      [
-        {
-          'id': 0,
-          'name': 'state (String)',
-          'value': 'state'
-        },
-        {
-          'id': 1,
-          'name': 'county (String)',
-          'value': 'county'
-        },
-        {
-          'id': 2,
-          'name': 'operator (String)',
-          'value': 'operator'
-        },
-        {
-          'id': 3,
-          'name': 'well_id (String)',
-          'value': 'well_id'
-        },
-        {
-          'id': 4,
-          'name': 'well_name (String)',
-          'value': 'well_name'
-        },
-        {
-          'id': 5,
-          'name': 'objectid (Number)',
-          'value': 'objectid'
-        },
-        {
-          'id': 6,
-          'name': 'tvd (String)',
-          'value': 'tvd'
-        },
-        {
-          'id': 7,
-          'name': 'frac_type (String)',
-          'value': 'frac_type'
-        },
-        {
-          'id': 8,
-          'name': 'start_date (Date)',
-          'value': 'start_date'
-        },
-        {
-          'id': 9,
-          'name': 'longitude (Number)',
-          'value': 'longitude'
-        },
-        {
-          'id': 10,
-          'name': 'latitude (Number)',
-          'value': 'latitude'
-        },
-        {
-          'id': 11,
-          'name': 'datum (String)',
-          'value': 'datum'
-        },
-        {
-          'id': 12,
-          'name': 'link_efrac (String)',
-          'value': 'link_efrac'
-        }
-      ]
-    ]
+      {
+        'id': 0,
+        'name': 'state (String)',
+        'value': 'state'
+      },
+      {
+        'id': 1,
+        'name': 'county (String)',
+        'value': 'county'
+      },
+      {
+        'id': 2,
+        'name': 'operator (String)',
+        'value': 'operator'
+      },
+      {
+        'id': 3,
+        'name': 'well_id (String)',
+        'value': 'well_id'
+      },
+      {
+        'id': 4,
+        'name': 'well_name (String)',
+        'value': 'well_name'
+      },
+      {
+        'id': 5,
+        'name': 'objectid (Number)',
+        'value': 'objectid'
+      },
+      {
+        'id': 6,
+        'name': 'tvd (String)',
+        'value': 'tvd'
+      },
+      {
+        'id': 7,
+        'name': 'frac_type (String)',
+        'value': 'frac_type'
+      },
+      {
+        'id': 8,
+        'name': 'start_date (Date)',
+        'value': 'start_date'
+      },
+      {
+        'id': 9,
+        'name': 'longitude (Number)',
+        'value': 'longitude'
+      },
+      {
+        'id': 10,
+        'name': 'latitude (Number)',
+        'value': 'latitude'
+      },
+      {
+        'id': 11,
+        'name': 'datum (String)',
+        'value': 'datum'
+      },
+      {
+        'id': 12,
+        'name': 'link_efrac (String)',
+        'value': 'link_efrac'
+      }
+    ];
+    this.conditions = [
+      {
+        "id": 0,
+        "name": "is",
+        "value": "is"
+      },
+      {
+        "id": 1,
+        "name": "is not",
+        "value": "is not"
+      },
+      {
+        "id": 2,
+        "name": "start with",
+        "value": "start with"
+      },
+      {
+        "id": 3,
+        "name": "end with",
+        "value": "end with"
+      },
+      {
+        "id": 4,
+        "name": "contains",
+        "value": "contains"
+      },
+      {
+        "id": 5,
+        "name": "does not contain",
+        "value": "does not contain"
+      },
+      {
+        "id": 6,
+        "name": "is any of",
+        "value": "is any of"
+      },
+      {
+        "id": 7,
+        "name": "is none of",
+        "value": "is none of"
+      },
+      {
+        "id": 8,
+        "name": "is blank",
+        "value": "is blank"
+      },
+      {
+        "id": 9,
+        "name": "is not blank",
+        "value": "is not blank"
+      }
+    ];
     this.selected = this.globalLogicalConditions[0].value;
     this.advanceFilterForm = this.fb.group({
       operator: this.selected,

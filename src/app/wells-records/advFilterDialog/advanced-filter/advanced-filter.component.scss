@@ -12,3 +12,11 @@
         width: auto;
     }
 }
+
+.actionButtons {
+    margin-bottom: 16px;
+}
+
+::ng-deep .mat-menu-content {
+    height: auto;
+  }
