@@ -2,7 +2,9 @@
   <div class="header">
     <div><h3 mat-dialog-title>Filter</h3></div>
     <div>
+      <button mat-button (click)="onNoClick()">
         <mat-icon>close</mat-icon>
+      </button>
     </div>
   </div>
   <div class='actionButtons'>
@@ -16,7 +18,7 @@
   <div mat-dialog-content class='auto-width'>
       <mat-form-field>
           <mat-label>Select condition</mat-label>
-          <mat-select [(value)]="selected">
+          <mat-select [(value)]="selectedGlobalCondition">
             <mat-option *ngFor="let conditions of globalLogicalConditions" [value]="conditions.value">
               {{conditions.viewValue}}
             </mat-option>
@@ -24,7 +26,7 @@
       </mat-form-field>
       <form [formGroup]="advanceFilterForm">
         <div formArrayName='exp'>
-          <div class ="expFields" *ngFor='let exp of expForms.controls; let i=index;' [formGroupName]="i">
+          <div class ="fields" *ngFor='let exp of expForms.controls; let i=index;' [formGroupName]="i">
             <mat-form-field>
               <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
               formControlName="column">
@@ -75,15 +77,20 @@
         </div>
         <div formArrayName='set'>
           <div *ngFor='let set of setForms.controls; let i=index;' [formGroupName]="i">
-            <mat-form-field>
-              <mat-label>Select condition</mat-label>
-              <mat-select [(value)]="selected">
-                <mat-option *ngFor="let conditions of globalLogicalConditions" [value]="conditions.value">
-                  {{conditions.viewValue}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div *ngFor="let exp of set.get('exp').controls;let j = index;" [formGroupName]="j">
+            <div class='fields'>
+              <mat-form-field>
+                <mat-label>Select condition</mat-label>
+                <mat-select [(value)]="selectedSetCondition">
+                  <mat-option *ngFor="let conditions of setLogicalConditions" [value]="conditions.value">
+                    {{conditions.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button mat-button (click)="addExpToSetForm(i)">
+                <mat-icon color="primary">add</mat-icon> Add Expression
+              </button>
+            </div>
+            <div class="fields" *ngFor="let exp of set.get('exp').controls;let j = index;" [formGroupName]="j">
               <mat-form-field>
                 <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
                 formControlName="column">
@@ -104,7 +111,7 @@
               </mat-form-field>
               <mat-form-field>
                 <input matInput placeholder="Enter filter term here" aria-label="Value" [matAutocomplete]="valuesAutoComplete"
-                formControlName="condition">
+                formControlName="value">
                 <mat-autocomplete #valuesAutoComplete="matAutocomplete">
                   <mat-option *ngFor="let value of values" [value]="value.value">
                     <span>{{value.name}}</span>

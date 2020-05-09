@@ -20,3 +20,8 @@
 ::ng-deep .mat-menu-content {
     height: auto;
   }
+
+  .fields {
+    display: flex;
+    justify-content: space-between;
+  }

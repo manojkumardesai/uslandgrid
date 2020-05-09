@@ -13,7 +13,12 @@ export class AdvancedFilterComponent implements OnInit {
     { value: 'and', viewValue: 'Display features in the layer that match all of the following expressions' },
     { value: 'or', viewValue: 'Display features in the layer that match any of the following expressions' }
   ];
-  selected;
+  setLogicalConditions = [
+    { value: 'and', viewValue: 'All of the following expressions in this set are true' },
+    { value: 'or', viewValue: 'Any of the following expressions in this set are true' }
+  ];
+  selectedGlobalCondition;
+  selectedSetCondition;
   columns;
   conditions;
   values = [];
@@ -142,9 +147,10 @@ export class AdvancedFilterComponent implements OnInit {
         "value": "is not blank"
       }
     ];
-    this.selected = this.globalLogicalConditions[0].value;
+    this.selectedGlobalCondition = this.globalLogicalConditions[0].value;
+    this.selectedSetCondition = this.setLogicalConditions[0].value;
     this.advanceFilterForm = this.fb.group({
-      operator: this.selected,
+      operator: this.selectedGlobalCondition,
       exp: this.fb.array([
 
       ]),
