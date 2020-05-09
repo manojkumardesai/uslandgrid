@@ -74,8 +74,62 @@
           </div>
         </div>
         <div formArrayName='set'>
-          <div *ngFor='let exp of setForms.controls; let i=index;' [formGroupName]="i">
-    
+          <div *ngFor='let set of setForms.controls; let i=index;' [formGroupName]="i">
+            <mat-form-field>
+              <mat-label>Select condition</mat-label>
+              <mat-select [(value)]="selected">
+                <mat-option *ngFor="let conditions of globalLogicalConditions" [value]="conditions.value">
+                  {{conditions.viewValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div *ngFor="let exp of set.get('exp').controls;let j = index;" [formGroupName]="j">
+              <mat-form-field>
+                <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
+                formControlName="column">
+                <mat-autocomplete #columnsAutoComplete="matAutocomplete">
+                  <mat-option *ngFor="let column of columns" [value]="column.value">
+                    <span>{{column.name}}</span>
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput placeholder="Condition" aria-label="Condition" [matAutocomplete]="conditionsAutoComplete"
+                formControlName="condition">
+                <mat-autocomplete #conditionsAutoComplete="matAutocomplete">
+                  <mat-option *ngFor="let condition of conditions" [value]="condition.value">
+                    <span>{{condition.name}}</span>
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput placeholder="Enter filter term here" aria-label="Value" [matAutocomplete]="valuesAutoComplete"
+                formControlName="condition">
+                <mat-autocomplete #valuesAutoComplete="matAutocomplete">
+                  <mat-option *ngFor="let value of values" [value]="value.value">
+                    <span>{{value.name}}</span>
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                <mat-icon>settings</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <span>Set Input Type</span>
+                <button mat-menu-item>
+                  Value
+                </button>
+                <button mat-menu-item>
+                  Field
+                </button>
+                <button mat-menu-item>
+                  Unique
+                </button>
+              </mat-menu>
+              <button mat-icon-button (click)="deleteExpFromSet(j, i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
       </form>

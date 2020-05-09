@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Form } from '@angular/forms';
 
 
 @Component({
@@ -167,40 +167,23 @@ export class AdvancedFilterComponent implements OnInit {
 
 
   addExpressionToExp() {
-    const exp = this.fb.group({
-      column: '',
-      type: '',
-      condition: '',
-      caseSensitive: false,
-      value: []
-    });
-    this.expForms.push(exp);
+    this.expForms.push(this.expressionStructure());
   }
 
   addSetToSetForm() {
-    const exp = this.fb.group({
+    const expTemp = this.fb.group({
       setOperator: '',
-      exp: [{
-        column: '',
-        type: '',
-        condition: '',
-        caseSensitive: false,
-        value: []
-      }]
+      exp: this.fb.array([])
     });
-    this.setForms.push(exp);
+    let expTempFormArray = expTemp.get('exp') as FormArray;
+    expTempFormArray.push(this.expressionStructure());
+    this.setForms.push(expTemp);
     this.addExpToSetForm(this.setForms.length - 1);
   }
 
   addExpToSetForm(index) {
-    const exp = this.fb.group({
-      column: '',
-      type: '',
-      condition: '',
-      caseSensitive: false,
-      value: []
-    });
-    this.setForms[index]['exp'].push(exp);
+    let indexedExp = this.setForms.controls[index].get('exp') as FormArray;
+    indexedExp.push(this.expressionStructure());
   }
 
   deleteExpFromExpArray(expIndex) {
@@ -213,5 +196,15 @@ export class AdvancedFilterComponent implements OnInit {
 
   deleteExpFromSet(expIndex, setIndex) {
     this.setForms[setIndex]['exp'].removeAt(expIndex);
+  }
+
+  expressionStructure() {
+    return this.fb.group({
+      column: '',
+      type: '',
+      condition: '',
+      caseSensitive: false,
+      value: []
+    });
   }
 }
