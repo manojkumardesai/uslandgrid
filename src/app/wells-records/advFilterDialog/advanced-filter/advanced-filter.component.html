@@ -90,52 +90,56 @@
                 <mat-icon color="primary">add</mat-icon> Add Expression
               </button>
             </div>
+            <div formArrayName='exp'>
             <div class="fields" *ngFor="let exp of set.get('exp').controls;let j = index;" [formGroupName]="j">
-              <mat-form-field>
-                <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
-                formControlName="column">
-                <mat-autocomplete #columnsAutoComplete="matAutocomplete">
-                  <mat-option *ngFor="let column of columns" [value]="column.value">
-                    <span>{{column.name}}</span>
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-              <mat-form-field>
-                <input matInput placeholder="Condition" aria-label="Condition" [matAutocomplete]="conditionsAutoComplete"
-                formControlName="condition">
-                <mat-autocomplete #conditionsAutoComplete="matAutocomplete">
-                  <mat-option *ngFor="let condition of conditions" [value]="condition.value">
-                    <span>{{condition.name}}</span>
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-              <mat-form-field>
-                <input matInput placeholder="Enter filter term here" aria-label="Value" [matAutocomplete]="valuesAutoComplete"
-                formControlName="value">
-                <mat-autocomplete #valuesAutoComplete="matAutocomplete">
-                  <mat-option *ngFor="let value of values" [value]="value.value">
-                    <span>{{value.name}}</span>
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                <mat-icon>settings</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu">
-                <span>Set Input Type</span>
-                <button mat-menu-item>
-                  Value
+              
+                <mat-form-field>
+                  <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
+                  formControlName="column">
+                  <mat-autocomplete #columnsAutoComplete="matAutocomplete">
+                    <mat-option *ngFor="let column of columns" [value]="column.value">
+                      <span>{{column.name}}</span>
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="Condition" aria-label="Condition" [matAutocomplete]="conditionsAutoComplete"
+                  formControlName="condition">
+                  <mat-autocomplete #conditionsAutoComplete="matAutocomplete">
+                    <mat-option *ngFor="let condition of conditions" [value]="condition.value">
+                      <span>{{condition.name}}</span>
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="Enter filter term here" aria-label="Value" [matAutocomplete]="valuesAutoComplete"
+                  formControlName="value">
+                  <mat-autocomplete #valuesAutoComplete="matAutocomplete">
+                    <mat-option *ngFor="let value of values" [value]="value.value">
+                      <span>{{value.name}}</span>
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon>settings</mat-icon>
                 </button>
-                <button mat-menu-item>
-                  Field
+                <mat-menu #menu="matMenu">
+                  <span>Set Input Type</span>
+                  <button mat-menu-item>
+                    Value
+                  </button>
+                  <button mat-menu-item>
+                    Field
+                  </button>
+                  <button mat-menu-item>
+                    Unique
+                  </button>
+                </mat-menu>
+                <button mat-icon-button *ngIf="set.get('exp').controls.length > 1" (click)="deleteExpFromSet(j, i)">
+                  <mat-icon>delete</mat-icon>
                 </button>
-                <button mat-menu-item>
-                  Unique
-                </button>
-              </mat-menu>
-              <button mat-icon-button (click)="deleteExpFromSet(j, i)">
-                <mat-icon>delete</mat-icon>
-              </button>
+              </div>
+              
             </div>
           </div>
         </div>

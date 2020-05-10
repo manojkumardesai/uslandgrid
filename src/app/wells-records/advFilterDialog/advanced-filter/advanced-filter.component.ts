@@ -201,7 +201,8 @@ export class AdvancedFilterComponent implements OnInit {
   }
 
   deleteExpFromSet(expIndex, setIndex) {
-    this.setForms[setIndex]['exp'].removeAt(expIndex);
+    let indexedExp = this.setForms.controls[setIndex].get('exp') as FormArray;
+    indexedExp.removeAt(expIndex);
   }
 
   expressionStructure() {
