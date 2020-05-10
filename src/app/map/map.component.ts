@@ -8,6 +8,7 @@ import { ApiService } from '../_services/api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FilterDialog } from '../utils/matDialog/filterDialog.component';
 import "leaflet-mouse-position";
+import * as esri from "esri-leaflet";
 
 export interface DialogData {
   animal: string;
@@ -130,7 +131,12 @@ export class MapComponent implements AfterViewInit, OnInit {
       maxZoom: 20,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
-    this.map.addLayer(this.tiles);
+    //this.map.addLayer(this.tiles);
+
+    //Streets, Topographic, NationalGeographic, Oceans, Gray, DarkGray, Imagery, ImageryClarity, ImageryFirefly, ShadedRelief, Terrain, USATopo, Physical
+    let esriBaseLayer = esri.basemapLayer('Topographic');
+    let esriImageryLayer = esri.basemapLayer('Imagery');
+    this.map.addLayer(esriBaseLayer);
   }
 
   addCultureLayer() {
