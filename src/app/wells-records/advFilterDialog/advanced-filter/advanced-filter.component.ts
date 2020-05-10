@@ -17,6 +17,7 @@ export class AdvancedFilterComponent implements OnInit {
     { value: 'and', viewValue: 'All of the following expressions in this set are true' },
     { value: 'or', viewValue: 'Any of the following expressions in this set are true' }
   ];
+  valueTypes = ['Value', 'Field', 'Unique'];
   selectedGlobalCondition;
   selectedSetCondition;
   columns;

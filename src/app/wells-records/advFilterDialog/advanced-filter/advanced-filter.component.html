@@ -54,20 +54,15 @@
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
-            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <button mat-icon-button [matMenuTriggerFor]="expMenu" aria-label="Example icon-button with a menu">
               <mat-icon>settings</mat-icon>
             </button>
-            <mat-menu #menu="matMenu">
-              <span>Set Input Type</span>
-              <button mat-menu-item>
-                Value
-              </button>
-              <button mat-menu-item>
-                Field
-              </button>
-              <button mat-menu-item>
-                Unique
-              </button>
+            <mat-menu #expMenu="matMenu">
+              <mat-radio-group class="valuetype-radio-group">
+                <mat-radio-button class="valuetype-radio-button" mat-menu *ngFor="let value of valueTypes" [value]="value">
+                  {{value}}
+                </mat-radio-button>
+              </mat-radio-group>
             </mat-menu>
             <button mat-icon-button (click)="deleteExpFromExpArray(i)">
               <mat-icon>delete</mat-icon>
@@ -124,19 +119,15 @@
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
-                <button mat-icon-button [matMenuTriggerFor]="menu">
+                <button mat-icon-button [matMenuTriggerFor]="setExpMenu">
                   <mat-icon>settings</mat-icon>
                 </button>
-                <mat-menu #menu="matMenu">
-                  <button mat-menu-item>
-                    Value
-                  </button>
-                  <button mat-menu-item>
-                    Field
-                  </button>
-                  <button mat-menu-item>
-                    Unique
-                  </button>
+                <mat-menu #setExpMenu="matMenu">
+                  <mat-radio-group class="valuetype-radio-group">
+                    <mat-radio-button class="valuetype-radio-button" mat-menu *ngFor="let value of valueTypes" [value]="value">
+                      {{value}}
+                    </mat-radio-button>
+                  </mat-radio-group>
                 </mat-menu>
                 <button mat-icon-button *ngIf="set.get('exp').controls.length > 1" (click)="deleteExpFromSet(j, i)">
                   <mat-icon>delete</mat-icon>
