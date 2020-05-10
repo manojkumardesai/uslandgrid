@@ -135,7 +135,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
     //Streets, Topographic, NationalGeographic, Oceans, Gray, DarkGray, Imagery, ImageryClarity, ImageryFirefly, ShadedRelief, Terrain, USATopo, Physical
     let esriBaseLayer = esri.basemapLayer('Topographic');
-    let esriImageryLayer = esri.basemapLayer('Imagery');
+    //let esriImageryLayer = esri.basemapLayer('Imagery');
     this.map.addLayer(esriBaseLayer);
   }
 
