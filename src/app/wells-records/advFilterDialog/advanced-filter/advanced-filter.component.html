@@ -72,6 +72,10 @@
             <button mat-icon-button (click)="deleteExpFromExpArray(i)">
               <mat-icon>delete</mat-icon>
             </button>
+            <br/>
+            <mat-checkbox formControlName="caseSensitive">
+              Case Sensitive
+            </mat-checkbox>
             
           </div>
         </div>
@@ -80,7 +84,7 @@
             <div class='fields'>
               <mat-form-field>
                 <mat-label>Select condition</mat-label>
-                <mat-select [(value)]="selectedSetCondition">
+                <mat-select formControlName="setOperator">
                   <mat-option *ngFor="let conditions of setLogicalConditions" [value]="conditions.value">
                     {{conditions.viewValue}}
                   </mat-option>
@@ -124,7 +128,6 @@
                   <mat-icon>settings</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                  <span>Set Input Type</span>
                   <button mat-menu-item>
                     Value
                   </button>
@@ -138,15 +141,19 @@
                 <button mat-icon-button *ngIf="set.get('exp').controls.length > 1" (click)="deleteExpFromSet(j, i)">
                   <mat-icon>delete</mat-icon>
                 </button>
+                <br/>
+                <mat-checkbox formControlName="caseSensitive">
+                  Case Sensitive
+                </mat-checkbox>
               </div>
-              
             </div>
           </div>
         </div>
       </form>
   </div>
   <div mat-dialog-actions align="right">
-    <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Apply</button>
+    <!-- [mat-dialog-close]="data.animal" -->
+    <button mat-button (click)="apply()">Apply</button>
     <button mat-button (click)="onNoClick()">Cancel</button>
   </div>
 </div>

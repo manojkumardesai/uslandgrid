@@ -181,6 +181,7 @@ export class AdvancedFilterComponent implements OnInit {
       setOperator: '',
       exp: this.fb.array([])
     });
+    expTemp.get('setOperator').setValue(this.setLogicalConditions[0].value);
     let expTempFormArray = expTemp.get('exp') as FormArray;
     expTempFormArray.push(this.expressionStructure());
     this.setForms.push(expTemp);
@@ -213,5 +214,9 @@ export class AdvancedFilterComponent implements OnInit {
       caseSensitive: false,
       value: []
     });
+  }
+
+  apply() {
+    console.log(this.advanceFilterForm.value);
   }
 }

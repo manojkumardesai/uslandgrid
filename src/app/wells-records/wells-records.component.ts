@@ -243,7 +243,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   filterAdvanced() {
     const dialogRef = this.dialog.open(AdvancedFilterComponent, {
-      width: '700px',
+      width: '750px',
       // maxWidth: 350,
       backdropClass: 'cdk-overlay-transparent-backdrop',
       hasBackdrop: true,

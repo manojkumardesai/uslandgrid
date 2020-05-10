@@ -25,3 +25,8 @@
     display: flex;
     justify-content: space-between;
   }
+
+  .break {
+    flex-basis: 100%;
+    height: 0;
+  }
