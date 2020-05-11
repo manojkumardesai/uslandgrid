@@ -198,8 +198,12 @@ export class AdvancedFilterComponent implements OnInit {
   }
 
   deleteExpFromSet(expIndex, setIndex) {
-    let indexedExp = this.setForms.controls[setIndex].get('exp') as FormArray;
+    let indexedExp = this.getExpAtSetIndex(setIndex);
     indexedExp.removeAt(expIndex);
+  }
+
+  getExpAtSetIndex(setIndex) {
+    return this.setForms.controls[setIndex].get('exp') as FormArray;
   }
 
   expressionStructure() {
@@ -216,7 +220,22 @@ export class AdvancedFilterComponent implements OnInit {
     console.log(this.advanceFilterForm.value);
   }
 
-  changeColumnValue() {
-    console.log('Event catch works');
+  changeExpColumnValue(expIndex) {
+    this.expForms.controls[expIndex].patchValue({
+      value: '',
+      condition: 'is',
+      caseSensitive: false,
+      type: 'string'
+    });
+  }
+
+  changeSetExpColumnValue(setIndex, expIndex) {
+    let indexedExp = this.getExpAtSetIndex(setIndex);
+    indexedExp.controls[expIndex].patchValue({
+      value: '',
+      condition: 'is',
+      caseSensitive: false,
+      type: 'string'
+    });
   }
 }
