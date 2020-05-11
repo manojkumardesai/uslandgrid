@@ -247,11 +247,11 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       // maxWidth: 350,
       backdropClass: 'cdk-overlay-transparent-backdrop',
       hasBackdrop: true,
-      data: 'test'
+      data: this.payLoadWithParams.filter ? this.payLoadWithParams.filter : ''
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
+      this.payLoadWithParams['filter'] = result;
     });
   }
 }

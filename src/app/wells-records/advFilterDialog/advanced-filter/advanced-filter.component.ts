@@ -46,6 +46,7 @@ export class AdvancedFilterComponent implements OnInit {
     public apiService: ApiService) { }
 
   ngOnInit(): void {
+
     this.columns = [
       {
         'id': 0,
@@ -172,6 +173,9 @@ export class AdvancedFilterComponent implements OnInit {
       exp: this.fb.array([]),
       set: this.fb.array([])
     });
+    if (this.data) {
+      this.setDefaultFormValues();
+    }
   }
 
   onNoClick(): void {
@@ -335,6 +339,22 @@ export class AdvancedFilterComponent implements OnInit {
         this.values[expIndex] = [...data];
       });
     }
+  }
+
+  setDefaultFormValues() {
+    for (let i = 0; i < this.data.exp.length; i++) {
+      this.addExpressionToExp();
+    }
+    for (let j = 0; j < this.data.set.length; j++) {
+      this.addSetToSetForm();
+    }
+    for (let k = 0; k < this.data.set.length; k++) {
+      for (let l = 2; l < this.data.set[k].exp.length; l++) {
+        this.addExpToSetForm(k);
+      }
+    }
+
+    this.advanceFilterForm.setValue(this.data);
   }
   // End of Settings button event handlers
 }
