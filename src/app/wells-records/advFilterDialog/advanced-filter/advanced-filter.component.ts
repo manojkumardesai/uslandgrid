@@ -212,7 +212,7 @@ export class AdvancedFilterComponent implements OnInit {
       type: 'string',
       condition: 'is',
       caseSensitive: false,
-      value: ''
+      value: ['']
     });
   }
 
@@ -220,9 +220,10 @@ export class AdvancedFilterComponent implements OnInit {
     console.log(this.advanceFilterForm.value);
   }
 
+  // Column dropdown change event handlers
   changeExpColumnValue(expIndex) {
     this.expForms.controls[expIndex].patchValue({
-      value: '',
+      value: [''],
       condition: 'is',
       caseSensitive: false,
       type: 'string'
@@ -232,10 +233,53 @@ export class AdvancedFilterComponent implements OnInit {
   changeSetExpColumnValue(setIndex, expIndex) {
     let indexedExp = this.getExpAtSetIndex(setIndex);
     indexedExp.controls[expIndex].patchValue({
-      value: '',
+      value: [''],
       condition: 'is',
       caseSensitive: false,
       type: 'string'
     });
   }
+  // End of column dropdown change event handlers
+
+  // Condtion tab change event handlers
+  expConditionChange(expIndex) {
+    this.expForms.controls[expIndex].patchValue({
+      value: ['']
+    });
+    this.setExpMenuValues(expIndex);
+    console.log('Test');
+  }
+
+  setExpMenuValues(expIndex) {
+    // return
+
+  }
+
+  setExpConditionChange(setIndex, expIndex) {
+    let indexedExp = this.getExpAtSetIndex(setIndex);
+    indexedExp.controls[expIndex].patchValue({
+      value: ['']
+    });
+    console.log('Test Set');
+  }
+
+  setMenuValuesOfSet(setIndex, expIndex) {
+
+  }
+  // End of condition tab change event handlers
+
+  // Settings button change event handlers
+  setExpSettingMenuChange(setIndex, expIndex, value) {
+    let indexedExp = this.getExpAtSetIndex(setIndex);
+    indexedExp.controls[expIndex].patchValue({
+      value: ['']
+    });
+  }
+
+  expSettingMenuChange(expIndex) {
+    this.expForms.controls[expIndex].patchValue({
+      value: ['']
+    });
+  }
+  // End of Settings button event handlers
 }

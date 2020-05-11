@@ -30,7 +30,7 @@
             <mat-form-field>
               <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
               formControlName="column">
-              <mat-autocomplete #columnsAutoComplete="matAutocomplete" (optionSelected)="changeColumnValue(i)">
+              <mat-autocomplete #columnsAutoComplete="matAutocomplete" (optionSelected)="changeExpColumnValue(i)">
                 <mat-option *ngFor="let column of columns" [value]="column.value">
                   <span>{{column.name}}</span>
                 </mat-option>
@@ -39,7 +39,7 @@
             <mat-form-field>
               <input matInput placeholder="Condition" aria-label="Condition" [matAutocomplete]="conditionsAutoComplete"
               formControlName="condition">
-              <mat-autocomplete #conditionsAutoComplete="matAutocomplete">
+              <mat-autocomplete #conditionsAutoComplete="matAutocomplete" (optionSelected)="expConditionChange(i)">
                 <mat-option *ngFor="let condition of conditions" [value]="condition.value">
                   <span>{{condition.name}}</span>
                 </mat-option>
@@ -59,7 +59,9 @@
             </button>
             <mat-menu #expMenu="matMenu">
               <mat-radio-group class="valuetype-radio-group">
-                <mat-radio-button class="valuetype-radio-button" mat-menu *ngFor="let value of valueTypes" [value]="value">
+                <mat-radio-button class="valuetype-radio-button" 
+                mat-menu *ngFor="let value of valueTypes" [value]="value"
+                (change)="expSettingMenuChange(i, value)">
                   {{value}}
                 </mat-radio-button>
               </mat-radio-group>
@@ -104,7 +106,7 @@
                 <mat-form-field>
                   <input matInput placeholder="Condition" aria-label="Condition" [matAutocomplete]="conditionsAutoComplete"
                   formControlName="condition">
-                  <mat-autocomplete #conditionsAutoComplete="matAutocomplete">
+                  <mat-autocomplete #conditionsAutoComplete="matAutocomplete" (optionSelected)="setExpConditionChange(i, j)">
                     <mat-option *ngFor="let condition of conditions" [value]="condition.value">
                       <span>{{condition.name}}</span>
                     </mat-option>
@@ -124,7 +126,9 @@
                 </button>
                 <mat-menu #setExpMenu="matMenu">
                   <mat-radio-group class="valuetype-radio-group">
-                    <mat-radio-button class="valuetype-radio-button" mat-menu *ngFor="let value of valueTypes" [value]="value">
+                    <mat-radio-button class="valuetype-radio-button"
+                    mat-menu *ngFor="let value of valueTypes" [value]="value"
+                    (change)="setExpSettingMenuChange(i, j, value)">
                       {{value}}
                     </mat-radio-button>
                   </mat-radio-group>
