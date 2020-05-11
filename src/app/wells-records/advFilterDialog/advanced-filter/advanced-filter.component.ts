@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormArray, Form } from '@angular/forms';
+import { ApiService } from 'src/app/_services/api.service';
 
 
 @Component({
@@ -28,10 +29,21 @@ export class AdvancedFilterComponent implements OnInit {
   columns;
   conditions;
   values = [];
+  fieldValues = [
+    'county',
+    'operator',
+    'api_number',
+    'well_name',
+    'tvd',
+    'frac_type',
+    'datum',
+    'link_efrac',
+  ];
   advanceFilterForm: FormGroup;
   constructor(public dialogRef: MatDialogRef<AdvancedFilterComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
-    public fb: FormBuilder) { }
+    public fb: FormBuilder,
+    public apiService: ApiService) { }
 
   ngOnInit(): void {
     this.columns = [
@@ -278,8 +290,20 @@ export class AdvancedFilterComponent implements OnInit {
     console.log('Test Set');
   }
 
-  setMenuValuesOfSet(setIndex, expIndex) {
-
+  setMenuValuesOfSet(setIndex, expIndex, value) {
+    let indexedExp = this.getExpAtSetIndex(setIndex);
+    let condition = indexedExp.value[expIndex].condition;
+    if (this.allEnabledConditions.includes(condition)) {
+      return false;
+    } else if (this.valueEnabledConditions.includes(condition) && value === 'Value') {
+      return false;
+    } else if (this.multipleValueConditions.includes(condition) && value === 'Multiple') {
+      return false;
+    } else if (this.blankConditions.includes(condition)) {
+      return true;
+    } else {
+      return true;
+    }
   }
   // End of condition tab change event handlers
 
@@ -289,12 +313,28 @@ export class AdvancedFilterComponent implements OnInit {
     indexedExp.controls[expIndex].patchValue({
       value: ['']
     });
+    let column = indexedExp.value[expIndex].column;
+    if (value == 'Field') {
+      this.values[setIndex + '' + expIndex] = [...this.fieldValues];
+    } else if (value == 'Unique') {
+      this.apiService.fetchUniqueValues(column).subscribe((data: any) => {
+        this.values[setIndex + '' + expIndex] = [...data];
+      });
+    }
   }
 
-  expSettingMenuChange(expIndex) {
+  expSettingMenuChange(expIndex, value) {
+    let column = this.expForms.value[expIndex].column;
     this.expForms.controls[expIndex].patchValue({
       value: ['']
     });
+    if (value == 'Field') {
+      this.values[expIndex] = [...this.fieldValues];
+    } else if (value == 'Unique') {
+      this.apiService.fetchUniqueValues(column).subscribe((data: any) => {
+        this.values[expIndex] = [...data];
+      });
+    }
   }
   // End of Settings button event handlers
 }
