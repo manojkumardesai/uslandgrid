@@ -252,6 +252,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
     dialogRef.afterClosed().subscribe(result => {
       this.payLoadWithParams['filter'] = result;
+      this.fetchData(this.payLoadWithParams);
     });
   }
 }
