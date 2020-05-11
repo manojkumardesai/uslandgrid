@@ -152,12 +152,8 @@ export class AdvancedFilterComponent implements OnInit {
     this.selectedSetCondition = this.setLogicalConditions[0].value;
     this.advanceFilterForm = this.fb.group({
       operator: this.selectedGlobalCondition,
-      exp: this.fb.array([
-
-      ]),
-      set: this.fb.array([
-
-      ])
+      exp: this.fb.array([]),
+      set: this.fb.array([])
     });
   }
 
@@ -171,7 +167,6 @@ export class AdvancedFilterComponent implements OnInit {
   get setForms() {
     return this.advanceFilterForm.get('set') as FormArray;
   }
-
 
   addExpressionToExp() {
     this.expForms.push(this.expressionStructure());
@@ -209,9 +204,9 @@ export class AdvancedFilterComponent implements OnInit {
 
   expressionStructure() {
     return this.fb.group({
-      column: '',
-      type: '',
-      condition: '',
+      column: 'state',
+      type: 'string',
+      condition: 'is',
       caseSensitive: false,
       value: []
     });
@@ -219,5 +214,9 @@ export class AdvancedFilterComponent implements OnInit {
 
   apply() {
     console.log(this.advanceFilterForm.value);
+  }
+
+  changeColumnValue() {
+    console.log('Event catch works');
   }
 }

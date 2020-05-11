@@ -30,7 +30,7 @@
             <mat-form-field>
               <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
               formControlName="column">
-              <mat-autocomplete #columnsAutoComplete="matAutocomplete">
+              <mat-autocomplete #columnsAutoComplete="matAutocomplete" (optionSelected)="changeColumnValue(i)">
                 <mat-option *ngFor="let column of columns" [value]="column.value">
                   <span>{{column.name}}</span>
                 </mat-option>
@@ -68,9 +68,9 @@
               <mat-icon>delete</mat-icon>
             </button>
             <br/>
-            <mat-checkbox formControlName="caseSensitive">
+            <!-- <mat-checkbox formControlName="caseSensitive">
               Case Sensitive
-            </mat-checkbox>
+            </mat-checkbox> -->
             
           </div>
         </div>
@@ -133,9 +133,9 @@
                   <mat-icon>delete</mat-icon>
                 </button>
                 <br/>
-                <mat-checkbox formControlName="caseSensitive">
+                <!-- <mat-checkbox formControlName="caseSensitive">
                   Case Sensitive
-                </mat-checkbox>
+                </mat-checkbox> -->
               </div>
             </div>
           </div>
