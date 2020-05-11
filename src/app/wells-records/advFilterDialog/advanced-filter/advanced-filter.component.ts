@@ -17,6 +17,11 @@ export class AdvancedFilterComponent implements OnInit {
     { value: 'and', viewValue: 'All of the following expressions in this set are true' },
     { value: 'or', viewValue: 'Any of the following expressions in this set are true' }
   ];
+  allEnabledConditions = ['is', 'is not'];
+  valueEnabledConditions = ['starts with', 'ends with', 'contains', 'does not contain'];
+  multipleValueConditions = ['is any of', 'is none of'];
+  blankConditions = ['is blank', 'is not blank'];
+
   valueTypes = ['Value', 'Field', 'Unique'];
   selectedGlobalCondition;
   selectedSetCondition;
@@ -246,13 +251,23 @@ export class AdvancedFilterComponent implements OnInit {
     this.expForms.controls[expIndex].patchValue({
       value: ['']
     });
-    this.setExpMenuValues(expIndex);
+    // this.setExpMenuValues(expIndex);
     console.log('Test');
   }
 
-  setExpMenuValues(expIndex) {
-    // return
-
+  setExpMenuValues(expIndex, value) {
+    let condition = this.expForms.value[expIndex].condition;
+    if (this.allEnabledConditions.includes(condition)) {
+      return false;
+    } else if (this.valueEnabledConditions.includes(condition) && value === 'Value') {
+      return false;
+    } else if (this.multipleValueConditions.includes(condition) && value === 'Multiple') {
+      return false;
+    } else if (this.blankConditions.includes(condition)) {
+      return true;
+    } else {
+      return true;
+    }
   }
 
   setExpConditionChange(setIndex, expIndex) {

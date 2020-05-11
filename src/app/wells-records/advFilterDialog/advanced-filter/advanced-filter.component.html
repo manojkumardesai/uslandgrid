@@ -61,7 +61,7 @@
               <mat-radio-group class="valuetype-radio-group">
                 <mat-radio-button class="valuetype-radio-button" 
                 mat-menu *ngFor="let value of valueTypes" [value]="value"
-                (change)="expSettingMenuChange(i, value)">
+                (change)="expSettingMenuChange(i, value)" [disabled]="setExpMenuValues(i, value)">
                   {{value}}
                 </mat-radio-button>
               </mat-radio-group>
@@ -128,7 +128,7 @@
                   <mat-radio-group class="valuetype-radio-group">
                     <mat-radio-button class="valuetype-radio-button"
                     mat-menu *ngFor="let value of valueTypes" [value]="value"
-                    (change)="setExpSettingMenuChange(i, j, value)">
+                    (change)="setExpSettingMenuChange(i, j, value)" [disabled]="setMenuValuesOfSet(i, j)">
                       {{value}}
                     </mat-radio-button>
                   </mat-radio-group>
