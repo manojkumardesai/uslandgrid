@@ -208,7 +208,7 @@ export class AdvancedFilterComponent implements OnInit {
       type: 'string',
       condition: 'is',
       caseSensitive: false,
-      value: []
+      value: ''
     });
   }
 

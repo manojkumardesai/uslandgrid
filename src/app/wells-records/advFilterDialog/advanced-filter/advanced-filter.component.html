@@ -47,7 +47,7 @@
             </mat-form-field>
             <mat-form-field>
               <input matInput placeholder="Enter filter term here" aria-label="Value" [matAutocomplete]="valuesAutoComplete"
-              formControlName="condition">
+              formControlName="value">
               <mat-autocomplete #valuesAutoComplete="matAutocomplete">
                 <mat-option *ngFor="let value of values" [value]="value.value">
                   <span>{{value.name}}</span>
