@@ -87,9 +87,14 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <button mat-button (click)="addExpToSetForm(i)">
-                <mat-icon color="primary">add</mat-icon> Add Expression
-              </button>
+              <div>
+                <button mat-icon-button (click)="deleteSet(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+                <button mat-button (click)="addExpToSetForm(i)">
+                  <mat-icon color="primary">add</mat-icon> Add Expression
+                </button>
+              </div>
             </div>
             <div formArrayName='exp'>
             <div class="fields" *ngFor="let exp of set.get('exp').controls;let j = index;" [formGroupName]="j">

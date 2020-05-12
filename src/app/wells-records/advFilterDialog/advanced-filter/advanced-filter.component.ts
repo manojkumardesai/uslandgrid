@@ -357,4 +357,12 @@ export class AdvancedFilterComponent implements OnInit {
     this.advanceFilterForm.setValue(this.data);
   }
   // End of Settings button event handlers
+
+  // onBlurMethod(i) {
+  //   let val = [];
+  //   val.push(this.expForms.value[i].value);
+  //   this.expForms.controls[i].patchValue({
+  //     value: val
+  //   });
+  // }
 }
