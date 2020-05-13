@@ -45,15 +45,18 @@
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
-            <mat-form-field>
-              <input matInput placeholder="Enter filter term here" aria-label="Value" [matAutocomplete]="valuesAutoComplete"
+            <!-- <mat-form-field> -->
+              <!-- <input matInput placeholder="Enter filter term here" aria-label="Value" [matAutocomplete]="valuesAutoComplete"
               formControlName="value">
               <mat-autocomplete #valuesAutoComplete="matAutocomplete">
                 <mat-option *ngFor="let value of values[i]" [value]="value">
                   <span>{{value}}</span>
                 </mat-option>
               </mat-autocomplete>
-            </mat-form-field>
+            </mat-form-field> -->
+            <app-multi-select 
+            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="true">
+            </app-multi-select>
             <button mat-icon-button [matMenuTriggerFor]="expMenu" aria-label="Example icon-button with a menu">
               <mat-icon>settings</mat-icon>
             </button>

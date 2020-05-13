@@ -16,6 +16,8 @@ import { FilterDialog } from './utils/matDialog/filterDialog.component';
 import { HeaderComponent } from './header/header.component';
 import { MapLegendComponent } from './map-legend/map-legend.component';
 import { AdvancedFilterComponent } from './wells-records/advFilterDialog/advanced-filter/advanced-filter.component';
+import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 // import { RouterStateSnapshot } from '@angular/router';
 
 
@@ -29,7 +31,8 @@ import { AdvancedFilterComponent } from './wells-records/advFilterDialog/advance
     FilterDialog,
     HeaderComponent,
     MapLegendComponent,
-    AdvancedFilterComponent
+    AdvancedFilterComponent,
+    MultiSelectComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +43,8 @@ import { AdvancedFilterComponent } from './wells-records/advFilterDialog/advance
     HttpClientModule,
     ChartsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxMatSelectSearchModule
   ],
   providers: [],
   bootstrap: [AppComponent]

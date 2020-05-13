@@ -319,10 +319,20 @@ export class AdvancedFilterComponent implements OnInit {
     });
     let column = indexedExp.value[expIndex].column;
     if (value == 'Field') {
-      this.values[setIndex + '' + expIndex] = [...this.fieldValues];
+      this.values[setIndex + '' + expIndex] = this.fieldValues.map((data, index) => {
+        return {
+          id: index,
+          name: data
+        }
+      });
     } else if (value == 'Unique') {
       this.apiService.fetchUniqueValues(column).subscribe((data: any) => {
-        this.values[setIndex + '' + expIndex] = [...data];
+        this.values[setIndex + '' + expIndex] = data.map((data, index) => {
+          return {
+            id: index,
+            name: data
+          }
+        });
       });
     }
   }
@@ -333,10 +343,20 @@ export class AdvancedFilterComponent implements OnInit {
       value: ['']
     });
     if (value == 'Field') {
-      this.values[expIndex] = [...this.fieldValues];
+      this.values[expIndex] = this.fieldValues.map((data, index) => {
+        return {
+          id: index,
+          name: data
+        }
+      });
     } else if (value == 'Unique') {
       this.apiService.fetchUniqueValues(column).subscribe((data: any) => {
-        this.values[expIndex] = [...data];
+        this.values[expIndex] = data.map((data, index) => {
+          return {
+            id: index,
+            name: data
+          }
+        });
       });
     }
   }
@@ -356,13 +376,8 @@ export class AdvancedFilterComponent implements OnInit {
 
     this.advanceFilterForm.setValue(this.data);
   }
-  // End of Settings button event handlers
 
-  // onBlurMethod(i) {
-  //   let val = [];
-  //   val.push(this.expForms.value[i].value);
-  //   this.expForms.controls[i].patchValue({
-  //     value: val
-  //   });
-  // }
+  getValueFieldFormControl(expIndex) {
+    return (this.expForms.controls[expIndex] as any).controls.value;
+  }
 }
