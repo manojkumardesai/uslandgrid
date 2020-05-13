@@ -29,6 +29,7 @@ export class AdvancedFilterComponent implements OnInit {
   columns;
   conditions;
   values = [];
+  valueTypeMap = [];
   fieldValues = [
     'county',
     'operator',
@@ -191,6 +192,7 @@ export class AdvancedFilterComponent implements OnInit {
 
   addExpressionToExp() {
     this.expForms.push(this.expressionStructure());
+    this.valueTypeMap[this.expForms.length - 1] = "Value";
   }
 
   addSetToSetForm() {
@@ -335,6 +337,7 @@ export class AdvancedFilterComponent implements OnInit {
         });
       });
     }
+    this.valueTypeMap[setIndex + '' + expIndex] = value;
   }
 
   expSettingMenuChange(expIndex, value) {
@@ -359,6 +362,7 @@ export class AdvancedFilterComponent implements OnInit {
         });
       });
     }
+    this.valueTypeMap[expIndex] = value;
   }
 
   setDefaultFormValues() {

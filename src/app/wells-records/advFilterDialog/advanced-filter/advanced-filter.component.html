@@ -54,8 +54,14 @@
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field> -->
-            <app-multi-select 
+            <app-multi-select *ngIf="valueTypeMap[i] == 'Field'"
             [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="false">
+            </app-multi-select>
+            <app-multi-select *ngIf="valueTypeMap[i] == 'Unique'"
+            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="false">
+            </app-multi-select>
+            <app-multi-select *ngIf="valueTypeMap[i] == 'Multiple'"
+            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="true">
             </app-multi-select>
             <button mat-icon-button [matMenuTriggerFor]="expMenu" aria-label="Example icon-button with a menu">
               <mat-icon>settings</mat-icon>
@@ -64,6 +70,7 @@
               <mat-radio-group class="valuetype-radio-group">
                 <mat-radio-button class="valuetype-radio-button" 
                 mat-menu *ngFor="let value of valueTypes" [value]="value"
+                [checked] = "valueTypeMap[i] == value"
                 (change)="expSettingMenuChange(i, value)" [disabled]="setExpMenuValues(i, value)">
                   {{value}}
                 </mat-radio-button>
@@ -129,8 +136,14 @@
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field> -->
-                <app-multi-select 
+                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Value'"
                     [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="false">
+                </app-multi-select>
+                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Field'"
+                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="false">
+                </app-multi-select>
+                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Multiple'"
+                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="true">
                 </app-multi-select>
                 <button mat-icon-button [matMenuTriggerFor]="setExpMenu">
                   <mat-icon>settings</mat-icon>
@@ -139,6 +152,7 @@
                   <mat-radio-group class="valuetype-radio-group">
                     <mat-radio-button class="valuetype-radio-button"
                     mat-menu *ngFor="let value of valueTypes" [value]="value"
+                    [checked] = "valueTypeMap[i+''+j] == value"
                     (change)="setExpSettingMenuChange(i, j, value)" [disabled]="setMenuValuesOfSet(i, j, value)">
                       {{value}}
                     </mat-radio-button>
