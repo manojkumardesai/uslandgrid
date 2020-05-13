@@ -14,6 +14,7 @@ import { FormControl } from '@angular/forms';
 import { ReplaySubject, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
+import { ConditionalExpr } from '@angular/compiler';
 
 @Component({
   selector: 'app-multi-select',
@@ -64,7 +65,7 @@ export class MultiSelectComponent implements OnInit, AfterViewInit, OnChanges, O
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.data.currentValue) {
+    if (changes.data && changes.data.currentValue) {
       this.optionsList = this.data;
       // load the initial options list
       this.filteredMultiOptions.next(this.optionsList.slice());
