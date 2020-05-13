@@ -380,4 +380,8 @@ export class AdvancedFilterComponent implements OnInit {
   getValueFieldFormControl(expIndex) {
     return (this.expForms.controls[expIndex] as any).controls.value;
   }
+
+  getValueFieldFormControlForSet(setIndex, expIndex) {
+    return (this.getExpAtSetIndex(setIndex).controls[expIndex] as any).controls.value
+  }
 }

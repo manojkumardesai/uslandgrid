@@ -120,7 +120,7 @@
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
-                <mat-form-field>
+                <!-- <mat-form-field>
                   <input matInput placeholder="Enter filter term here" aria-label="Value" [matAutocomplete]="valuesAutoComplete"
                   formControlName="value">
                   <mat-autocomplete #valuesAutoComplete="matAutocomplete">
@@ -128,7 +128,10 @@
                       <span>{{value}}</span>
                     </mat-option>
                   </mat-autocomplete>
-                </mat-form-field>
+                </mat-form-field> -->
+                <app-multi-select 
+                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="true">
+                </app-multi-select>
                 <button mat-icon-button [matMenuTriggerFor]="setExpMenu">
                   <mat-icon>settings</mat-icon>
                 </button>
