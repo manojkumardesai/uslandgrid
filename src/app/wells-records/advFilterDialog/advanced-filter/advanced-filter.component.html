@@ -45,15 +45,10 @@
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
-            <!-- <mat-form-field> -->
-              <!-- <input matInput placeholder="Enter filter term here" aria-label="Value" [matAutocomplete]="valuesAutoComplete"
-              formControlName="value">
-              <mat-autocomplete #valuesAutoComplete="matAutocomplete">
-                <mat-option *ngFor="let value of values[i]" [value]="value">
-                  <span>{{value}}</span>
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field> -->
+            <mat-form-field *ngIf="valueTypeMap[i] == 'Value'">
+              <input matInput placeholder="Enter filter term here" 
+              aria-label="Value" formControlName="value">
+            </mat-form-field>
             <app-multi-select *ngIf="valueTypeMap[i] == 'Field'"
             [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="false">
             </app-multi-select>
@@ -127,15 +122,10 @@
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
-                <!-- <mat-form-field>
-                  <input matInput placeholder="Enter filter term here" aria-label="Value" [matAutocomplete]="valuesAutoComplete"
-                  formControlName="value">
-                  <mat-autocomplete #valuesAutoComplete="matAutocomplete">
-                    <mat-option *ngFor="let value of values[i+''+j]" [value]="value">
-                      <span>{{value}}</span>
-                    </mat-option>
-                  </mat-autocomplete>
-                </mat-form-field> -->
+                <mat-form-field *ngIf="valueTypeMap[i+''+j] == 'Value'">
+                  <input matInput placeholder="Enter filter term here"
+                  aria-label="Value" formControlName="value">
+                </mat-form-field>
                 <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Value'"
                     [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="false">
                 </app-multi-select>
