@@ -55,7 +55,7 @@
               </mat-autocomplete>
             </mat-form-field> -->
             <app-multi-select 
-            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="true">
+            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="false">
             </app-multi-select>
             <button mat-icon-button [matMenuTriggerFor]="expMenu" aria-label="Example icon-button with a menu">
               <mat-icon>settings</mat-icon>
@@ -130,7 +130,7 @@
                   </mat-autocomplete>
                 </mat-form-field> -->
                 <app-multi-select 
-                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="true">
+                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="false">
                 </app-multi-select>
                 <button mat-icon-button [matMenuTriggerFor]="setExpMenu">
                   <mat-icon>settings</mat-icon>
