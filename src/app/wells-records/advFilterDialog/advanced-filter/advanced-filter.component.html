@@ -1,6 +1,10 @@
-<div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+<div>
   <div class="header">
-    <div><h3 mat-dialog-title>Filter</h3></div>
+    <div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+    <h3 mat-dialog-title>
+      <mat-icon>drag_handle</mat-icon>
+      Filter
+    </h3></div>
     <div>
       <button mat-button (click)="onNoClick()">
         <mat-icon>close</mat-icon>
@@ -126,10 +130,10 @@
                   <input matInput placeholder="Enter filter term here"
                   aria-label="Value" formControlName="value">
                 </mat-form-field>
-                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Value'"
+                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Field'"
                     [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="false">
                 </app-multi-select>
-                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Field'"
+                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Unique'"
                     [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="false">
                 </app-multi-select>
                 <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Multiple'"

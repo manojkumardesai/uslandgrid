@@ -204,12 +204,14 @@ export class AdvancedFilterComponent implements OnInit {
     let expTempFormArray = expTemp.get('exp') as FormArray;
     expTempFormArray.push(this.expressionStructure());
     this.setForms.push(expTemp);
+    this.valueTypeMap[this.setForms.length - 1 + '' + 0] = "Value";
     this.addExpToSetForm(this.setForms.length - 1);
   }
 
   addExpToSetForm(index) {
     let indexedExp = this.setForms.controls[index].get('exp') as FormArray;
     indexedExp.push(this.expressionStructure());
+    this.valueTypeMap[index + '' + (indexedExp.length - 1)] = "Value";
   }
 
   deleteExpFromExpArray(expIndex) {
