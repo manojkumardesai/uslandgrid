@@ -18,6 +18,7 @@ import { MapLegendComponent } from './map-legend/map-legend.component';
 import { AdvancedFilterComponent } from './wells-records/advFilterDialog/advanced-filter/advanced-filter.component';
 import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { InfoWindowComponent } from './map/info-window/info-window.component';
 // import { RouterStateSnapshot } from '@angular/router';
 
 
@@ -32,7 +33,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     HeaderComponent,
     MapLegendComponent,
     AdvancedFilterComponent,
-    MultiSelectComponent
+    MultiSelectComponent,
+    InfoWindowComponent
   ],
   imports: [
     BrowserModule,
