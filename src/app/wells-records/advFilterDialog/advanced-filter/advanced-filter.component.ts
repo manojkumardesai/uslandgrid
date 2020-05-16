@@ -23,7 +23,7 @@ export class AdvancedFilterComponent implements OnInit {
   multipleValueConditions = ['is any of', 'is none of'];
   blankConditions = ['is blank', 'is not blank'];
 
-  valueTypes = ['Value', 'Field', 'Unique'];
+  valueTypes = ['Value', 'Field', 'Unique', 'Multiple'];
   selectedGlobalCondition;
   selectedSetCondition;
   columns;
