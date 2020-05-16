@@ -330,7 +330,7 @@ export class AdvancedFilterComponent implements OnInit {
           name: data
         }
       });
-    } else if (value == 'Unique') {
+    } else if (value == 'Unique' || value == 'Multiple') {
       this.apiService.fetchUniqueValues(column).subscribe((data: any) => {
         this.values[setIndex + '' + expIndex] = data.map((data, index) => {
           return {
@@ -355,7 +355,7 @@ export class AdvancedFilterComponent implements OnInit {
           name: data
         }
       });
-    } else if (value == 'Unique') {
+    } else if (value == 'Unique' || value == 'Multiple') {
       this.apiService.fetchUniqueValues(column).subscribe((data: any) => {
         this.values[expIndex] = data.map((data, index) => {
           return {
