@@ -253,6 +253,7 @@ export class AdvancedFilterComponent implements OnInit {
       caseSensitive: false,
       type: 'string'
     });
+    this.valueTypeMap[expIndex] = "Value";
   }
 
   changeSetExpColumnValue(setIndex, expIndex) {
@@ -263,6 +264,7 @@ export class AdvancedFilterComponent implements OnInit {
       caseSensitive: false,
       type: 'string'
     });
+    this.valueTypeMap[setIndex + '' + expIndex] = "Value";
   }
   // End of column dropdown change event handlers
 
@@ -271,13 +273,12 @@ export class AdvancedFilterComponent implements OnInit {
     this.expForms.controls[expIndex].patchValue({
       value: ['']
     });
-    // this.setExpMenuValues(expIndex);
-    console.log('Test');
+    this.valueTypeMap[expIndex] = "Value";
   }
 
   setExpMenuValues(expIndex, value) {
     let condition = this.expForms.value[expIndex].condition;
-    if (this.allEnabledConditions.includes(condition)) {
+    if (this.allEnabledConditions.includes(condition) && value !== 'Multiple') {
       return false;
     } else if (this.valueEnabledConditions.includes(condition) && value === 'Value') {
       return false;
@@ -295,15 +296,15 @@ export class AdvancedFilterComponent implements OnInit {
     indexedExp.controls[expIndex].patchValue({
       value: ['']
     });
-    console.log('Test Set');
+    this.valueTypeMap[setIndex + '' + expIndex] = "Value";
   }
 
   setMenuValuesOfSet(setIndex, expIndex, value) {
     let indexedExp = this.getExpAtSetIndex(setIndex);
     let condition = indexedExp.value[expIndex].condition;
-    if (this.allEnabledConditions.includes(condition)) {
+    if (this.allEnabledConditions.includes(condition) && value !== 'Multiple') {
       return false;
-    } else if (this.valueEnabledConditions.includes(condition) && value === 'Value') {
+    } if (this.valueEnabledConditions.includes(condition) && value === 'Value') {
       return false;
     } else if (this.multipleValueConditions.includes(condition) && value === 'Multiple') {
       return false;
