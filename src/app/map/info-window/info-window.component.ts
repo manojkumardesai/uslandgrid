@@ -10,7 +10,9 @@ import { DialogData } from 'src/app/utils/matDialog/filterDialog.component';
 export class InfoWindowComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<InfoWindowComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData, ) { }
+    @Inject(MAT_DIALOG_DATA) public data: DialogData, ) {
+    dialogRef.disableClose = true;
+  }
 
   ngOnInit(): void {
     this.changePosition();
