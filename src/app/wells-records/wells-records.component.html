@@ -1,6 +1,7 @@
 <div class='wellsAccordion'>
     <mat-accordion>
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [ngClass]="{'customAccordionPanel': !panelOpenState}">
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+        [expanded]='true' [disabled]='true' [ngClass]="{'customAccordionPanel': !panelOpenState}">
             <mat-expansion-panel-header [ngClass]="{'customAccordionHeader': !panelOpenState,
             'customExpandedAccordionHeader': panelOpenState}">
                 <mat-panel-title *ngIf="!panelOpenState">
