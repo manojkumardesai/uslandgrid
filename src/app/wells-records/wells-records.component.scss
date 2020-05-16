@@ -90,3 +90,9 @@ tr.mat-row {
   ::ng-deep .mat-menu-content {
     height: 250px;
   }
+
+  .pagination {
+    position: absolute;
+    right: 1px;
+    top: 10px;
+  }
