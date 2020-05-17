@@ -222,7 +222,7 @@ export class AdvancedFilterComponent implements OnInit {
       column: 'state',
       type: 'string',
       condition: 'is',
-      option: ['Value'],
+      option: 'value',
       caseSensitive: false,
       value: ['']
     });
@@ -384,7 +384,7 @@ export class AdvancedFilterComponent implements OnInit {
   updateInput(expIndex, event?) {
     let valueControl = (this.expForms.controls[expIndex] as any).controls.value;
     let userEnteredValue = [];
-    if (event.value) {
+    if (event && event.value) {
       userEnteredValue.push(event.value);
     } else {
       userEnteredValue.push(valueControl.value);
@@ -395,7 +395,7 @@ export class AdvancedFilterComponent implements OnInit {
   updateSetInput(setIndex, expIndex, event?) {
     let valueControl = this.getValueFieldFormControlForSet(setIndex, expIndex);
     let userEnteredValue = [];
-    if (event.value) {
+    if (event && event.value) {
       userEnteredValue.push(event.value);
     } else {
       userEnteredValue.push(valueControl.value);
