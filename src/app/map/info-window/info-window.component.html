@@ -1,5 +1,14 @@
 <div>
-    <div class="header">USLandgrid Well: {{data[0].wellName}}</div>
+    <div class="header">
+      <div>USLandgrid Well: {{data[0].wellName}}</div>
+      <div>
+        <button mat-button (click)="close()">
+          <span class="material-icons">
+            close
+          </span>
+        </button>
+      </div>
+    </div>
     <div class="hzLine"></div>
     <div>
     <table>

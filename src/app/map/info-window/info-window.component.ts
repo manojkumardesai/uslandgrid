@@ -11,11 +11,14 @@ export class InfoWindowComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<InfoWindowComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, ) {
-    dialogRef.disableClose = true;
   }
 
   ngOnInit(): void {
     this.changePosition();
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 
   changePosition() {

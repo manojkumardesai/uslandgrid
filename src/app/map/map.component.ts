@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ApiService } from '../_services/api.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FilterDialog } from '../utils/matDialog/filterDialog.component';
 import "leaflet-mouse-position";
 import * as esri from "esri-leaflet";
@@ -30,6 +30,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   public plssLayer;
   public wellsLayer;
   public circleMarker;
+  public infoWindowDialog;
   public isMapExtentApplied = false;
   payLoadFromFilter = [];
   public mapExtent = [];
@@ -206,14 +207,17 @@ export class MapComponent implements AfterViewInit, OnInit {
   showInfoPoint(ev) {
     this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
       if (data.length) {
-        let dialogRef = this.dialog.open(InfoWindowComponent, {
+        if (this.infoWindowDialog) {
+          this.infoWindowDialog.close();
+        }
+        this.infoWindowDialog = this.dialog.open(InfoWindowComponent, {
           width: '350px',
           maxWidth: 350,
           backdropClass: 'cdk-overlay-transparent-backdrop',
-          hasBackdrop: true,
+          hasBackdrop: false,
           data
         });
-        dialogRef.afterClosed().subscribe((data) => console.log());
+        this.infoWindowDialog.afterClosed().subscribe((data) => console.log());
       }
     });
   }
