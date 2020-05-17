@@ -40,7 +40,6 @@ export class AdvancedFilterComponent implements OnInit {
     'longitude',
     'spuddate',
     'completiondate',
-    'country',
     'datumtype',
     'tvd',
     'state',
