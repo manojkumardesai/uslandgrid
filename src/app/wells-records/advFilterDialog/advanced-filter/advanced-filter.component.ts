@@ -31,14 +31,19 @@ export class AdvancedFilterComponent implements OnInit {
   values = [];
   valueTypeMap = [];
   fieldValues = [
-    'county',
+    'wellid',
+    'wellname',
     'operator',
-    'api_number',
-    'well_name',
+    'wellnumber',
+    'status',
+    'latitude',
+    'longitude',
+    'spuddate',
+    'completiondate',
+    'datumtype',
     'tvd',
-    'frac_type',
-    'datum',
-    'link_efrac',
+    'state',
+    'county',
   ];
   advanceFilterForm: FormGroup;
   constructor(public dialogRef: MatDialogRef<AdvancedFilterComponent>,
@@ -216,6 +221,7 @@ export class AdvancedFilterComponent implements OnInit {
       column: 'state',
       type: 'string',
       condition: 'is',
+      option: 'value',
       caseSensitive: false,
       value: ['']
     });
@@ -300,7 +306,8 @@ export class AdvancedFilterComponent implements OnInit {
   setExpSettingMenuChange(setIndex, expIndex, value) {
     let indexedExp = this.getExpAtSetIndex(setIndex);
     indexedExp.controls[expIndex].patchValue({
-      value: ['']
+      value: [''],
+      option: value.toLocaleLowerCase()
     });
     let column = indexedExp.value[expIndex].column;
     if (value == 'Field') {
@@ -326,7 +333,8 @@ export class AdvancedFilterComponent implements OnInit {
   expSettingMenuChange(expIndex, value) {
     let column = this.expForms.value[expIndex].column;
     this.expForms.controls[expIndex].patchValue({
-      value: ['']
+      value: [''],
+      option: value.toLocaleLowerCase()
     });
     if (value == 'Field') {
       this.values[expIndex] = this.fieldValues.map((data, index) => {
@@ -375,19 +383,32 @@ export class AdvancedFilterComponent implements OnInit {
   updateInput(expIndex, event?) {
     let valueControl = (this.expForms.controls[expIndex] as any).controls.value;
     let userEnteredValue = [];
-    userEnteredValue.push(valueControl.value);
-    valueControl.setValue(userEnteredValue);
+    if (event && event.value) {
+      userEnteredValue.push(event.value);
+    } else {
+      userEnteredValue.push(valueControl.value);
+    }
+    valueControl.patchValue(userEnteredValue);
   }
 
   updateSetInput(setIndex, expIndex, event?) {
     let valueControl = this.getValueFieldFormControlForSet(setIndex, expIndex);
     let userEnteredValue = [];
-    userEnteredValue.push(valueControl.value);
-    valueControl.setValue(userEnteredValue);
+    if (event && event.value) {
+      userEnteredValue.push(event.value);
+    } else {
+      userEnteredValue.push(valueControl.value);
+    }
+
+    valueControl.patchValue(userEnteredValue);
   }
 
   get displayGlobalConditions() {
     return this.expForms.length > 1 || this.setForms.length > 1 ||
       (this.expForms.length > 0 && this.setForms.length > 0);
+  }
+
+  reset() {
+    this.advanceFilterForm.reset();
   }
 }
