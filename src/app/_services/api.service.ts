@@ -59,4 +59,7 @@ export class ApiService {
   fetchInfoPoint({ lat, lng }) {
     return this.http.post(this.baseUrl + `well/info`, { latitude: lat, longitude: lng });
   }
+  fetchUniqueValues(columnName) {
+    return this.http.get(this.baseUrl + `unique/${columnName}`);
+  }
 }

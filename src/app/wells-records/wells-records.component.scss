@@ -3,6 +3,7 @@
     position: absolute;
     bottom: 0%;
     width: 100%;
+    height: 25%
 }
 
 .wellsRecordTable{
@@ -89,4 +90,14 @@ tr.mat-row {
 
   ::ng-deep .mat-menu-content {
     height: 250px;
+  }
+
+  .pagination {
+    position: absolute;
+    right: 1px;
+    top: 10px;
+  }
+
+  ::ng-deep .mat-expansion-panel {
+      height: 100%;
   }

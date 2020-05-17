@@ -1,0 +1,182 @@
+<div>
+  <div class="header">
+    <div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+    <h3 mat-dialog-title>
+      <mat-icon>drag_handle</mat-icon>
+      Filter
+    </h3></div>
+    <div>
+      <button mat-button (click)="onNoClick()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class='actionButtons'>
+    <button mat-button (click)="addExpressionToExp()">
+      <mat-icon color="primary">add</mat-icon> Add Expression
+    </button>
+    <button mat-button (click)="addSetToSetForm()">
+      <mat-icon color="primary">add</mat-icon> Add Set
+    </button>
+  </div>
+  <div mat-dialog-content class='auto-width'>
+      <mat-form-field *ngIf="displayGlobalConditions">
+          <mat-label>Select condition</mat-label>
+          <mat-select [(value)]="selectedGlobalCondition">
+            <mat-option *ngFor="let conditions of globalLogicalConditions" [value]="conditions.value">
+              {{conditions.viewValue}}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+      <form [formGroup]="advanceFilterForm">
+        <div formArrayName='exp'>
+          <div class ="fields" *ngFor='let exp of expForms.controls; let i=index;' [formGroupName]="i">
+            <mat-form-field>
+              <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
+              formControlName="column">
+              <mat-autocomplete #columnsAutoComplete="matAutocomplete" (optionSelected)="changeExpColumnValue(i)">
+                <mat-option *ngFor="let column of columns" [value]="column.value">
+                  <span>{{column.name}}</span>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Condition" aria-label="Condition" [matAutocomplete]="conditionsAutoComplete"
+              formControlName="condition">
+              <mat-autocomplete #conditionsAutoComplete="matAutocomplete" (optionSelected)="expConditionChange(i)">
+                <mat-option *ngFor="let condition of conditions" [value]="condition.value">
+                  <span>{{condition.name}}</span>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field *ngIf="valueTypeMap[i] == 'Value'">
+              <input matInput placeholder="Enter filter term here" 
+              aria-label="Value" formControlName="value" (change)="updateInput(i)">
+            </mat-form-field>
+            <app-multi-select *ngIf="valueTypeMap[i] == 'Field'"
+            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" 
+            (changeDropdown)="updateInput(i, $event)"
+            [enableCheckbox]="false">
+            </app-multi-select>
+            <app-multi-select *ngIf="valueTypeMap[i] == 'Unique'"
+            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" 
+            (changeDropdown)="updateInput(i, $event)"
+            [enableCheckbox]="false">
+            </app-multi-select>
+            <app-multi-select *ngIf="valueTypeMap[i] == 'Multiple'"
+            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="true">
+            </app-multi-select>
+            <button mat-icon-button [matMenuTriggerFor]="expMenu" aria-label="Example icon-button with a menu">
+              <mat-icon>settings</mat-icon>
+            </button>
+            <mat-menu #expMenu="matMenu">
+              <mat-radio-group class="valuetype-radio-group">
+                <mat-radio-button class="valuetype-radio-button" 
+                mat-menu *ngFor="let value of valueTypes" [value]="value"
+                [checked] = "valueTypeMap[i] == value"
+                (change)="expSettingMenuChange(i, value)" [disabled]="setExpMenuValues(i, value)">
+                  {{value}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </mat-menu>
+            <button mat-icon-button (click)="deleteExpFromExpArray(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <br/>
+            <!-- <mat-checkbox formControlName="caseSensitive">
+              Case Sensitive
+            </mat-checkbox> -->
+            
+          </div>
+        </div>
+        <div formArrayName='set'>
+          <div *ngFor='let set of setForms.controls; let i=index;' [formGroupName]="i">
+            <div class='fields'>
+              <mat-form-field>
+                <mat-label>Select condition</mat-label>
+                <mat-select formControlName="setOperator">
+                  <mat-option *ngFor="let conditions of setLogicalConditions" [value]="conditions.value">
+                    {{conditions.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div>
+                <button mat-icon-button (click)="deleteSet(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+                <button mat-button (click)="addExpToSetForm(i)">
+                  <mat-icon color="primary">add</mat-icon> Add Expression
+                </button>
+              </div>
+            </div>
+            <div formArrayName='exp'>
+            <div class="fields" *ngFor="let exp of set.get('exp').controls;let j = index;" [formGroupName]="j">
+              
+                <mat-form-field>
+                  <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
+                  formControlName="column">
+                  <mat-autocomplete #columnsAutoComplete="matAutocomplete" (optionSelected)="changeSetExpColumnValue(i, j)">
+                    <mat-option *ngFor="let column of columns" [value]="column.value">
+                      <span>{{column.name}}</span>
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="Condition" aria-label="Condition" [matAutocomplete]="conditionsAutoComplete"
+                  formControlName="condition">
+                  <mat-autocomplete #conditionsAutoComplete="matAutocomplete" (optionSelected)="setExpConditionChange(i, j)">
+                    <mat-option *ngFor="let condition of conditions" [value]="condition.value">
+                      <span>{{condition.name}}</span>
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field *ngIf="valueTypeMap[i+''+j] == 'Value'">
+                  <input matInput placeholder="Enter filter term here"
+                  (change) = "updateSetInput(i, j)"
+                  aria-label="Value" formControlName="value">
+                </mat-form-field>
+                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Field'"
+                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]"
+                    (changeDropdown)="updateSetInput(i, j, $event)"
+                    [enableCheckbox]="false">
+                </app-multi-select>
+                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Unique'"
+                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]"
+                    (changeDropdown)="updateSetInput(i, j, $event)"
+                    [enableCheckbox]="false">
+                </app-multi-select>
+                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Multiple'"
+                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="true">
+                </app-multi-select>
+                <button mat-icon-button [matMenuTriggerFor]="setExpMenu">
+                  <mat-icon>settings</mat-icon>
+                </button>
+                <mat-menu #setExpMenu="matMenu">
+                  <mat-radio-group class="valuetype-radio-group">
+                    <mat-radio-button class="valuetype-radio-button"
+                    mat-menu *ngFor="let value of valueTypes" [value]="value"
+                    [checked] = "valueTypeMap[i+''+j] == value"
+                    (change)="setExpSettingMenuChange(i, j, value)" [disabled]="setMenuValuesOfSet(i, j, value)">
+                      {{value}}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </mat-menu>
+                <button mat-icon-button *ngIf="set.get('exp').controls.length > 2" (click)="deleteExpFromSet(j, i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+                <br/>
+                <!-- <mat-checkbox formControlName="caseSensitive">
+                  Case Sensitive
+                </mat-checkbox> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+  </div>
+  <div mat-dialog-actions align="right">
+    <!-- [mat-dialog-close]="data.animal" -->
+    <button mat-button [mat-dialog-close]="advanceFilterForm.value">Apply</button>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+  </div>
+</div>

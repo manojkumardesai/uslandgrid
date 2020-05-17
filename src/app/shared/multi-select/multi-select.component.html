@@ -1,0 +1,17 @@
+<mat-form-field>
+    <mat-select [formControl]="optionMultiCtrl" [multiple]="enableCheckbox" (selectionChange)="changeDD(multiSelect)" #multiSelect>
+      <ngx-mat-select-search 
+                            [showToggleAllCheckbox]="enableCheckbox" 
+                            (toggleAll)="toggleSelectAll($event)" 
+                            [formControl]="optionMultiFilterCtrl"
+                            noEntriesFoundLabel="No matches found"
+                            placeholderLabel=''
+                            ></ngx-mat-select-search>
+      <mat-option *ngFor="let option of filteredMultiOptions | async" [value]="option.name">
+        {{option.name}}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="!optionMultiCtrl.valid && optionMultiCtrl.touched">
+      {{ariaLabel}} can not be blank
+    </mat-error>
+  </mat-form-field>

@@ -1,0 +1,50 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+::ng-deep .auto-width{
+    .mat-form-field {
+        width: auto !important;
+    }
+    .mat-select-value {
+        max-width: 100%;
+        width: auto;
+    }
+}
+
+.actionButtons {
+    margin-bottom: 16px;
+}
+
+::ng-deep .mat-menu-content {
+    height: auto;
+  }
+
+  .fields {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .break {
+    flex-basis: 100%;
+    height: 0;
+  }
+
+  .valuetype-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+  }
+  
+  .valuetype-radio-button {
+    margin: 5px;
+    color: white;
+  }
+
+  .mat-dialog-title .mat-icon {
+    top: 5px;
+    position: relative;
+    cursor: grab;
+  }
+  

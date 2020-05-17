@@ -5,6 +5,8 @@ import { MatSort } from '@angular/material/sort';
 import { ApiService } from '../_services/api.service';
 import { tap } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatDialog } from '@angular/material/dialog';
+import { AdvancedFilterComponent } from './advFilterDialog/advanced-filter/advanced-filter.component';
 
 export interface UserData {
   id: string;
@@ -67,7 +69,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   filterByMapExtentFlag: boolean;
   isLoading: boolean;
   payLoadWithParams: any = {};
-  constructor(public apiService: ApiService) { }
+  constructor(public apiService: ApiService,
+    public dialog: MatDialog) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.isLoading = true;
@@ -236,6 +239,21 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     } else {
       this.displayedColumns.splice(originalIndexOfColumn, 0, column);
     }
+  }
+
+  filterAdvanced() {
+    const dialogRef = this.dialog.open(AdvancedFilterComponent, {
+      width: '750px',
+      // maxWidth: 350,
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+      hasBackdrop: true,
+      data: this.payLoadWithParams.filter ? this.payLoadWithParams.filter : ''
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.payLoadWithParams['filter'] = result;
+      this.fetchData(this.payLoadWithParams);
+    });
   }
 }
 

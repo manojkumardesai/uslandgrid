@@ -5,9 +5,11 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ApiService } from '../_services/api.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FilterDialog } from '../utils/matDialog/filterDialog.component';
 import "leaflet-mouse-position";
+import * as esri from "esri-leaflet";
+import { InfoWindowComponent } from './info-window/info-window.component';
 
 export interface DialogData {
   animal: string;
@@ -28,6 +30,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   public plssLayer;
   public wellsLayer;
   public circleMarker;
+  public infoWindowDialog;
   public isMapExtentApplied = false;
   payLoadFromFilter = [];
   public mapExtent = [];
@@ -130,7 +133,12 @@ export class MapComponent implements AfterViewInit, OnInit {
       maxZoom: 20,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
-    this.map.addLayer(this.tiles);
+    //this.map.addLayer(this.tiles);
+
+    //Streets, Topographic, NationalGeographic, Oceans, Gray, DarkGray, Imagery, ImageryClarity, ImageryFirefly, ShadedRelief, Terrain, USATopo, Physical
+    let esriBaseLayer = esri.basemapLayer('Topographic');
+    //let esriImageryLayer = esri.basemapLayer('Imagery');
+    this.map.addLayer(esriBaseLayer);
   }
 
   addCultureLayer() {
@@ -198,92 +206,18 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   showInfoPoint(ev) {
     this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
-      if (this.infoPointMarker) {
-        this.map.removeLayer(this.infoPointMarker);
-      }
       if (data.length) {
-        this.infoPointMarker = new L.Marker(ev.latlng, {
-          opacity: 0,
-          draggable: true,
+        if (this.infoWindowDialog) {
+          this.infoWindowDialog.close();
+        }
+        this.infoWindowDialog = this.dialog.open(InfoWindowComponent, {
+          width: '350px',
+          maxWidth: 350,
+          backdropClass: 'cdk-overlay-transparent-backdrop',
+          hasBackdrop: false,
+          data
         });
-        this.map.addLayer(this.infoPointMarker);
-        this.infoPointMarker.bindPopup(`
-        <style>
-        .hzLine {
-          border: none;
-          border-top: 1px solid #333333;
-          margin-top: 6px;
-          margin-bottom: 6px;
-        }
-        .attrName {
-          color: #888888;
-          padding-right: 5px;
-        }
-        </style>
-        <div>
-          <div class="header">USLandgrid Well: ${data[0].wellName}</div>
-          <div class="hzLine"></div>
-          <div>
-          <table>
-            <tr>
-              <td class="attrName">well_id</td>
-              <td>${data[0].wellId}</td>
-            </tr>
-            <tr>
-              <td class="attrName">well_name</td>
-              <td>${data[0].wellName}</td>
-            </tr>
-            <tr>
-              <td class="attrName">operator</td>
-              <td>${data[0].operator}</td>
-            </tr>
-            <tr>
-              <td class="attrName">well_number</td>
-              <td>${data[0].wellNumber}</td>
-            </tr>
-            <tr>
-              <td class="attrName">status</td>
-              <td>${data[0].status}</td>
-            </tr>
-            <tr>
-              <td class="attrName">latitude</td>
-              <td>${data[0].latitude}</td>
-            </tr>
-            <tr>
-              <td class="attrName">longitude</td>
-              <td>${data[0].longitude}</td>
-            </tr>
-            <tr>
-              <td class="attrName">spud_date</td>
-              <td>${data[0].spudDate}</td>
-            </tr>
-            <tr>
-              <td class="attrName">completion_date</td>
-              <td>${data[0].completionDate}</td>
-            </tr>
-            <tr>
-              <td class="attrName">datum_type</td>
-              <td>${data[0].datumType}</td>
-            </tr>
-            <tr>
-              <td class="attrName">tvd</td>
-              <td>${data[0].tvd}</td>
-            </tr>
-            <tr>
-              <td class="attrName">state</td>
-              <td>${data[0].state}</td>
-            </tr>
-            <tr>
-              <td class="attrName">county</td>
-              <td>${data[0].county}</td>
-            </tr>
-            <tr>
-              <td class="attrName">reports</td>
-              <td><a target="_blank" href="#/detail/${data[0].wellId}">Reports Page</a></td>
-            </tr>
-          </table>
-        </div>
-        `).openPopup();
+        this.infoWindowDialog.afterClosed().subscribe((data) => console.log());
       }
     });
   }

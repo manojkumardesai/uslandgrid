@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
@@ -15,6 +15,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterDialog } from './utils/matDialog/filterDialog.component';
 import { HeaderComponent } from './header/header.component';
 import { MapLegendComponent } from './map-legend/map-legend.component';
+import { AdvancedFilterComponent } from './wells-records/advFilterDialog/advanced-filter/advanced-filter.component';
+import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { InfoWindowComponent } from './map/info-window/info-window.component';
 // import { RouterStateSnapshot } from '@angular/router';
 
 
@@ -27,17 +31,22 @@ import { MapLegendComponent } from './map-legend/map-legend.component';
     LoginComponent,
     FilterDialog,
     HeaderComponent,
-    MapLegendComponent
+    MapLegendComponent,
+    AdvancedFilterComponent,
+    MultiSelectComponent,
+    InfoWindowComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
+    DragDropModule,
     HttpClientModule,
     ChartsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxMatSelectSearchModule
   ],
   providers: [],
   bootstrap: [AppComponent]
