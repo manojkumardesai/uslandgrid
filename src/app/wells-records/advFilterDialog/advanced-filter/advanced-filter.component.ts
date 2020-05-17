@@ -70,14 +70,9 @@ export class AdvancedFilterComponent implements OnInit {
         'value': 'well_id'
       },
       {
-        'id': 4,
+        'id': 5,
         'name': 'well_name (String)',
         'value': 'well_name'
-      },
-      {
-        'id': 5,
-        'name': 'objectid (Number)',
-        'value': 'objectid'
       },
       {
         'id': 6,
@@ -91,26 +86,11 @@ export class AdvancedFilterComponent implements OnInit {
       },
       {
         'id': 8,
-        'name': 'start_date (Date)',
-        'value': 'start_date'
-      },
-      {
-        'id': 9,
-        'name': 'longitude (Number)',
-        'value': 'longitude'
-      },
-      {
-        'id': 10,
-        'name': 'latitude (Number)',
-        'value': 'latitude'
-      },
-      {
-        'id': 11,
         'name': 'datum (String)',
         'value': 'datum'
       },
       {
-        'id': 12,
+        'id': 9,
         'name': 'link_efrac (String)',
         'value': 'link_efrac'
       }
@@ -390,5 +370,16 @@ export class AdvancedFilterComponent implements OnInit {
 
   getValueFieldFormControlForSet(setIndex, expIndex) {
     return (this.getExpAtSetIndex(setIndex).controls[expIndex] as any).controls.value
+  }
+
+  updateInput(expIndex) {
+    let valueControl = (this.expForms.controls[expIndex] as any).controls.value;
+    let userEnteredValue = [];
+    userEnteredValue.push(valueControl.value);
+    valueControl.setValue(userEnteredValue);
+  }
+
+  get displayGlobalConditions() {
+    return this.expForms.length > 1 || this.setForms.length > 1;
   }
 }

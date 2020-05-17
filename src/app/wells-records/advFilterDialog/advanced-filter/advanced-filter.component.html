@@ -20,7 +20,7 @@
     </button>
   </div>
   <div mat-dialog-content class='auto-width'>
-      <mat-form-field>
+      <mat-form-field *ngIf="displayGlobalConditions">
           <mat-label>Select condition</mat-label>
           <mat-select [(value)]="selectedGlobalCondition">
             <mat-option *ngFor="let conditions of globalLogicalConditions" [value]="conditions.value">
@@ -51,7 +51,7 @@
             </mat-form-field>
             <mat-form-field *ngIf="valueTypeMap[i] == 'Value'">
               <input matInput placeholder="Enter filter term here" 
-              aria-label="Value" formControlName="value">
+              aria-label="Value" formControlName="value" (change)="updateInput(i)">
             </mat-form-field>
             <app-multi-select *ngIf="valueTypeMap[i] == 'Field'"
             [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="false">
