@@ -2,12 +2,6 @@
     <mat-accordion>
         <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
         [expanded]='true' [disabled]='true' [ngClass]="{'customAccordionPanel': !panelOpenState}">
-            <mat-expansion-panel-header [ngClass]="{'customAccordionHeader': !panelOpenState,
-            'customExpandedAccordionHeader': panelOpenState}">
-                <mat-panel-title *ngIf="!panelOpenState">
-                    Wells Records
-                </mat-panel-title>
-            </mat-expansion-panel-header>
             <div>
                   <div class='options'>
                     <div class='actionButtons'>
@@ -25,8 +19,12 @@
                         </button>
                       </mat-menu>
                     </div>
+                    <div class='actionButtons' (click)="filterAdvanced()">
+                      <button mat-raised-button>Options</button>
+                    </div>
                     <div class='actionButtons'>
-                        <button mat-raised-button [ngClass]="{'active': filterByMapExtentFlag}" (click)="filterEmit()">Filter By Map Extent</button>
+                        <button mat-raised-button [ngClass]="{'active': filterByMapExtentFlag}"
+                        (click)="filterEmit()">Filter By Map Extent</button>
                     </div>
                     <div class='actionButtons'>
                         <button mat-raised-button (click)="zoomToEmit()">Zoom To</button>
@@ -37,9 +35,7 @@
                     <div class='actionButtons' (click)="refreshEmit()">
                         <button mat-raised-button>Refresh</button>
                     </div>
-                    <div class='actionButtons' (click)="filterAdvanced()">
-                        <button mat-raised-button>Filter</button>
-                    </div>
+                    
                     <div class='actionButtons pagination'>
                       <mat-paginator [length]="totalAvailableWellsCount" [pageSizeOptions]="[5,10,15]"></mat-paginator>
                     </div>
