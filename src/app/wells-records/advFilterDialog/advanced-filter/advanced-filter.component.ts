@@ -407,4 +407,8 @@ export class AdvancedFilterComponent implements OnInit {
     return this.expForms.length > 1 || this.setForms.length > 1 ||
       (this.expForms.length > 0 && this.setForms.length > 0);
   }
+
+  reset() {
+    this.advanceFilterForm.reset();
+  }
 }
