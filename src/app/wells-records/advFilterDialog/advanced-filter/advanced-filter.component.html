@@ -54,10 +54,14 @@
               aria-label="Value" formControlName="value" (change)="updateInput(i)">
             </mat-form-field>
             <app-multi-select *ngIf="valueTypeMap[i] == 'Field'"
-            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="false">
+            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" 
+            (changeDropdown)="updateInput(i, $event)"
+            [enableCheckbox]="false">
             </app-multi-select>
             <app-multi-select *ngIf="valueTypeMap[i] == 'Unique'"
-            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="false">
+            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" 
+            (changeDropdown)="updateInput(i, $event)"
+            [enableCheckbox]="false">
             </app-multi-select>
             <app-multi-select *ngIf="valueTypeMap[i] == 'Multiple'"
             [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="true">
@@ -128,13 +132,18 @@
                 </mat-form-field>
                 <mat-form-field *ngIf="valueTypeMap[i+''+j] == 'Value'">
                   <input matInput placeholder="Enter filter term here"
+                  (change) = "updateSetInput(i, j)"
                   aria-label="Value" formControlName="value">
                 </mat-form-field>
                 <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Field'"
-                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="false">
+                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]"
+                    (changeDropdown)="updateSetInput(i, j, $event)"
+                    [enableCheckbox]="false">
                 </app-multi-select>
                 <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Unique'"
-                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="false">
+                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]"
+                    (changeDropdown)="updateSetInput(i, j, $event)"
+                    [enableCheckbox]="false">
                 </app-multi-select>
                 <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Multiple'"
                     [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="true">

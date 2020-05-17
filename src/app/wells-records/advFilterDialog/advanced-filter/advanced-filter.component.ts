@@ -372,14 +372,22 @@ export class AdvancedFilterComponent implements OnInit {
     return (this.getExpAtSetIndex(setIndex).controls[expIndex] as any).controls.value
   }
 
-  updateInput(expIndex) {
+  updateInput(expIndex, event?) {
     let valueControl = (this.expForms.controls[expIndex] as any).controls.value;
     let userEnteredValue = [];
     userEnteredValue.push(valueControl.value);
     valueControl.setValue(userEnteredValue);
   }
 
+  updateSetInput(setIndex, expIndex, event?) {
+    let valueControl = this.getValueFieldFormControlForSet(setIndex, expIndex);
+    let userEnteredValue = [];
+    userEnteredValue.push(valueControl.value);
+    valueControl.setValue(userEnteredValue);
+  }
+
   get displayGlobalConditions() {
-    return this.expForms.length > 1 || this.setForms.length > 1;
+    return this.expForms.length > 1 || this.setForms.length > 1 ||
+      (this.expForms.length > 0 && this.setForms.length > 0);
   }
 }
