@@ -61,7 +61,7 @@ export class MultiSelectComponent implements OnInit, AfterViewInit, OnChanges, O
       });
   }
   ngAfterViewInit() {
-    this.setInitialValue();
+    // this.setInitialValue();
   }
 
   ngOnChanges(changes: SimpleChanges) {
