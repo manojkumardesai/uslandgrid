@@ -102,8 +102,8 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   private initMap(): void {
     this.map = L.map('map', {
-      center: [35.420372, -98.512855],
-      zoom: 8
+      center: [38.417301, -97.075195],
+      zoom: 5
     });
     this.map.on('moveend', () => {
       if (this.isMapExtentApplied) {
@@ -197,7 +197,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   homeLocation() {
-    this.map.setView(new L.LatLng(35.420372, -98.512855), 8);
+    this.map.setView(new L.LatLng(38.417301, -97.075195), 5);
   }
 
   goToLocation(lat, lng) {
