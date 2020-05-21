@@ -13,3 +13,8 @@
     display: flex;
     justify-content: space-between;
   }
+
+  ::ng-deep.mat-dialog-container {
+    resize: both; 
+    overflow: auto;
+  }
