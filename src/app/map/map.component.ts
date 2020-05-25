@@ -7,9 +7,10 @@ import { startWith, map, debounceTime, distinctUntilChanged, switchMap } from 'r
 import { ApiService } from '../_services/api.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FilterDialog } from '../utils/matDialog/filterDialog.component';
-import "leaflet-mouse-position";
-import * as esri from "esri-leaflet";
 import { InfoWindowComponent } from './info-window/info-window.component';
+import "leaflet-mouse-position";
+import "leaflet.markercluster"
+import * as esri from "esri-leaflet";
 
 export interface DialogData {
   animal: string;
@@ -26,6 +27,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   public map;
   public infoPointMarker;
   public tiles;
+  public esriBaseLayer;
+  public esriImageryLayer;
   public cultureLayer;
   public plssLayer;
   public wellsLayer;
@@ -34,6 +37,11 @@ export class MapComponent implements AfterViewInit, OnInit {
   public isMapExtentApplied = false;
   payLoadFromFilter = [];
   public mapExtent = [];
+  public clusterTestData = [[36.4894247, -94.62209316333, "2"],
+  [35.89726627274613, 	-94.78902898887267, "3"],
+  [35.656934764703834, 	-94.51654022374833, "3A"],
+  [35.7117439886913, -94.612213655333, "1"],
+  [35.651138107, -94.52214051333, "5"]];
   name: string;
   myControl = new FormControl();
   options: any[] = [];
@@ -123,8 +131,10 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.addPlssLayer();
     this.addWellsLayer();
     this.layerControl();
+    //this.addClusterLayer();
     // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
+
   }
 
   addTileLayer() {
@@ -136,9 +146,9 @@ export class MapComponent implements AfterViewInit, OnInit {
     //this.map.addLayer(this.tiles);
 
     //Streets, Topographic, NationalGeographic, Oceans, Gray, DarkGray, Imagery, ImageryClarity, ImageryFirefly, ShadedRelief, Terrain, USATopo, Physical
-    let esriBaseLayer = esri.basemapLayer('Topographic');
-    //let esriImageryLayer = esri.basemapLayer('Imagery');
-    this.map.addLayer(esriBaseLayer);
+    this.esriBaseLayer = esri.basemapLayer('Gray');
+    this.esriImageryLayer = esri.basemapLayer('Imagery');
+    this.map.addLayer(this.esriBaseLayer);
   }
 
   addCultureLayer() {
@@ -174,12 +184,31 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map.addLayer(this.wellsLayer);
   }
 
+  addClusterLayer() {
+     //Adding Cluster layer
+     var markers = L.markerClusterGroup({
+      disableClusteringAtZoom : 8,
+      showCoverageOnHover: false
+     });
+		
+     for (var i = 0; i < this.clusterTestData.length; i++) {
+       var a = this.clusterTestData[i];
+       var title = a[2];
+       var marker = L.marker(new L.LatLng(a[0], a[1]), { title: title });
+       marker.bindPopup(title);
+       markers.addLayer(marker);
+     }
+ 
+     this.map.addLayer(markers);
+  }
+
   layerControl() {
     let baseLayerMaps = {
 
     };
     let overLay = {
-      'Base Map': this.tiles,
+      'Base Map': this.esriBaseLayer,
+      'Satellite': this.esriImageryLayer,
       'Wells': this.wellsLayer,
       'PLSS': this.plssLayer
     }
