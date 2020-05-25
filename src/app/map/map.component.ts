@@ -37,11 +37,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   public isMapExtentApplied = false;
   payLoadFromFilter = [];
   public mapExtent = [];
-  public clusterTestData = [[36.4894247, -94.62209316333, "2"],
-  [35.89726627274613, 	-94.78902898887267, "3"],
-  [35.656934764703834, 	-94.51654022374833, "3A"],
-  [35.7117439886913, -94.612213655333, "1"],
-  [35.651138107, -94.52214051333, "5"]];
+  public clusterTestData = [];
   name: string;
   myControl = new FormControl();
   options: any[] = [];
@@ -78,6 +74,13 @@ export class MapComponent implements AfterViewInit, OnInit {
           return this._filter(name);
         })
       );
+    this.fetchClusterData();
+  }
+
+  fetchClusterData() {
+    this.apiService.fetchClusters().subscribe((clusterData) => {
+      this.clusterTestData = [...clusterData];
+    });
   }
 
   private _filter(value: any): Observable<any[]> {
@@ -185,21 +188,21 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   addClusterLayer() {
-     //Adding Cluster layer
-     var markers = L.markerClusterGroup({
-      disableClusteringAtZoom : 8,
+    //Adding Cluster layer
+    var markers = L.markerClusterGroup({
+      disableClusteringAtZoom: 8,
       showCoverageOnHover: false
-     });
-		
-     for (var i = 0; i < this.clusterTestData.length; i++) {
-       var a = this.clusterTestData[i];
-       var title = a[2];
-       var marker = L.marker(new L.LatLng(a[0], a[1]), { title: title });
-       marker.bindPopup(title);
-       markers.addLayer(marker);
-     }
- 
-     this.map.addLayer(markers);
+    });
+
+    for (var i = 0; i < this.clusterTestData.length; i++) {
+      var a = this.clusterTestData[i];
+      var title = a[2];
+      var marker = L.marker(new L.LatLng(a[0], a[1]), { title: title });
+      marker.bindPopup(title);
+      markers.addLayer(marker);
+    }
+
+    this.map.addLayer(markers);
   }
 
   layerControl() {

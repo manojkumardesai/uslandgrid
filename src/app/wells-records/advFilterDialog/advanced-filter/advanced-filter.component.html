@@ -176,7 +176,7 @@
   </div>
   <div mat-dialog-actions align="right">
     <!-- [mat-dialog-close]="data.animal" -->
-    <button mat-button [mat-dialog-close]="advanceFilterForm.value">Apply</button>
+    <button mat-button [disabled]="advanceFilterForm.invalid" [mat-dialog-close]="advanceFilterForm.value">Apply</button>
     <button mat-button (click)="onNoClick()">Cancel</button>
     <button mat-button (click)="reset()">Reset</button>
   </div>

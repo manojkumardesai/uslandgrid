@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormGroup, FormBuilder, FormArray, Form } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Form, FormControl, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/_services/api.service';
 
 
@@ -23,7 +23,7 @@ export class AdvancedFilterComponent implements OnInit {
   multipleValueConditions = ['is any of', 'is none of'];
   blankConditions = ['is blank', 'is not blank'];
 
-  valueTypes = ['Value', 'Field', 'Unique', 'Multiple'];
+  valueTypes = ['Unique', 'Value', 'Multiple'];
   selectedGlobalCondition;
   selectedSetCondition;
   columns;
@@ -161,6 +161,8 @@ export class AdvancedFilterComponent implements OnInit {
     });
     if (this.data) {
       this.setDefaultFormValues();
+    } else {
+      this.addExpressionToExp();
     }
   }
 
@@ -218,12 +220,12 @@ export class AdvancedFilterComponent implements OnInit {
 
   expressionStructure() {
     return this.fb.group({
-      column: 'state',
-      type: 'string',
-      condition: 'is',
-      option: 'value',
+      column: new FormControl('state', Validators.required),
+      type: new FormControl('string', Validators.required),
+      condition: new FormControl('is', Validators.required),
+      option: new FormControl('value', Validators.required),
       caseSensitive: false,
-      value: ['']
+      value: new FormControl([], Validators.required)
     });
   }
 
