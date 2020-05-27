@@ -80,6 +80,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   fetchClusterData() {
     this.apiService.fetchClusters().subscribe((clusterData) => {
       this.clusterTestData = [...clusterData];
+      this.addClusterLayer();
     });
   }
 
