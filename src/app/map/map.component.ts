@@ -207,9 +207,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   layerControl() {
-    let baseLayerMaps = {
-
-    };
+    let baseLayerMaps = {};
     let overLay = {
       'Base Map': this.esriBaseLayer,
       'Satellite': this.esriImageryLayer,
