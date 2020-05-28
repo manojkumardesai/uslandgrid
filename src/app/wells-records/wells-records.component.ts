@@ -69,6 +69,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   filterByMapExtentFlag: boolean;
   isLoading: boolean;
   payLoadWithParams: any = {};
+  selectedTab;
   constructor(public apiService: ApiService,
     public dialog: MatDialog) { }
 
@@ -254,6 +255,10 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.payLoadWithParams['filters'] = result;
       this.fetchData(this.payLoadWithParams);
     });
+  }
+
+  onTabChange(event) {
+    console.log(event);
   }
 }
 

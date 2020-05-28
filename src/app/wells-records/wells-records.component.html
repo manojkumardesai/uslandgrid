@@ -40,7 +40,7 @@
                       <mat-paginator [length]="totalAvailableWellsCount" [pageSizeOptions]="[5,10,15]"></mat-paginator>
                     </div>
                   </div>
-                  <mat-tab-group>
+                  <mat-tab-group [(selectedIndex)]="selectedTab" (selectedTabChange)="onTabChange($event)">
                     <mat-tab label="First"> 
                       <div class="wellsTableContainer">
                         <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar>
@@ -94,6 +94,7 @@
                     <mat-tab label="Fourth"> Content 4 </mat-tab>
                     <mat-tab label="Fifth"> Content 5 </mat-tab>
                     <mat-tab label="Sixth"> Content 6 </mat-tab>
+                    <mat-tab label="Seven"> Content 7 </mat-tab>
                   </mat-tab-group>
                   
             </div>
