@@ -41,7 +41,7 @@
                     </div>
                   </div>
                   <mat-tab-group [(selectedIndex)]="selectedTab" (selectedTabChange)="onTabChange($event)">
-                    <mat-tab label="First"> 
+                    <mat-tab label="Well Records"> 
                       <div class="wellsTableContainer">
                         <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar>
                       <table class='wellsRecordTable' mat-table [dataSource]="dataSource" matSort>
@@ -89,12 +89,12 @@
                       </table>
                     </div>
                     </mat-tab>
-                    <mat-tab label="Second"> Another table </mat-tab>
-                    <mat-tab label="Third"> Another table </mat-tab>
-                    <mat-tab label="Fourth">Another table </mat-tab>
-                    <mat-tab label="Fifth"> Another table </mat-tab>
-                    <mat-tab label="Sixth"> Another table </mat-tab>
-                    <mat-tab label="Seven"> Another table </mat-tab>
+                    <mat-tab label="MC"> Another table </mat-tab>
+                    <mat-tab label="CP"> Another table </mat-tab>
+                    <mat-tab label="FT">Another table </mat-tab>
+                    <mat-tab label="PF"> Another table </mat-tab>
+                    <mat-tab label="Survey"> Another table </mat-tab>
+                    <mat-tab label="IP Volume"> Another table </mat-tab>
                   </mat-tab-group>
                   
             </div>
