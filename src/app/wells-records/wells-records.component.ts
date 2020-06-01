@@ -23,7 +23,7 @@ export interface UserData {
 export class WellsRecordsComponent implements OnInit, OnChanges {
   panelOpenState = false;
   totalAvailableWellsCount = 400;
-  displayedColumns: string[] = [
+  displayedWellRecordColumns: string[] = [
     'select',
     'wellId',
     'wellName',
@@ -39,7 +39,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     'tvd',
     'reports'
   ];
-  availableColumns: string[] = [
+  availableWellRecordColumns: string[] = [
     'select',
     'wellId',
     'wellName',
@@ -55,12 +55,12 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     'tvd',
     'reports'
   ];
-  public wellDetailsMC = [];
-  public wellDetailsCP = [];
-  public wellDetailsPF = [];
-  public wellDetailsFT = [];
-  public wellDetailsSurvey = [];
-  public wellDetailsIP = [];
+  public wellDetailsMC: MatTableDataSource<any>;
+  public wellDetailsCP: MatTableDataSource<any>;
+  public wellDetailsPF: MatTableDataSource<any>;
+  public wellDetailsFT: MatTableDataSource<any>;
+  public wellDetailsSurvey: MatTableDataSource<any>;
+  public wellDetailsIP: MatTableDataSource<any>;
   dataSource: MatTableDataSource<any>;
   @Input() payLoadFromFilter: any;
   @Input() mapExtent: any;
@@ -235,16 +235,16 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   }
 
   selectedColumn(column) {
-    return this.displayedColumns.indexOf(column) > -1;
+    return this.displayedWellRecordColumns.indexOf(column) > -1;
   }
 
   modifyDisplayedColumns(column) {
-    const indexOfColumn = this.displayedColumns.indexOf(column);
-    const originalIndexOfColumn = this.availableColumns.indexOf(column);
+    const indexOfColumn = this.displayedWellRecordColumns.indexOf(column);
+    const originalIndexOfColumn = this.availableWellRecordColumns.indexOf(column);
     if (indexOfColumn > -1) {
-      this.displayedColumns.splice(indexOfColumn, 1);
+      this.displayedWellRecordColumns.splice(indexOfColumn, 1);
     } else {
-      this.displayedColumns.splice(originalIndexOfColumn, 0, column);
+      this.displayedWellRecordColumns.splice(originalIndexOfColumn, 0, column);
     }
   }
 
@@ -264,74 +264,60 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   }
 
   onTabChange(event) {
-    console.log(event);
+    this.fetchCpWellDetail(this.payLoadWithParams);
   }
 
-  fetchCpWellDetail(wellId) {
-    this.apiService.fetchCpWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsCP = data.map((innerData) => {
-        return Object.keys(innerData).map((res) => {
-          return {
-            key: res,
-            value: innerData[res]
-          }
-        });
-      });
+  fetchCpWellDetail(payLoad) {
+    this.apiService.fetchCpWellDetails(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.wellDetailsCP = new MatTableDataSource(data.wellDtos);
+      this.totalAvailableWellsCount = data.count;
+      this.wellDetailsCP.sort = this.sort;
     });
   }
 
-  fetchFtWellDetail(wellId) {
-    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsFT = Object.keys(data).map((res) => {
-        return {
-          key: res,
-          value: data[res]
-        }
-      });
+  fetchFtWellDetail(payLoad) {
+    this.apiService.fetchFtWellDetails(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.wellDetailsFT = new MatTableDataSource(data.wellDtos);
+      this.totalAvailableWellsCount = data.count;
+      this.wellDetailsFT.sort = this.sort;
     });
   }
 
-  fetchMcWellDetail(wellId) {
-    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsMC = Object.keys(data).map((res) => {
-        return {
-          key: res,
-          value: data[res]
-        }
-      });
+  fetchMcWellDetail(payLoad) {
+    this.apiService.fetchMcWellDetails(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.wellDetailsMC = new MatTableDataSource(data.wellDtos);
+      this.totalAvailableWellsCount = data.count;
+      this.wellDetailsMC.sort = this.sort;
     });
   }
 
-  fetchPfWellDetail(wellId) {
-    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsPF = Object.keys(data).map((res) => {
-        return {
-          key: res,
-          value: data[res]
-        }
-      });
+  fetchPfWellDetail(payLoad) {
+    this.apiService.fetchPfWellDetails(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.wellDetailsPF = new MatTableDataSource(data.wellDtos);
+      this.totalAvailableWellsCount = data.count;
+      this.wellDetailsPF.sort = this.sort;
     });
   }
 
-  fetchSurveyWellDetail(wellId) {
-    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsSurvey = Object.keys(data).map((res) => {
-        return {
-          key: res,
-          value: data[res]
-        }
-      });
+  fetchSurveyWellDetail(payLoad) {
+    this.apiService.fetchSurveyWellDetails(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.wellDetailsSurvey = new MatTableDataSource(data.wellDtos);
+      this.totalAvailableWellsCount = data.count;
+      this.wellDetailsSurvey.sort = this.sort;
     });
   }
 
-  fetchIpWellDetail(wellId) {
-    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsIP = Object.keys(data).map((res) => {
-        return {
-          key: res,
-          value: data[res]
-        }
-      });
+  fetchIpWellDetail(payLoad) {
+    this.apiService.fetchIpWellDetails(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.wellDetailsIP = new MatTableDataSource(data.wellDtos);
+      this.totalAvailableWellsCount = data.count;
+      this.wellDetailsIP.sort = this.sort;
     });
   }
 }

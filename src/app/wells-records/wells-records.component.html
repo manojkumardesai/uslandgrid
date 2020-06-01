@@ -9,7 +9,7 @@
                         <mat-icon>more_vert</mat-icon>
                       </button>
                       <mat-menu yPosition="above" #menu="matMenu">
-                        <button mat-menu-item *ngFor="let columnToDisplay of availableColumns">
+                        <button mat-menu-item *ngFor="let columnToDisplay of availableWellRecordColumns">
                           <mat-checkbox 
                           (click) = "$event.stopPropagation()"
                           (change)="modifyDisplayedColumns(columnToDisplay)"
@@ -64,7 +64,7 @@
                         </ng-container>
   
                         <!-- Looping through displayed column list -->
-                        <ng-container *ngFor="let column of displayedColumns">
+                        <ng-container *ngFor="let column of displayedWellRecordColumns">
                           <ng-container *ngIf="column !== 'select' && column !== 'reports'" [matColumnDef]="column">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column | uppercase }} </th>
                             <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
@@ -83,8 +83,8 @@
                           </td>
                         </ng-container>
                     
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        <tr mat-header-row *matHeaderRowDef="displayedWellRecordColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedWellRecordColumns;">
                         </tr>
                       </table>
                     </div>
