@@ -55,6 +55,12 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     'tvd',
     'reports'
   ];
+  public wellDetailsMC = [];
+  public wellDetailsCP = [];
+  public wellDetailsPF = [];
+  public wellDetailsFT = [];
+  public wellDetailsSurvey = [];
+  public wellDetailsIP = [];
   dataSource: MatTableDataSource<any>;
   @Input() payLoadFromFilter: any;
   @Input() mapExtent: any;
@@ -259,6 +265,74 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   onTabChange(event) {
     console.log(event);
+  }
+
+  fetchCpWellDetail(wellId) {
+    this.apiService.fetchCpWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsCP = data.map((innerData) => {
+        return Object.keys(innerData).map((res) => {
+          return {
+            key: res,
+            value: innerData[res]
+          }
+        });
+      });
+    });
+  }
+
+  fetchFtWellDetail(wellId) {
+    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsFT = Object.keys(data).map((res) => {
+        return {
+          key: res,
+          value: data[res]
+        }
+      });
+    });
+  }
+
+  fetchMcWellDetail(wellId) {
+    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsMC = Object.keys(data).map((res) => {
+        return {
+          key: res,
+          value: data[res]
+        }
+      });
+    });
+  }
+
+  fetchPfWellDetail(wellId) {
+    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsPF = Object.keys(data).map((res) => {
+        return {
+          key: res,
+          value: data[res]
+        }
+      });
+    });
+  }
+
+  fetchSurveyWellDetail(wellId) {
+    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsSurvey = Object.keys(data).map((res) => {
+        return {
+          key: res,
+          value: data[res]
+        }
+      });
+    });
+  }
+
+  fetchIpWellDetail(wellId) {
+    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsIP = Object.keys(data).map((res) => {
+        return {
+          key: res,
+          value: data[res]
+        }
+      });
+    });
   }
 }
 

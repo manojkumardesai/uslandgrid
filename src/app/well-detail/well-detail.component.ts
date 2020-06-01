@@ -4,6 +4,7 @@ import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { ActivatedRoute } from '@angular/router';
 import { LoginService } from '../_services/login.service';
+import { DetailService } from './service/detail-service.service';
 
 @Component({
   selector: 'app-well-detail',
@@ -23,7 +24,7 @@ export class WellDetailComponent implements OnInit {
       }
     },
     showLines: false,
-    legend: {position: 'bottom'}
+    legend: { position: 'bottom' }
   };
   public doughNutChartOptions: ChartOptions = {
     responsive: true,
@@ -36,7 +37,7 @@ export class WellDetailComponent implements OnInit {
       }
     },
     showLines: false,
-    legend: {position: 'bottom'}
+    legend: { position: 'bottom' }
   };
 
   public barChartData: ChartDataSets[];
@@ -56,15 +57,15 @@ export class WellDetailComponent implements OnInit {
   public wellDetailsIP = [];
   public isLoggedIn = false;
 
-  constructor(public apiService: ApiService,
-              public route: ActivatedRoute, public loginService: LoginService) { }
+  constructor(public detailService: DetailService,
+    public route: ActivatedRoute, public loginService: LoginService) { }
 
   ngOnInit(): void {
     this.wellId = this.route.snapshot.paramMap.get("id");
     this.loginService.user.subscribe((data) => {
-      this.isLoggedIn = data && data.loggedIn ? data.loggedIn  : false;
-  });
-    if(this.wellId) {
+      this.isLoggedIn = data && data.loggedIn ? data.loggedIn : false;
+    });
+    if (this.wellId) {
       this.fetchDataForChart();
       this.fetchWellDetail(this.wellId);
       this.fetchMcWellDetail(this.wellId);
@@ -74,14 +75,14 @@ export class WellDetailComponent implements OnInit {
       this.fetchIpWellDetail(this.wellId);
       this.fetchSurveyWellDetail(this.wellId);
     }
-      }
+  }
 
   fetchDataForChart() {
-    this.apiService.fetchChartData().subscribe((data) => {
+    this.detailService.fetchChartData().subscribe((data) => {
       this.barChartLabels = data.map((res) => {
         return res.county
       });
-      let values =  data.map((res) => {
+      let values = data.map((res) => {
         return res.value
       });
       this.doughNutChartData = values;
@@ -94,75 +95,76 @@ export class WellDetailComponent implements OnInit {
   }
 
   fetchWellDetail(wellId) {
-    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+    this.detailService.fetchWellDetails(wellId).subscribe((data) => {
       this.wellDetails = data;
     });
   }
 
   fetchCpWellDetail(wellId) {
-    this.apiService.fetchCpWellDetails(wellId).subscribe((data) => {
+    this.detailService.fetchCpWellDetails(wellId).subscribe((data) => {
       this.wellDetailsCP = data.map((innerData) => {
         return Object.keys(innerData).map((res) => {
-        return {
+          return {
             key: res,
             value: innerData[res]
-        }
+          }
+        });
+      });
     });
-    }); });
   }
 
   fetchFtWellDetail(wellId) {
-    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+    this.detailService.fetchWellDetails(wellId).subscribe((data) => {
       this.wellDetailsFT = Object.keys(data).map((res) => {
         return {
-            key: res,
-            value: data[res]
+          key: res,
+          value: data[res]
         }
-    });
+      });
     });
   }
 
   fetchMcWellDetail(wellId) {
-    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
-      this.wellDetailsMC= Object.keys(data).map((res) => {
+    this.detailService.fetchWellDetails(wellId).subscribe((data) => {
+      this.wellDetailsMC = Object.keys(data).map((res) => {
         return {
-            key: res,
-            value: data[res]
+          key: res,
+          value: data[res]
         }
-    });
+      });
     });
   }
 
   fetchPfWellDetail(wellId) {
-    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+    this.detailService.fetchWellDetails(wellId).subscribe((data) => {
       this.wellDetailsPF = Object.keys(data).map((res) => {
         return {
-            key: res,
-            value: data[res]
+          key: res,
+          value: data[res]
         }
-    });
+      });
     });
   }
 
   fetchSurveyWellDetail(wellId) {
-    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+    this.detailService.fetchWellDetails(wellId).subscribe((data) => {
       this.wellDetailsSurvey = Object.keys(data).map((res) => {
         return {
-            key: res,
-            value: data[res]
+          key: res,
+          value: data[res]
         }
-    });
+      });
     });
   }
 
   fetchIpWellDetail(wellId) {
-    this.apiService.fetchWellDetails(wellId).subscribe((data) => {
+    this.detailService.fetchWellDetails(wellId).subscribe((data) => {
       this.wellDetailsIP = Object.keys(data).map((res) => {
         return {
-            key: res,
-            value: data[res]
+          key: res,
+          value: data[res]
         }
-    });
+      });
     });
   }
 

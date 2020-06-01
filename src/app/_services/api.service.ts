@@ -18,9 +18,6 @@ export class ApiService {
   fetchWellsData(wellPayLoad): Observable<any> {
     return this.http.post(this.baseUrl + 'wells', wellPayLoad);
   }
-  fetchChartData(): Observable<any> {
-    return this.http.get(this.baseUrl + `chart/county`);
-  }
   fetchWellDetails(wellId): Observable<any> {
     return this.http.get(this.baseUrl + `well/${wellId}`);
   }
@@ -36,24 +33,7 @@ export class ApiService {
   generateReport(payLoad) {
     return this.http.post(this.baseUrl + `report/well`, payLoad, { responseType: 'arraybuffer' });
   }
-  fetchMcWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/mc?wellId=${wellId}`);
-  }
-  fetchCpWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/cp?wellId=${wellId}`);
-  }
-  fetchFtWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/ft?wellId=${wellId}`);
-  }
-  fetchPfWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/pf?wellId=${wellId}`);
-  }
-  fetchSurveyWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/survey?wellId=${wellId}`);
-  }
-  fetchIpWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/ipvolume?wellId=${wellId}`);
-  }
+
   fetchInfoPoint({ lat, lng }) {
     return this.http.post(this.baseUrl + `well/info`, { latitude: lat, longitude: lng });
   }
