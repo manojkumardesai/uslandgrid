@@ -75,7 +75,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   filterByMapExtentFlag: boolean;
   isLoading: boolean;
   payLoadWithParams: any = {};
-  selectedTab;
+  selectedTab = 0;
   constructor(public apiService: ApiService,
     public dialog: MatDialog) { }
 
@@ -103,11 +103,14 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         points: this.mapExtent
       };
     }
-    if (Object.keys(payLoad).length) {
-      Object.assign(this.payLoadWithParams, payLoad);
+    if (!this.payLoadWithParams[this.selectedTab]) {
+      this.payLoadWithParams[this.selectedTab] = {};
     }
-    if (Object.keys(this.payLoadWithParams).length) {
-      this.apiService.fetchWellsData(this.payLoadWithParams).subscribe((data) => {
+    if (Object.keys(payLoad).length) {
+      Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
+    }
+    if (Object.keys(this.payLoadWithParams[this.selectedTab]).length) {
+      this.apiService.fetchWellsData(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
         this.isLoading = false;
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
@@ -145,9 +148,9 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         wellsCriteria: this.payLoadFromFilter
       }
       if (Object.keys(payLoad).length) {
-        Object.assign(this.payLoadWithParams, payLoad);
+        Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
       }
-      this.apiService.fetchWellsData(this.payLoadWithParams).subscribe((data) => {
+      this.apiService.fetchWellsData(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
         this.isLoading = false;
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
@@ -159,9 +162,9 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         limit
       }
       if (Object.keys(payLoad).length) {
-        Object.assign(this.payLoadWithParams, payLoad);
+        Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
       }
-      this.apiService.fetchWellsData(this.payLoadWithParams).subscribe((data) => {
+      this.apiService.fetchWellsData(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
         this.isLoading = false;
         this.dataSource = new MatTableDataSource(data.wellDtos);
         this.totalAvailableWellsCount = data.count;
@@ -207,7 +210,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   refreshEmit() {
     this.refresh.emit('true');
     this.selection.clear();
-    this.fetchData(this.payLoadWithParams);
+    this.fetchData(this.payLoadWithParams[this.selectedTab]);
   }
 
   zoomToEmit() {
@@ -254,17 +257,17 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       // maxWidth: 350,
       backdropClass: 'cdk-overlay-transparent-backdrop',
       hasBackdrop: true,
-      data: this.payLoadWithParams.filters ? this.payLoadWithParams.filters : ''
+      data: this.payLoadWithParams[this.selectedTab].filters ? this.payLoadWithParams[this.selectedTab].filters : ''
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.payLoadWithParams['filters'] = result;
-      this.fetchData(this.payLoadWithParams);
+      this.payLoadWithParams[this.selectedTab]['filters'] = result;
+      this.fetchData(this.payLoadWithParams[this.selectedTab]);
     });
   }
 
   onTabChange(event) {
-    this.fetchCpWellDetail(this.payLoadWithParams);
+    this.fetchCpWellDetail(this.payLoadWithParams[this.selectedTab]);
   }
 
   fetchCpWellDetail(payLoad) {
