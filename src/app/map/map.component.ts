@@ -9,7 +9,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FilterDialog } from '../utils/matDialog/filterDialog.component';
 import { InfoWindowComponent } from './info-window/info-window.component';
 import "leaflet-mouse-position";
-import "leaflet.markercluster"
+import "leaflet.markercluster";
 import * as esri from "esri-leaflet";
 
 export interface DialogData {
@@ -131,7 +131,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       }, 400)
     });
     this.addTileLayer();
-    // this.addCultureLayer();
+    this.addCultureLayer();
     this.addPlssLayer();
     this.addWellsLayer();
     this.layerControl();
@@ -163,7 +163,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       styles: '',
       attribution: null
     });
-    this.map.addLayer(this.cultureLayer);
+    //this.map.addLayer(this.cultureLayer);
   }
 
   addPlssLayer() {
@@ -174,7 +174,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       styles: '',
       attribution: null
     });
-    this.map.addLayer(this.plssLayer);
+    //this.map.addLayer(this.plssLayer);
   }
 
   addWellsLayer() {
