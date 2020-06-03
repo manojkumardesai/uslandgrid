@@ -42,8 +42,8 @@
                   </div>
                   <mat-tab-group [(selectedIndex)]="selectedTab" (selectedTabChange)="onTabChange($event)">
                     <mat-tab label="Well Records"> 
-                      <div class="wellsTableContainer">
-                        <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar>
+                    <div class="wellsTableContainer">
+                      <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar>
                       <table class='wellsRecordTable' mat-table [dataSource]="dataSource" matSort>
                         <!-- Check Box Code-->
                         <ng-container matColumnDef="select">
@@ -89,7 +89,54 @@
                       </table>
                     </div>
                     </mat-tab>
-                    <mat-tab label="MC"> Another table </mat-tab>
+                    <mat-tab label="MC">
+                      <div class="wellsTableContainer">
+                        <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar>
+                        <table class='wellsRecordTable' mat-table [dataSource]="dataSource" matSort>
+                          <!-- Check Box Code-->
+                          <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                              <mat-checkbox (change)="$event ? masterToggle() : null"
+                                            [checked]="selection.hasValue() && isAllSelected()"
+                                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                            [aria-label]="checkboxLabel()">
+                              </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                              <mat-checkbox (click)="$event.stopPropagation()"
+                                            (change)="$event ? selection.toggle(row) : null; rowToggle($event);"
+                                            [checked]="selection.isSelected(row)"
+                                            [aria-label]="checkboxLabel(row)">
+                              </mat-checkbox>
+                            </td>
+                          </ng-container>
+    
+                          <!-- Looping through displayed column list -->
+                          <ng-container *ngFor="let column of displayedWellRecordColumns">
+                            <ng-container *ngIf="column !== 'select' && column !== 'reports'" [matColumnDef]="column">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column | uppercase }} </th>
+                              <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                            </ng-container>
+                          </ng-container>
+                          <!-- End of column loop -->
+    
+                          <ng-container matColumnDef="reports">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> REPORTS </th>
+                            <td mat-cell *matCellDef="let row">
+                              <a target="_blank" [routerLink]="['/detail', row.wellId]">
+                                <span  class="material-icons pointerClass" >
+                                  open_in_new
+                                </span>
+                              </a>
+                            </td>
+                          </ng-container>
+                      
+                          <tr mat-header-row *matHeaderRowDef="displayedWellRecordColumns; sticky: true"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedWellRecordColumns;">
+                          </tr>
+                        </table>
+                      </div>
+                    </mat-tab>
                     <mat-tab label="CP"> Another table </mat-tab>
                     <mat-tab label="FT">Another table </mat-tab>
                     <mat-tab label="PF"> Another table </mat-tab>

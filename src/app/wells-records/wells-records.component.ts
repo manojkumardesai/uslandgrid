@@ -267,11 +267,19 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   }
 
   onTabChange(event) {
-    this.fetchCpWellDetail(this.payLoadWithParams[this.selectedTab]);
+    this.fetchCpWellDetail();
   }
 
-  fetchCpWellDetail(payLoad) {
-    this.apiService.fetchCpWellDetails(payLoad).subscribe((data) => {
+  fetchCpWellDetail(offset = 0, limit = 5) {
+    const payLoad = {
+      offset,
+      limit
+    }
+    if (!this.payLoadWithParams[this.selectedTab]) {
+      this.payLoadWithParams[this.selectedTab] = {};
+    }
+    Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
+    this.apiService.fetchCpWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.wellDetailsCP = new MatTableDataSource(data.wellDtos);
       this.totalAvailableWellsCount = data.count;
