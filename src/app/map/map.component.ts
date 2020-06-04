@@ -78,10 +78,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   fetchClusterData() {
-    this.apiService.fetchClusters().subscribe((clusterData) => {
-      this.clusterTestData = [...clusterData];
-      this.addClusterLayer();
-    });
+    // this.apiService.fetchClusters().subscribe((clusterData) => {
+    //   this.clusterTestData = [...clusterData];
+    //   this.addClusterLayer();
+    // });
   }
 
   private _filter(value: any): Observable<any[]> {
@@ -195,15 +195,15 @@ export class MapComponent implements AfterViewInit, OnInit {
       showCoverageOnHover: false
     });
 
-    for (var i = 0; i < this.clusterTestData.length; i++) {
-      var a = this.clusterTestData[i];
-      var title = a[2];
-      var marker = L.marker(new L.LatLng(a[0], a[1]), { title: title });
-      marker.bindPopup(title);
-      markers.addLayer(marker);
-    }
+    // for (var i = 0; i < this.clusterTestData.length; i++) {
+    //   var a = this.clusterTestData[i];
+    //   var title = a[2];
+    //   var marker = L.marker(new L.LatLng(a[0], a[1]), { title: title });
+    //   marker.bindPopup(title);
+    //   markers.addLayer(marker);
+    // }
 
-    this.map.addLayer(markers);
+    // this.map.addLayer(markers);
   }
 
   layerControl() {
