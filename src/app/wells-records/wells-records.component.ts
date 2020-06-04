@@ -25,22 +25,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   panelOpenState = false;
   totalAvailableWellsCount = [];
   displayedColumns = [];
-  availableColumns: string[] = [
-    'select',
-    'wellId',
-    'wellName',
-    'operator',
-    'wellNumber',
-    'status',
-    'latitude',
-    'longitude',
-    'spudDate',
-    'completionDate',
-    'county',
-    'datumType',
-    'tvd',
-    'reports'
-  ];
+  availableColumns = [];
   public wellDetailsMC: MatTableDataSource<any>;
   public wellDetailsCP: MatTableDataSource<any>;
   public wellDetailsPF: MatTableDataSource<any>;
@@ -209,6 +194,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellDtos[0]);
     });
   }
 
@@ -218,7 +204,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   modifyDisplayedColumns(column) {
     const indexOfColumn = this.displayedColumns[this.selectedTab].indexOf(column);
-    const originalIndexOfColumn = this.availableColumns.indexOf(column);
+    const originalIndexOfColumn = this.availableColumns[this.selectedTab].indexOf(column);
     if (indexOfColumn > -1) {
       this.displayedColumns[this.selectedTab].splice(indexOfColumn, 1);
     } else {
@@ -276,7 +262,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.payLoadWithParams[this.selectedTab] = {};
     }
     if (!this.displayedColumns[this.selectedTab]) {
-      this.displayedColumns[this.selectedTab] = [...this.columnConstants.CP_COLUMNS];
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.CP_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
     this.apiService.fetchCpWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
@@ -296,7 +282,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.payLoadWithParams[this.selectedTab] = {};
     }
     if (!this.displayedColumns[this.selectedTab]) {
-      this.displayedColumns[this.selectedTab] = [...this.columnConstants.FT_COLUMNS];
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.FT_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
     this.apiService.fetchFtWellDetails(payLoad).subscribe((data) => {
@@ -316,7 +302,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.payLoadWithParams[this.selectedTab] = {};
     }
     if (!this.displayedColumns[this.selectedTab]) {
-      this.displayedColumns[this.selectedTab] = [...this.columnConstants.MC_COLUMNS];
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.MC_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
     this.apiService.fetchMcWellDetails(payLoad).subscribe((data) => {
@@ -324,6 +310,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellMcDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellMcDtos[0]);
     });
   }
 
@@ -336,7 +323,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.payLoadWithParams[this.selectedTab] = {};
     }
     if (!this.displayedColumns[this.selectedTab]) {
-      this.displayedColumns[this.selectedTab] = [...this.columnConstants.PF_COLUMNS];
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.PF_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
     this.apiService.fetchPfWellDetails(payLoad).subscribe((data) => {
@@ -344,6 +331,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellPfDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellPfDtos[0]);
     });
   }
 
@@ -356,7 +344,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.payLoadWithParams[this.selectedTab] = {};
     }
     if (!this.displayedColumns[this.selectedTab]) {
-      this.displayedColumns[this.selectedTab] = [...this.columnConstants.SURVEY_COLUMNS];
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.SURVEY_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
     this.apiService.fetchSurveyWellDetails(payLoad).subscribe((data) => {
@@ -364,6 +352,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellSurveyDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellSurveyDtos[0]);
     });
   }
 
@@ -376,7 +365,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.payLoadWithParams[this.selectedTab] = {};
     }
     if (!this.displayedColumns[this.selectedTab]) {
-      this.displayedColumns[this.selectedTab] = [...this.columnConstants.IP_COLUMNS];
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.IP_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
     this.apiService.fetchIpWellDetails(payLoad).subscribe((data) => {
@@ -384,6 +373,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellIpVolumeDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellIpVolumeDtos[0]);
     });
   }
 

@@ -9,7 +9,7 @@
                         <mat-icon>more_vert</mat-icon>
                       </button>
                       <mat-menu yPosition="above" #menu="matMenu">
-                        <button mat-menu-item *ngFor="let columnToDisplay of availableColumns">
+                        <button mat-menu-item *ngFor="let columnToDisplay of availableColumns[selectedTab]">
                           <mat-checkbox 
                           (click) = "$event.stopPropagation()"
                           (change)="modifyDisplayedColumns(columnToDisplay)"
