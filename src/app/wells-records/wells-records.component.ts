@@ -23,7 +23,7 @@ export interface UserData {
 })
 export class WellsRecordsComponent implements OnInit, OnChanges {
   panelOpenState = false;
-  totalAvailableWellsCount = 400;
+  totalAvailableWellsCount = [];
   displayedColumns = [];
   availableColumns: string[] = [
     'select',
@@ -107,7 +107,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   ngAfterViewInit() {
     this.paginator.page
       .pipe(
-        tap(() => this.loadWells(this.paginator.pageIndex, this.paginator.pageSize))
+        tap(() => this.onTabChange(this.paginator.pageIndex, this.paginator.pageSize))
       )
       .subscribe();
   }
@@ -207,22 +207,22 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.apiService.fetchWellsData(payLoad).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellDtos);
-      this.totalAvailableWellsCount = data.count;
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
     });
   }
 
   selectedColumn(column) {
-    return this.displayedColumns.indexOf(column) > -1;
+    return this.displayedColumns[this.selectedTab].indexOf(column) > -1;
   }
 
   modifyDisplayedColumns(column) {
-    const indexOfColumn = this.displayedColumns.indexOf(column);
+    const indexOfColumn = this.displayedColumns[this.selectedTab].indexOf(column);
     const originalIndexOfColumn = this.availableColumns.indexOf(column);
     if (indexOfColumn > -1) {
-      this.displayedColumns.splice(indexOfColumn, 1);
+      this.displayedColumns[this.selectedTab].splice(indexOfColumn, 1);
     } else {
-      this.displayedColumns.splice(originalIndexOfColumn, 0, column);
+      this.displayedColumns[this.selectedTab].splice(originalIndexOfColumn, 0, column);
     }
   }
 
@@ -241,28 +241,28 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     });
   }
 
-  onTabChange(event) {
+  onTabChange(offset, limit) {
     switch (this.selectedTab) {
       case 0:
         this.fetchData(this.payLoadWithParams[this.selectedTab]);
         break;
       case 1:
-        this.fetchMcWellDetail();
+        this.fetchMcWellDetail(offset, limit);
         break;
       case 2:
-        this.fetchCpWellDetail();
+        this.fetchCpWellDetail(offset, limit);
         break;
       case 3:
-        this.fetchFtWellDetail();
+        this.fetchFtWellDetail(offset, limit);
         break;
       case 4:
-        this.fetchPfWellDetail();
+        this.fetchPfWellDetail(offset, limit);
         break;
       case 5:
-        this.fetchSurveyWellDetail();
+        this.fetchSurveyWellDetail(offset, limit);
         break;
       case 6:
-        this.fetchIpWellDetail();
+        this.fetchIpWellDetail(offset, limit);
         break;
     }
   }
@@ -282,7 +282,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.apiService.fetchCpWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellCpDtos);
-      this.totalAvailableWellsCount = data.count;
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
     });
   }
@@ -302,7 +302,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.apiService.fetchFtWellDetails(payLoad).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellFtDtos);
-      this.totalAvailableWellsCount = data.count;
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
     });
   }
@@ -322,7 +322,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.apiService.fetchMcWellDetails(payLoad).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellMcDtos);
-      this.totalAvailableWellsCount = data.count;
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
     });
   }
@@ -342,7 +342,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.apiService.fetchPfWellDetails(payLoad).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellPfDtos);
-      this.totalAvailableWellsCount = data.count;
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
     });
   }
@@ -362,7 +362,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.apiService.fetchSurveyWellDetails(payLoad).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellSurveyDtos);
-      this.totalAvailableWellsCount = data.count;
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
     });
   }
@@ -382,7 +382,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.apiService.fetchIpWellDetails(payLoad).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellIpVolumeDtos);
-      this.totalAvailableWellsCount = data.count;
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
     });
   }

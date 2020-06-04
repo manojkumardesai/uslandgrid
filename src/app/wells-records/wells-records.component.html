@@ -37,10 +37,10 @@
                     </div>
                     
                     <div class='actionButtons pagination'>
-                      <mat-paginator [length]="totalAvailableWellsCount" [pageSizeOptions]="[5,10,15]"></mat-paginator>
+                      <mat-paginator [length]="totalAvailableWellsCount[this.selectedTab]" [pageSizeOptions]="[5,10,15]"></mat-paginator>
                     </div>
                   </div>
-                  <mat-tab-group [(selectedIndex)]="selectedTab" (selectedTabChange)="onTabChange($event)">
+                  <mat-tab-group [(selectedIndex)]="selectedTab" (selectedTabChange)="onTabChange('', '')">
                     <mat-tab label="Well Records"> 
                     <div class="wellsTableContainer">
                       <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar>
