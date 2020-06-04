@@ -32,6 +32,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   public cultureLayer;
   public plssLayer;
   public wellsLayer;
+  public clusterLayer;
   public circleMarker;
   public infoWindowDialog;
   public isMapExtentApplied = false;
@@ -78,10 +79,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   fetchClusterData() {
-    // this.apiService.fetchClusters().subscribe((clusterData) => {
-    //   this.clusterTestData = [...clusterData];
-    //   this.addClusterLayer();
-    // });
+     this.apiService.fetchClusters().subscribe((clusterData) => {
+       this.clusterTestData = [...clusterData];
+       this.addClusterLayer();
+     });
   }
 
   private _filter(value: any): Observable<any[]> {
@@ -129,6 +130,18 @@ export class MapComponent implements AfterViewInit, OnInit {
       setTimeout(() => {
         this.map.invalidateSize();
       }, 400)
+    });
+
+    //Control the cluster visibility based on zoom level
+    this.map.on("zoomend", () => {
+      let zoom = this.map.getZoom();
+      if(zoom > 11) {
+        this.map.removeLayer(this.clusterLayer);
+      } else {
+        if(!this.map.hasLayer(this.clusterLayer)) {
+          this.map.addLayer(this.clusterLayer);
+        }
+      }
     });
     this.addTileLayer();
     this.addCultureLayer();
@@ -190,20 +203,42 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   addClusterLayer() {
     //Adding Cluster layer
-    var markers = L.markerClusterGroup({
-      disableClusteringAtZoom: 8,
-      showCoverageOnHover: false
+    this.clusterLayer = L.markerClusterGroup({
+      //disableClusteringAtZoom: 8,
+      showCoverageOnHover: false,
+      /*iconCreateFunction: function (cluster) {
+        return L.divIcon({
+          iconSize: null
+        });
+      }*/
+      
     });
 
-    // for (var i = 0; i < this.clusterTestData.length; i++) {
-    //   var a = this.clusterTestData[i];
-    //   var title = a[2];
-    //   var marker = L.marker(new L.LatLng(a[0], a[1]), { title: title });
-    //   marker.bindPopup(title);
-    //   markers.addLayer(marker);
-    // }
+    //clustermarker
+    let clusterMarkerOptions = {
+      radius: 3,
+      fillColor: "#ab0972",
+      color: "#df098",
+      weight: 1,
+      opacity: 0.2,
+      fillOpacity: 0.5
+    };
 
-    // this.map.addLayer(markers);
+    var mapIcon = L.icon({
+      iconUrl: 'https://cdn.iconscout.com/icon/free/png-256/dot-22-433567.png',
+      iconSize: [30, 30]
+    });
+
+
+    for (var i = 0; i < this.clusterTestData.length; i++) {
+      var a = this.clusterTestData[i];
+      var title = a[2];
+      var marker = L.marker(new L.LatLng(a[0], a[1]), { icon: mapIcon });
+      //marker.bindPopup(title);
+      this.clusterLayer.addLayer(marker);
+    }
+
+    this.map.addLayer(this.clusterLayer);
   }
 
   layerControl() {
