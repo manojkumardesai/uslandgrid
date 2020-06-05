@@ -76,17 +76,35 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       };
     }
     if (!this.payLoadWithParams[this.selectedTab]) {
-      this.payLoadWithParams[this.selectedTab] = {};
+      this.payLoadWithParams[0] = {};
+      this.payLoadWithParams[1] = {};
+      this.payLoadWithParams[2] = {};
+      this.payLoadWithParams[3] = {};
+      this.payLoadWithParams[4] = {};
+      this.payLoadWithParams[5] = {};
+      this.payLoadWithParams[6] = {};
     }
     if (Object.keys(payLoad).length) {
-      Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
+      Object.assign(this.payLoadWithParams[0], payLoad);
+      Object.assign(this.payLoadWithParams[1], payLoad);
+      Object.assign(this.payLoadWithParams[2], payLoad);
+      Object.assign(this.payLoadWithParams[3], payLoad);
+      Object.assign(this.payLoadWithParams[4], payLoad);
+      Object.assign(this.payLoadWithParams[5], payLoad);
+      Object.assign(this.payLoadWithParams[6], payLoad);
     }
     if (Object.keys(this.payLoadWithParams[this.selectedTab]).length) {
-      this.fetchData(this.payLoadWithParams[this.selectedTab]);
+      this.onTabChange();
     }
   }
   ngOnInit() {
-
+    this.payLoadWithParams[0] = {};
+    this.payLoadWithParams[1] = {};
+    this.payLoadWithParams[2] = {};
+    this.payLoadWithParams[3] = {};
+    this.payLoadWithParams[4] = {};
+    this.payLoadWithParams[5] = {};
+    this.payLoadWithParams[6] = {};
   }
 
   ngAfterViewInit() {
@@ -222,8 +240,14 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.payLoadWithParams[this.selectedTab]['filters'] = result;
-      this.fetchData(this.payLoadWithParams[this.selectedTab]);
+      this.payLoadWithParams[0]['filters'] = result;
+      this.payLoadWithParams[1]['filters'] = result;
+      this.payLoadWithParams[2]['filters'] = result;
+      this.payLoadWithParams[3]['filters'] = result;
+      this.payLoadWithParams[4]['filters'] = result;
+      this.payLoadWithParams[5]['filters'] = result;
+      this.payLoadWithParams[6]['filters'] = result;
+      this.onTabChange();
     });
   }
 

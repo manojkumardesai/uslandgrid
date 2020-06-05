@@ -162,7 +162,7 @@ export class AdvancedFilterComponent implements OnInit {
     if (this.data) {
       this.setDefaultFormValues();
     } else {
-      this.addExpressionToExp();
+      this.addSetToSetForm();
     }
   }
 
