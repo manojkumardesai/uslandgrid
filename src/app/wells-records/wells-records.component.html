@@ -4,7 +4,7 @@
         [expanded]='true' [disabled]='true' [ngClass]="{'customAccordionPanel': !panelOpenState}">
             <div>
                   
-                  <mat-tab-group [(selectedIndex)]="selectedTab" (selectedTabChange)="onTabChange('', '')">
+                  <mat-tab-group [(selectedIndex)]="selectedTab" (selectedTabChange)="onTabChange()">
                     <mat-tab label="Well Records">
                       <div class='options'>
                         <div class='actionButtons'>
@@ -114,12 +114,6 @@
                             <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                             (click)="filterEmit()">Filter By Map Extent</button>
                         </div>
-                        <div class='actionButtons'>
-                            <button mat-flat-button (click)="zoomToEmit()">Zoom To</button>
-                        </div>
-                        <div class='actionButtons' (click)="clear()">
-                            <button mat-flat-button>Clear Selection</button>
-                        </div>
                         <div class='actionButtons' (click)="refreshEmit()">
                             <button mat-flat-button>Reset</button>
                         </div>
@@ -187,12 +181,6 @@
                         <div class='actionButtons'>
                             <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                             (click)="filterEmit()">Filter By Map Extent</button>
-                        </div>
-                        <div class='actionButtons'>
-                            <button mat-flat-button (click)="zoomToEmit()">Zoom To</button>
-                        </div>
-                        <div class='actionButtons' (click)="clear()">
-                            <button mat-flat-button>Clear Selection</button>
                         </div>
                         <div class='actionButtons' (click)="refreshEmit()">
                             <button mat-flat-button>Reset</button>
@@ -262,12 +250,6 @@
                             <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                             (click)="filterEmit()">Filter By Map Extent</button>
                         </div>
-                        <div class='actionButtons'>
-                            <button mat-flat-button (click)="zoomToEmit()">Zoom To</button>
-                        </div>
-                        <div class='actionButtons' (click)="clear()">
-                            <button mat-flat-button>Clear Selection</button>
-                        </div>
                         <div class='actionButtons' (click)="refreshEmit()">
                             <button mat-flat-button>Reset</button>
                         </div>
@@ -335,12 +317,6 @@
                         <div class='actionButtons'>
                             <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                             (click)="filterEmit()">Filter By Map Extent</button>
-                        </div>
-                        <div class='actionButtons'>
-                            <button mat-flat-button (click)="zoomToEmit()">Zoom To</button>
-                        </div>
-                        <div class='actionButtons' (click)="clear()">
-                            <button mat-flat-button>Clear Selection</button>
                         </div>
                         <div class='actionButtons' (click)="refreshEmit()">
                             <button mat-flat-button>Reset</button>
@@ -410,12 +386,6 @@
                             <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                             (click)="filterEmit()">Filter By Map Extent</button>
                         </div>
-                        <div class='actionButtons'>
-                            <button mat-flat-button (click)="zoomToEmit()">Zoom To</button>
-                        </div>
-                        <div class='actionButtons' (click)="clear()">
-                            <button mat-flat-button>Clear Selection</button>
-                        </div>
                         <div class='actionButtons' (click)="refreshEmit()">
                             <button mat-flat-button>Reset</button>
                         </div>
@@ -483,12 +453,6 @@
                     <div class='actionButtons'>
                         <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                         (click)="filterEmit()">Filter By Map Extent</button>
-                    </div>
-                    <div class='actionButtons'>
-                        <button mat-flat-button (click)="zoomToEmit()">Zoom To</button>
-                    </div>
-                    <div class='actionButtons' (click)="clear()">
-                        <button mat-flat-button>Clear Selection</button>
                     </div>
                     <div class='actionButtons' (click)="refreshEmit()">
                         <button mat-flat-button>Reset</button>

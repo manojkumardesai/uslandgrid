@@ -227,7 +227,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     });
   }
 
-  onTabChange(offset, limit) {
+  onTabChange(offset = 0, limit = 5) {
+    this.isLoading = true;
     switch (this.selectedTab) {
       case 0:
         this.fetchData(this.payLoadWithParams[this.selectedTab]);
