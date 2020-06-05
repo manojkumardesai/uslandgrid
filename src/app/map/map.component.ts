@@ -79,10 +79,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   fetchClusterData() {
-     this.apiService.fetchClusters().subscribe((clusterData) => {
-       this.clusterTestData = [...clusterData];
-       this.addClusterLayer();
-     });
+    this.apiService.fetchClusters().subscribe((clusterData) => {
+      this.clusterTestData = [...clusterData];
+      this.addClusterLayer();
+    });
   }
 
   private _filter(value: any): Observable<any[]> {
@@ -135,10 +135,10 @@ export class MapComponent implements AfterViewInit, OnInit {
     //Control the cluster visibility based on zoom level
     this.map.on("zoomend", () => {
       let zoom = this.map.getZoom();
-      if(zoom > 11) {
+      if (zoom > 11) {
         this.map.removeLayer(this.clusterLayer);
       } else {
-        if(!this.map.hasLayer(this.clusterLayer)) {
+        if (!this.map.hasLayer(this.clusterLayer)) {
           this.map.addLayer(this.clusterLayer);
         }
       }
@@ -211,7 +211,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           iconSize: null
         });
       }*/
-      
+
     });
 
     //clustermarker
@@ -225,7 +225,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     };
 
     var mapIcon = L.icon({
-      iconUrl: 'https://cdn.iconscout.com/icon/free/png-256/dot-22-433567.png',
+      iconUrl: '../assets/dot.png',
       iconSize: [30, 30]
     });
 
