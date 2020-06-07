@@ -35,6 +35,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   dataSource = [];
   @Input() payLoadFromFilter: any;
   @Input() mapExtent: any;
+  @Input() openAdvancedFilter: boolean;
+  @Output() openAdvancedFilterEvent = new EventEmitter();
   @Output() filterByExtent = new EventEmitter();
   @Output() zoomTo = new EventEmitter();
   @Output() clearSelection = new EventEmitter();
@@ -55,6 +57,9 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.isLoading = true;
     const currentItem: SimpleChange = changes.payLoadFromFilter;
     const mapExtentValue: SimpleChange = changes.mapExtent;
+    if (changes.openAdvancedFilter && changes.openAdvancedFilter.currentValue) {
+      this.filterAdvanced();
+    }
     let payLoad: any = {
       offset: 0,
       limit: 5,
@@ -247,6 +252,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.payLoadWithParams[4]['filters'] = result;
       this.payLoadWithParams[5]['filters'] = result;
       this.payLoadWithParams[6]['filters'] = result;
+      this.openAdvancedFilterEvent.emit(false);
       this.onTabChange();
     });
   }

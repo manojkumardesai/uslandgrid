@@ -33,6 +33,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   public plssLayer;
   public wellsLayer;
   public clusterLayer;
+  public openAdvancedFilter = false;
   public circleMarker;
   public infoWindowDialog;
   public isMapExtentApplied = false;
@@ -47,22 +48,27 @@ export class MapComponent implements AfterViewInit, OnInit {
     public dialog: MatDialog) { }
 
   openFilterDialog(): void {
-    const dialogRef = this.dialog.open(FilterDialog, {
-      width: '350px',
-      maxWidth: 350,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
-      hasBackdrop: true,
-      data: this.payLoadFromFilter
-    });
+    this.openAdvancedFilter = true;
+    // const dialogRef = this.dialog.open(FilterDialog, {
+    //   width: '350px',
+    //   maxWidth: 350,
+    //   backdropClass: 'cdk-overlay-transparent-backdrop',
+    //   hasBackdrop: true,
+    //   data: this.payLoadFromFilter
+    // });
 
-    dialogRef.afterClosed().subscribe(result => {
-      const wellsCriteria = result ? JSON.parse(JSON.stringify(result)).wellsCriteria : {};
-      if (Object.keys(wellsCriteria).length && wellsCriteria[0].field) {
-        this.payLoadFromFilter = wellsCriteria;
-      } else {
-        this.payLoadFromFilter = [];
-      }
-    });
+    // dialogRef.afterClosed().subscribe(result => {
+    //   const wellsCriteria = result ? JSON.parse(JSON.stringify(result)).wellsCriteria : {};
+    //   if (Object.keys(wellsCriteria).length && wellsCriteria[0].field) {
+    //     this.payLoadFromFilter = wellsCriteria;
+    //   } else {
+    //     this.payLoadFromFilter = [];
+    //   }
+    // });
+  }
+
+  openAdvancedFilterEvent(event) {
+    this.openAdvancedFilter = false;
   }
 
   ngOnInit(): void {
