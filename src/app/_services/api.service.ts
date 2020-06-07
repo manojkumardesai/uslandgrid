@@ -18,48 +18,44 @@ export class ApiService {
   fetchWellsData(wellPayLoad): Observable<any> {
     return this.http.post(this.baseUrl + 'wells', wellPayLoad);
   }
-  fetchChartData(): Observable<any> {
-    return this.http.get(this.baseUrl + `chart/county`);
-  }
-  fetchWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/${wellId}`);
-  }
   fetchCounties(): Observable<any> {
     return this.http.get(this.baseUrl + `county`);
   }
   fetchOperators(): Observable<any> {
     return this.http.get(this.baseUrl + `operator`);
   }
-  // generateReport(payLoad) {
-  //   // const headers = new HttpHeaders();
-  //   return this.baseUrl + `report/well?state=Oklahoma&${payLoad.group}=${payLoad.value}&reportType=${payLoad.format}`;
-  // }
+  fetchClusters(offset, limit): Observable<any> {
+    return this.http.get(this.baseUrl + `well/cluster?offset=${offset}&limit=${limit}`);
+  }
   generateReport(payLoad) {
-    // const headers = new HttpHeaders();
     return this.http.post(this.baseUrl + `report/well`, payLoad, { responseType: 'arraybuffer' });
-  }
-  fetchMcWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/mc?wellId=${wellId}`);
-  }
-  fetchCpWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/cp?wellId=${wellId}`);
-  }
-  fetchFtWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/ft?wellId=${wellId}`);
-  }
-  fetchPfWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/pf?wellId=${wellId}`);
-  }
-  fetchSurveyWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/survey?wellId=${wellId}`);
-  }
-  fetchIpWellDetails(wellId): Observable<any> {
-    return this.http.get(this.baseUrl + `well/ipvolume?wellId=${wellId}`);
   }
   fetchInfoPoint({ lat, lng }) {
     return this.http.post(this.baseUrl + `well/info`, { latitude: lat, longitude: lng });
   }
-  fetchUniqueValues(columnName) {
-    return this.http.get(this.baseUrl + `unique/${columnName}`);
+  fetchUniqueValues(columnName, tableName) {
+    return this.http.get(this.baseUrl + `unique/${columnName}?table=${tableName}`);
+  }
+  fetchColumnValues(isProd) {
+    return this.http.get(this.baseUrl + `filter/column?production=${isProd}`);
+  }
+
+  fetchMcWellDetails(payload): Observable<any> {
+    return this.http.post(this.baseUrl + `welllist/mc`, payload);
+  }
+  fetchCpWellDetails(payload): Observable<any> {
+    return this.http.post(this.baseUrl + `welllist/cp`, payload);
+  }
+  fetchFtWellDetails(payload): Observable<any> {
+    return this.http.post(this.baseUrl + `welllist/ft`, payload);
+  }
+  fetchPfWellDetails(payload): Observable<any> {
+    return this.http.post(this.baseUrl + `welllist/pf`, payload);
+  }
+  fetchSurveyWellDetails(payload): Observable<any> {
+    return this.http.post(this.baseUrl + `welllist/survey`, payload);
+  }
+  fetchIpWellDetails(payload): Observable<any> {
+    return this.http.post(this.baseUrl + `welllist/ipvolume`, payload);
   }
 }

@@ -12,9 +12,9 @@
     </div>
   </div>
   <div class='actionButtons'>
-    <button mat-button (click)="addExpressionToExp()">
+    <!-- <button mat-button (click)="addExpressionToExp()">
       <mat-icon color="primary">add</mat-icon> Add Expression
-    </button>
+    </button> -->
     <button mat-button (click)="addSetToSetForm()">
       <mat-icon color="primary">add</mat-icon> Add Set
     </button>
@@ -104,21 +104,28 @@
                 <button mat-icon-button (click)="deleteSet(i)">
                   <mat-icon>delete</mat-icon>
                 </button>
-                <button mat-button (click)="addExpToSetForm(i)">
+                <!-- <button mat-button (click)="addExpToSetForm(i)">
                   <mat-icon color="primary">add</mat-icon> Add Expression
-                </button>
+                </button> -->
               </div>
             </div>
             <div formArrayName='exp'>
-            <div class="fields" *ngFor="let exp of set.get('exp').controls;let j = index;" [formGroupName]="j">
+            <div class="fields" *ngFor="let exp of set.get('exp').controls;let j = index;even as isEven odd as isOdd" [formGroupName]="j">
               
                 <mat-form-field>
                   <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
                   formControlName="column">
-                  <mat-autocomplete #columnsAutoComplete="matAutocomplete" (optionSelected)="changeSetExpColumnValue(i, j)">
-                    <mat-option *ngFor="let column of columns" [value]="column.value">
-                      <span>{{column.name}}</span>
-                    </mat-option>
+                  <mat-autocomplete #columnsAutoComplete="matAutocomplete" (optionSelected)="changeSetExpColumnValue(i, j, $event)">
+                    <ng-container *ngIf="isEven">
+                      <mat-option *ngFor="let column of columns" [value]="column">
+                        <span>{{column.column}}</span>
+                      </mat-option>
+                    </ng-container>
+                    <ng-container *ngIf="isOdd">
+                      <mat-option *ngFor="let column of prodColumns" [value]="column">
+                        <span>{{column.column}}</span>
+                      </mat-option>
+                    </ng-container>
                   </mat-autocomplete>
                 </mat-form-field>
                 <mat-form-field>
@@ -176,7 +183,8 @@
   </div>
   <div mat-dialog-actions align="right">
     <!-- [mat-dialog-close]="data.animal" -->
-    <button mat-button [mat-dialog-close]="advanceFilterForm.value">Apply</button>
+    <button mat-button [disabled]="advanceFilterForm.invalid" [mat-dialog-close]="advanceFilterForm.value">Apply</button>
+    <!-- <button mat-button [disabled]="true">Export</button> -->
     <button mat-button (click)="onNoClick()">Cancel</button>
     <button mat-button (click)="reset()">Reset</button>
   </div>

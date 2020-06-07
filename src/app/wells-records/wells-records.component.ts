@@ -7,6 +7,7 @@ import { tap } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { AdvancedFilterComponent } from './advFilterDialog/advanced-filter/advanced-filter.component';
+import { ColumnConstantsService } from './column-constants.service';
 
 export interface UserData {
   id: string;
@@ -22,42 +23,20 @@ export interface UserData {
 })
 export class WellsRecordsComponent implements OnInit, OnChanges {
   panelOpenState = false;
-  totalAvailableWellsCount = 400;
-  displayedColumns: string[] = [
-    'select',
-    'wellId',
-    'wellName',
-    'operator',
-    'wellNumber',
-    'status',
-    'latitude',
-    'longitude',
-    'spudDate',
-    'completionDate',
-    'county',
-    'datumType',
-    'tvd',
-    'reports'
-  ];
-  availableColumns: string[] = [
-    'select',
-    'wellId',
-    'wellName',
-    'operator',
-    'wellNumber',
-    'status',
-    'latitude',
-    'longitude',
-    'spudDate',
-    'completionDate',
-    'county',
-    'datumType',
-    'tvd',
-    'reports'
-  ];
-  dataSource: MatTableDataSource<any>;
+  totalAvailableWellsCount = [];
+  displayedColumns = [];
+  availableColumns = [];
+  public wellDetailsMC: MatTableDataSource<any>;
+  public wellDetailsCP: MatTableDataSource<any>;
+  public wellDetailsPF: MatTableDataSource<any>;
+  public wellDetailsFT: MatTableDataSource<any>;
+  public wellDetailsSurvey: MatTableDataSource<any>;
+  public wellDetailsIP: MatTableDataSource<any>;
+  dataSource = [];
   @Input() payLoadFromFilter: any;
   @Input() mapExtent: any;
+  @Input() openAdvancedFilter: boolean;
+  @Output() openAdvancedFilterEvent = new EventEmitter();
   @Output() filterByExtent = new EventEmitter();
   @Output() zoomTo = new EventEmitter();
   @Output() clearSelection = new EventEmitter();
@@ -69,13 +48,18 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   filterByMapExtentFlag: boolean;
   isLoading: boolean;
   payLoadWithParams: any = {};
+  selectedTab = 0;
   constructor(public apiService: ApiService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    public columnConstants: ColumnConstantsService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.isLoading = true;
     const currentItem: SimpleChange = changes.payLoadFromFilter;
     const mapExtentValue: SimpleChange = changes.mapExtent;
+    if (changes.openAdvancedFilter && changes.openAdvancedFilter.currentValue) {
+      this.filterAdvanced();
+    }
     let payLoad: any = {
       offset: 0,
       limit: 5,
@@ -96,36 +80,52 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         points: this.mapExtent
       };
     }
-    if (Object.keys(payLoad).length) {
-      Object.assign(this.payLoadWithParams, payLoad);
+    if (!this.payLoadWithParams[this.selectedTab]) {
+      this.payLoadWithParams[0] = {};
+      this.payLoadWithParams[1] = {};
+      this.payLoadWithParams[2] = {};
+      this.payLoadWithParams[3] = {};
+      this.payLoadWithParams[4] = {};
+      this.payLoadWithParams[5] = {};
+      this.payLoadWithParams[6] = {};
     }
-    if (Object.keys(this.payLoadWithParams).length) {
-      this.apiService.fetchWellsData(this.payLoadWithParams).subscribe((data) => {
-        this.isLoading = false;
-        this.dataSource = new MatTableDataSource(data.wellDtos);
-        this.totalAvailableWellsCount = data.count;
-        this.dataSource.sort = this.sort;
-      });
+    if (Object.keys(payLoad).length) {
+      Object.assign(this.payLoadWithParams[0], payLoad);
+      Object.assign(this.payLoadWithParams[1], payLoad);
+      Object.assign(this.payLoadWithParams[2], payLoad);
+      Object.assign(this.payLoadWithParams[3], payLoad);
+      Object.assign(this.payLoadWithParams[4], payLoad);
+      Object.assign(this.payLoadWithParams[5], payLoad);
+      Object.assign(this.payLoadWithParams[6], payLoad);
+    }
+    if (Object.keys(this.payLoadWithParams[this.selectedTab]).length) {
+      this.onTabChange();
     }
   }
   ngOnInit() {
-
+    this.payLoadWithParams[0] = {};
+    this.payLoadWithParams[1] = {};
+    this.payLoadWithParams[2] = {};
+    this.payLoadWithParams[3] = {};
+    this.payLoadWithParams[4] = {};
+    this.payLoadWithParams[5] = {};
+    this.payLoadWithParams[6] = {};
   }
 
   ngAfterViewInit() {
     this.paginator.page
       .pipe(
-        tap(() => this.loadWells(this.paginator.pageIndex, this.paginator.pageSize))
+        tap(() => this.onTabChange(this.paginator.pageIndex, this.paginator.pageSize))
       )
       .subscribe();
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSource[this.selectedTab].filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    if (this.dataSource[this.selectedTab].paginator) {
+      this.dataSource[this.selectedTab].paginator.firstPage();
     }
   }
 
@@ -138,36 +138,26 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         wellsCriteria: this.payLoadFromFilter
       }
       if (Object.keys(payLoad).length) {
-        Object.assign(this.payLoadWithParams, payLoad);
+        Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
       }
-      this.apiService.fetchWellsData(this.payLoadWithParams).subscribe((data) => {
-        this.isLoading = false;
-        this.dataSource = new MatTableDataSource(data.wellDtos);
-        this.totalAvailableWellsCount = data.count;
-        this.dataSource.sort = this.sort;
-      });
+      this.fetchData(this.payLoadWithParams[this.selectedTab]);
     } else {
       const payLoad = {
         offset,
         limit
       }
       if (Object.keys(payLoad).length) {
-        Object.assign(this.payLoadWithParams, payLoad);
+        Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
       }
-      this.apiService.fetchWellsData(this.payLoadWithParams).subscribe((data) => {
-        this.isLoading = false;
-        this.dataSource = new MatTableDataSource(data.wellDtos);
-        this.totalAvailableWellsCount = data.count;
-        this.dataSource.sort = this.sort;
-      });
+      this.fetchData(this.payLoadWithParams[this.selectedTab]);
     }
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
-    if (this.dataSource) {
+    if (this.dataSource[this.selectedTab]) {
       const numSelected = this.selection.selected.length;
-      const numRows = this.dataSource.data.length;
+      const numRows = this.dataSource[this.selectedTab].data.length;
       return numSelected === numRows;
     }
   }
@@ -176,7 +166,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+      this.dataSource[this.selectedTab].data.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -200,7 +190,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   refreshEmit() {
     this.refresh.emit('true');
     this.selection.clear();
-    this.fetchData(this.payLoadWithParams);
+    this.fetchData(this.payLoadWithParams[this.selectedTab]);
   }
 
   zoomToEmit() {
@@ -219,25 +209,29 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   fetchData(payLoad) {
     this.isLoading = true;
+    if (!this.displayedColumns[this.selectedTab]) {
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.WELL_RECORD_COLUMNS];
+    }
     this.apiService.fetchWellsData(payLoad).subscribe((data) => {
       this.isLoading = false;
-      this.dataSource = new MatTableDataSource(data.wellDtos);
-      this.totalAvailableWellsCount = data.count;
-      this.dataSource.sort = this.sort;
+      this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellDtos);
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
+      this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellDtos[0]);
     });
   }
 
   selectedColumn(column) {
-    return this.displayedColumns.indexOf(column) > -1;
+    return this.displayedColumns[this.selectedTab].indexOf(column) > -1;
   }
 
   modifyDisplayedColumns(column) {
-    const indexOfColumn = this.displayedColumns.indexOf(column);
-    const originalIndexOfColumn = this.availableColumns.indexOf(column);
+    const indexOfColumn = this.displayedColumns[this.selectedTab].indexOf(column);
+    const originalIndexOfColumn = this.availableColumns[this.selectedTab].indexOf(column);
     if (indexOfColumn > -1) {
-      this.displayedColumns.splice(indexOfColumn, 1);
+      this.displayedColumns[this.selectedTab].splice(indexOfColumn, 1);
     } else {
-      this.displayedColumns.splice(originalIndexOfColumn, 0, column);
+      this.displayedColumns[this.selectedTab].splice(originalIndexOfColumn, 0, column);
     }
   }
 
@@ -247,13 +241,175 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       // maxWidth: 350,
       backdropClass: 'cdk-overlay-transparent-backdrop',
       hasBackdrop: true,
-      data: this.payLoadWithParams.filters ? this.payLoadWithParams.filters : ''
+      data: this.payLoadWithParams[this.selectedTab].filters ? this.payLoadWithParams[this.selectedTab].filters : ''
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.payLoadWithParams['filters'] = result;
-      this.fetchData(this.payLoadWithParams);
+      this.payLoadWithParams[0]['filters'] = result;
+      this.payLoadWithParams[1]['filters'] = result;
+      this.payLoadWithParams[2]['filters'] = result;
+      this.payLoadWithParams[3]['filters'] = result;
+      this.payLoadWithParams[4]['filters'] = result;
+      this.payLoadWithParams[5]['filters'] = result;
+      this.payLoadWithParams[6]['filters'] = result;
+      this.openAdvancedFilterEvent.emit(false);
+      this.onTabChange();
     });
+  }
+
+  onTabChange(offset = 0, limit = 5) {
+    this.isLoading = true;
+    switch (this.selectedTab) {
+      case 0:
+        this.fetchData(this.payLoadWithParams[this.selectedTab]);
+        break;
+      case 1:
+        this.fetchMcWellDetail(offset, limit);
+        break;
+      case 2:
+        this.fetchCpWellDetail(offset, limit);
+        break;
+      case 3:
+        this.fetchFtWellDetail(offset, limit);
+        break;
+      case 4:
+        this.fetchPfWellDetail(offset, limit);
+        break;
+      case 5:
+        this.fetchSurveyWellDetail(offset, limit);
+        break;
+      case 6:
+        this.fetchIpWellDetail(offset, limit);
+        break;
+    }
+  }
+
+  fetchCpWellDetail(offset = 0, limit = 5) {
+    const payLoad = {
+      offset,
+      limit
+    }
+    if (!this.payLoadWithParams[this.selectedTab]) {
+      this.payLoadWithParams[this.selectedTab] = {};
+    }
+    if (!this.displayedColumns[this.selectedTab]) {
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.CP_COLUMNS].slice(0, 10);
+    }
+    Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
+    this.apiService.fetchCpWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
+      this.isLoading = false;
+      this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellCpDtos);
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
+      this.dataSource[this.selectedTab].sort = this.sort;
+    });
+  }
+
+  fetchFtWellDetail(offset = 0, limit = 5) {
+    const payLoad = {
+      offset,
+      limit
+    }
+    if (!this.payLoadWithParams[this.selectedTab]) {
+      this.payLoadWithParams[this.selectedTab] = {};
+    }
+    if (!this.displayedColumns[this.selectedTab]) {
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.FT_COLUMNS].slice(0, 10);
+    }
+    Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
+    this.apiService.fetchFtWellDetails(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellFtDtos);
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
+      this.dataSource[this.selectedTab].sort = this.sort;
+    });
+  }
+
+  fetchMcWellDetail(offset = 0, limit = 5) {
+    const payLoad = {
+      offset,
+      limit
+    }
+    if (!this.payLoadWithParams[this.selectedTab]) {
+      this.payLoadWithParams[this.selectedTab] = {};
+    }
+    if (!this.displayedColumns[this.selectedTab]) {
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.MC_COLUMNS].slice(0, 10);
+    }
+    Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
+    this.apiService.fetchMcWellDetails(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellMcDtos);
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
+      this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellMcDtos[0]);
+    });
+  }
+
+  fetchPfWellDetail(offset = 0, limit = 5) {
+    const payLoad = {
+      offset,
+      limit
+    }
+    if (!this.payLoadWithParams[this.selectedTab]) {
+      this.payLoadWithParams[this.selectedTab] = {};
+    }
+    if (!this.displayedColumns[this.selectedTab]) {
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.PF_COLUMNS].slice(0, 10);
+    }
+    Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
+    this.apiService.fetchPfWellDetails(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellPfDtos);
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
+      this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellPfDtos[0]);
+    });
+  }
+
+  fetchSurveyWellDetail(offset = 0, limit = 5) {
+    const payLoad = {
+      offset,
+      limit
+    }
+    if (!this.payLoadWithParams[this.selectedTab]) {
+      this.payLoadWithParams[this.selectedTab] = {};
+    }
+    if (!this.displayedColumns[this.selectedTab]) {
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.SURVEY_COLUMNS].slice(0, 10);
+    }
+    Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
+    this.apiService.fetchSurveyWellDetails(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellSurveyDtos);
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
+      this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellSurveyDtos[0]);
+    });
+  }
+
+  fetchIpWellDetail(offset = 0, limit = 5) {
+    const payLoad = {
+      offset,
+      limit
+    }
+    if (!this.payLoadWithParams[this.selectedTab]) {
+      this.payLoadWithParams[this.selectedTab] = {};
+    }
+    if (!this.displayedColumns[this.selectedTab]) {
+      this.displayedColumns[this.selectedTab] = [...this.columnConstants.IP_COLUMNS].slice(0, 10);
+    }
+    Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
+    this.apiService.fetchIpWellDetails(payLoad).subscribe((data) => {
+      this.isLoading = false;
+      this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellIpVolumeDtos);
+      this.totalAvailableWellsCount[this.selectedTab] = data.count;
+      this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellIpVolumeDtos[0]);
+    });
+  }
+
+  populateColumns(dataForTable) {
+
   }
 }
 

@@ -22,7 +22,7 @@ export class InfoWindowComponent implements OnInit {
   }
 
   changePosition() {
-    this.dialogRef.updatePosition({ right: '15px', bottom: '290px' });
+    this.dialogRef.updatePosition({ right: '15px', bottom: '330px' });
   }
 
 }

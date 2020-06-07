@@ -45,5 +45,7 @@
     (clearSelection)="clear($event)"
     (refresh)="refreshEmit($event)"
     (selectedRowEmit)="markWell($event)"
+    [openAdvancedFilter]="openAdvancedFilter"
+    (openAdvancedFilterEvent)="openAdvancedFilterEvent($event)"
     ></app-wells-records>
 </div>
