@@ -33,8 +33,11 @@ export class ApiService {
   fetchInfoPoint({ lat, lng }) {
     return this.http.post(this.baseUrl + `well/info`, { latitude: lat, longitude: lng });
   }
-  fetchUniqueValues(columnName) {
-    return this.http.get(this.baseUrl + `unique/${columnName}`);
+  fetchUniqueValues(columnName, tableName) {
+    return this.http.get(this.baseUrl + `unique/${columnName}?table=${tableName}`);
+  }
+  fetchColumnValues(isProd) {
+    return this.http.get(this.baseUrl + `filter/column?production=${isProd}`);
   }
 
   fetchMcWellDetails(payload): Observable<any> {

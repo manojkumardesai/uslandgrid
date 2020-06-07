@@ -27,6 +27,7 @@ export class AdvancedFilterComponent implements OnInit {
   selectedGlobalCondition;
   selectedSetCondition;
   columns;
+  prodColumns;
   conditions;
   values = [];
   valueTypeMap = [];
@@ -53,53 +54,7 @@ export class AdvancedFilterComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.columns = [
-      {
-        'id': 0,
-        'name': 'state (String)',
-        'value': 'state'
-      },
-      {
-        'id': 1,
-        'name': 'county (String)',
-        'value': 'county'
-      },
-      {
-        'id': 2,
-        'name': 'operator (String)',
-        'value': 'operator'
-      },
-      {
-        'id': 3,
-        'name': 'well_id (String)',
-        'value': 'well_id'
-      },
-      {
-        'id': 5,
-        'name': 'well_name (String)',
-        'value': 'well_name'
-      },
-      {
-        'id': 6,
-        'name': 'tvd (String)',
-        'value': 'tvd'
-      },
-      {
-        'id': 7,
-        'name': 'frac_type (String)',
-        'value': 'frac_type'
-      },
-      {
-        'id': 8,
-        'name': 'datum (String)',
-        'value': 'datum'
-      },
-      {
-        'id': 9,
-        'name': 'link_efrac (String)',
-        'value': 'link_efrac'
-      }
-    ];
+    this.populateColumns();
     this.conditions = [
       {
         "id": 0,
@@ -166,6 +121,14 @@ export class AdvancedFilterComponent implements OnInit {
     }
   }
 
+  populateColumns() {
+    this.apiService.fetchColumnValues(false).subscribe((columnValues: any) => {
+      this.columns = [...columnValues];
+    });
+    this.apiService.fetchColumnValues(true).subscribe((columnValues: any) => {
+      this.prodColumns = [...columnValues];
+    });
+  }
   onNoClick(): void {
     this.dialogRef.close();
   }
@@ -220,8 +183,9 @@ export class AdvancedFilterComponent implements OnInit {
 
   expressionStructure() {
     return this.fb.group({
-      column: new FormControl('state', Validators.required),
+      column: new FormControl('', Validators.required),
       type: new FormControl('string', Validators.required),
+      table: new FormControl('WH', Validators.required),
       condition: new FormControl('is', Validators.required),
       option: new FormControl('value', Validators.required),
       caseSensitive: false,
@@ -244,13 +208,15 @@ export class AdvancedFilterComponent implements OnInit {
     this.valueTypeMap[expIndex] = "Value";
   }
 
-  changeSetExpColumnValue(setIndex, expIndex) {
+  changeSetExpColumnValue(setIndex, expIndex, event) {
     let indexedExp = this.getExpAtSetIndex(setIndex);
     indexedExp.controls[expIndex].patchValue({
+      column: event.option.value.column,
+      table: event.option.value.table,
       value: [''],
       condition: 'is',
       caseSensitive: false,
-      type: 'string'
+      type: event.option.value.type
     });
     this.valueTypeMap[setIndex + '' + expIndex] = "Value";
   }
@@ -312,6 +278,7 @@ export class AdvancedFilterComponent implements OnInit {
       option: value.toLocaleLowerCase()
     });
     let column = indexedExp.value[expIndex].column;
+    let table = indexedExp.value[expIndex].table;
     if (value == 'Field') {
       this.values[setIndex + '' + expIndex] = this.fieldValues.map((data, index) => {
         return {
@@ -320,7 +287,7 @@ export class AdvancedFilterComponent implements OnInit {
         }
       });
     } else if (value == 'Unique' || value == 'Multiple') {
-      this.apiService.fetchUniqueValues(column).subscribe((data: any) => {
+      this.apiService.fetchUniqueValues(column, table).subscribe((data: any) => {
         this.values[setIndex + '' + expIndex] = data.map((data, index) => {
           return {
             id: index,
@@ -334,6 +301,7 @@ export class AdvancedFilterComponent implements OnInit {
 
   expSettingMenuChange(expIndex, value) {
     let column = this.expForms.value[expIndex].column;
+    let table = this.expForms.value[expIndex].table;
     this.expForms.controls[expIndex].patchValue({
       value: [''],
       option: value.toLocaleLowerCase()
@@ -346,7 +314,7 @@ export class AdvancedFilterComponent implements OnInit {
         }
       });
     } else if (value == 'Unique' || value == 'Multiple') {
-      this.apiService.fetchUniqueValues(column).subscribe((data: any) => {
+      this.apiService.fetchUniqueValues(column, table).subscribe((data: any) => {
         this.values[expIndex] = data.map((data, index) => {
           return {
             id: index,
