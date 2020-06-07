@@ -2,7 +2,7 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { BetterWMS } from '../utils/betterWms.util';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, merge } from 'rxjs';
 import { startWith, map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ApiService } from '../_services/api.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -85,7 +85,13 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   fetchClusterData() {
-    this.apiService.fetchClusters().subscribe((clusterData) => {
+    const cluster1 = this.apiService.fetchClusters(0, 100000);
+    const cluster2 = this.apiService.fetchClusters(100001, 100000);
+    const cluster3 = this.apiService.fetchClusters(200001, 100000);
+    const cluster4 = this.apiService.fetchClusters(300001, 100000);
+    const cluster5 = this.apiService.fetchClusters(400001, 100000);
+    const mergedCall = merge(cluster1, cluster2, cluster3, cluster4, cluster5);
+    mergedCall.subscribe((clusterData) => {
       this.clusterTestData = [...clusterData];
       this.addClusterLayer();
     });

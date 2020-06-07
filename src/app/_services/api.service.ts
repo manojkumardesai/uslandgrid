@@ -24,8 +24,8 @@ export class ApiService {
   fetchOperators(): Observable<any> {
     return this.http.get(this.baseUrl + `operator`);
   }
-  fetchClusters(): Observable<any> {
-    return this.http.get(this.baseUrl + `well/cluster`);
+  fetchClusters(offset, limit): Observable<any> {
+    return this.http.get(this.baseUrl + `well/cluster?offset=${offset}&limit=${limit}`);
   }
   generateReport(payLoad) {
     return this.http.post(this.baseUrl + `report/well`, payLoad, { responseType: 'arraybuffer' });
