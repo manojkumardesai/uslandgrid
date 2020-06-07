@@ -183,7 +183,7 @@ export class AdvancedFilterComponent implements OnInit {
 
   expressionStructure() {
     return this.fb.group({
-      column: new FormControl('', Validators.required),
+      column: new FormControl(''),
       type: new FormControl('string', Validators.required),
       table: new FormControl('WH', Validators.required),
       condition: new FormControl('is', Validators.required),
