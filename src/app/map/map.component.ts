@@ -259,7 +259,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       'Base Map': this.esriBaseLayer,
       'Satellite': this.esriImageryLayer,
       'Wells': this.wellsLayer,
-      'PLSS': this.plssLayer
+      'PLSS': this.plssLayer,
+      'Culture': this.cultureLayer
     }
     L.control.layers(baseLayerMaps, overLay).addTo(this.map);
     L.control.mousePosition().addTo(this.map);
