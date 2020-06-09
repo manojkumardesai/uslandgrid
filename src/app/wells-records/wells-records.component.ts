@@ -264,10 +264,10 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         this.fetchData(this.payLoadWithParams[this.selectedTab]);
         break;
       case 1:
-        this.fetchMcWellDetail(offset, limit);
+        this.fetchCpWellDetail(offset, limit);
         break;
       case 2:
-        this.fetchCpWellDetail(offset, limit);
+        this.fetchMcWellDetail(offset, limit);
         break;
       case 3:
         this.fetchFtWellDetail(offset, limit);

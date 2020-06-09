@@ -2,7 +2,7 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { BetterWMS } from '../utils/betterWms.util';
 import { FormControl } from '@angular/forms';
-import { Observable, merge } from 'rxjs';
+import { Observable, merge, forkJoin } from 'rxjs';
 import { startWith, map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ApiService } from '../_services/api.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -90,9 +90,9 @@ export class MapComponent implements AfterViewInit, OnInit {
     const cluster3 = this.apiService.fetchClusters(200001, 100000);
     const cluster4 = this.apiService.fetchClusters(300001, 100000);
     const cluster5 = this.apiService.fetchClusters(400001, 100000);
-    const mergedCall = merge(cluster1, cluster2, cluster3, cluster4, cluster5);
-    mergedCall.subscribe((clusterData) => {
-      this.clusterTestData = [...clusterData];
+    const mergedCall = forkJoin(cluster1, cluster2, cluster3, cluster4, cluster5);
+    mergedCall.subscribe((clusterData: any) => {
+      this.clusterTestData = clusterData.flat(1);
       this.addClusterLayer();
     });
   }
@@ -259,7 +259,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       'Base Map': this.esriBaseLayer,
       'Satellite': this.esriImageryLayer,
       'Wells': this.wellsLayer,
-      'PLSS': this.plssLayer
+      'PLSS': this.plssLayer,
+      'Culture': this.cultureLayer
     }
     L.control.layers(baseLayerMaps, overLay).addTo(this.map);
     L.control.mousePosition().addTo(this.map);
