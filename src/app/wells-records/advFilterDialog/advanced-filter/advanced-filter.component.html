@@ -181,11 +181,12 @@
         </div>
       </form>
   </div>
-  <div mat-dialog-actions align="right">
+  <div mat-dialog-actions align="right" class="dialogActions">
     <!-- [mat-dialog-close]="data.animal" -->
     <button mat-button [disabled]="advanceFilterForm.invalid" [mat-dialog-close]="advanceFilterForm.value">Apply</button>
     <!-- <button mat-button [disabled]="true">Export</button> -->
     <button mat-button (click)="onNoClick()">Cancel</button>
     <button mat-button (click)="reset()">Reset</button>
+    <button mat-button (click)="reset()" class="export">Export</button>
   </div>
 </div>
