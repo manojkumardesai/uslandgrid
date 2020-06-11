@@ -301,6 +301,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellCpDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellCpDtos[0]);
     });
   }
 
@@ -321,6 +322,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellFtDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       this.dataSource[this.selectedTab].sort = this.sort;
+      this.availableColumns[this.selectedTab] = Object.keys(data.wellFtDtos[0]);
     });
   }
 
