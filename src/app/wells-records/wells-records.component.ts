@@ -190,7 +190,11 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   refreshEmit() {
     this.refresh.emit('true');
     this.selection.clear();
-    this.fetchData(this.payLoadWithParams[this.selectedTab]);
+    let filtersReset = {
+      filters: {}
+    }
+    this.setPayloadValueOfAllTabs(filtersReset);
+    this.onTabChange();
   }
 
   zoomToEmit() {
@@ -412,6 +416,16 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   populateColumns(dataForTable) {
 
+  }
+
+  setPayloadValueOfAllTabs(valueToAssign) {
+    Object.assign(this.payLoadWithParams[0], valueToAssign);
+    Object.assign(this.payLoadWithParams[1], valueToAssign);
+    Object.assign(this.payLoadWithParams[2], valueToAssign);
+    Object.assign(this.payLoadWithParams[3], valueToAssign);
+    Object.assign(this.payLoadWithParams[4], valueToAssign);
+    Object.assign(this.payLoadWithParams[5], valueToAssign);
+    Object.assign(this.payLoadWithParams[6], valueToAssign);
   }
 }
 

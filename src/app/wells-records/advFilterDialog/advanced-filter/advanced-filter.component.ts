@@ -167,7 +167,7 @@ export class AdvancedFilterComponent implements OnInit {
 
   addExpressionToExp() {
     this.expForms.push(this.expressionStructure());
-    this.valueTypeMap[this.expForms.length - 1] = "Value";
+    this.valueTypeMap[this.expForms.length - 1] = "Unique";
   }
 
   addSetToSetForm() {
@@ -179,14 +179,14 @@ export class AdvancedFilterComponent implements OnInit {
     let expTempFormArray = expTemp.get('exp') as FormArray;
     expTempFormArray.push(this.expressionStructure());
     this.setForms.push(expTemp);
-    this.valueTypeMap[this.setForms.length - 1 + '' + 0] = "Value";
+    this.valueTypeMap[this.setForms.length - 1 + '' + 0] = "Unique";
     this.addExpToSetForm(this.setForms.length - 1);
   }
 
   addExpToSetForm(index) {
     let indexedExp = this.setForms.controls[index].get('exp') as FormArray;
     indexedExp.push(this.expressionStructure());
-    this.valueTypeMap[index + '' + (indexedExp.length - 1)] = "Value";
+    this.valueTypeMap[index + '' + (indexedExp.length - 1)] = "Unique";
   }
 
   deleteExpFromExpArray(expIndex) {
@@ -230,7 +230,7 @@ export class AdvancedFilterComponent implements OnInit {
       caseSensitive: false,
       type: 'string'
     });
-    this.valueTypeMap[expIndex] = "Value";
+    this.valueTypeMap[expIndex] = "Unique";
   }
 
   changeSetExpColumnValue(setIndex, expIndex, event) {
@@ -243,7 +243,8 @@ export class AdvancedFilterComponent implements OnInit {
       caseSensitive: false,
       type: event.option.value.type
     });
-    this.valueTypeMap[setIndex + '' + expIndex] = "Value";
+    this.valueTypeMap[setIndex + '' + expIndex] = "Unique";
+    this.setExpSettingMenuChange(setIndex, expIndex, 'Unique');
   }
   // End of column dropdown change event handlers
 
@@ -252,7 +253,7 @@ export class AdvancedFilterComponent implements OnInit {
     this.expForms.controls[expIndex].patchValue({
       value: ['']
     });
-    this.valueTypeMap[expIndex] = "Value";
+    this.valueTypeMap[expIndex] = "Unique";
   }
 
   setExpMenuValues(expIndex, value) {
@@ -275,7 +276,7 @@ export class AdvancedFilterComponent implements OnInit {
     indexedExp.controls[expIndex].patchValue({
       value: ['']
     });
-    this.valueTypeMap[setIndex + '' + expIndex] = "Value";
+    this.valueTypeMap[setIndex + '' + expIndex] = "Unique";
   }
 
   setMenuValuesOfSet(setIndex, expIndex, value) {
