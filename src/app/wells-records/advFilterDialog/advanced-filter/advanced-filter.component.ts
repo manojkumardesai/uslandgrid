@@ -20,6 +20,7 @@ export class AdvancedFilterComponent implements OnInit {
     { value: 'and', viewValue: 'All of the following expressions in this set are true' },
     { value: 'or', viewValue: 'Any of the following expressions in this set are true' }
   ];
+  generatingReport = false;
   allEnabledConditions = ['is', 'is not'];
   valueEnabledConditions = ['starts with', 'ends with', 'contains', 'does not contain'];
   multipleValueConditions = ['is any of', 'is none of'];
@@ -420,12 +421,15 @@ export class AdvancedFilterComponent implements OnInit {
   }
 
   generateReport() {
-    let payLoad = this.advanceFilterForm.value;
+    let payLoad = {};
     payLoad['reportType'] = this.reportType;
+    payLoad['filters'] = this.advanceFilterForm.value;
+    this.generatingReport = true;
     this.apiService.generateReport(payLoad).subscribe((data) => {
       const extension = this.reportType.toLowerCase() == 'shp' ? 'zip' : this.reportType.toLowerCase();
       const blobCont = new File([data], "Report." + extension, { type: extension });
       saveAs(blobCont);
+      this.generatingReport = false;
     })
   }
 }

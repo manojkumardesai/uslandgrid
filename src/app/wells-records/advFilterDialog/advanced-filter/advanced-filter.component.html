@@ -198,6 +198,7 @@
       </mat-form-field>
     </div>
     <button title="{{titleMsg}}" mat-button (click)="generateReport()"
-    [disabled]="invalidForm || !isLoggedIn || !reportType">Export</button>
+    [disabled]="invalidForm || !isLoggedIn || !reportType">
+    <mat-spinner *ngIf="generatingReport"></mat-spinner>Export</button>
   </div>
 </div>

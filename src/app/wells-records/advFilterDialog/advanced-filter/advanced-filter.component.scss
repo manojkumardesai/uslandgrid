@@ -26,6 +26,23 @@
     height: auto;
   }
 
+::ng-deep .mat-spinner {
+  float:left; 
+  width: 20px !important; 
+  height: 20px !important; 
+  margin: 5px 10px 0px 0px;
+}
+::ng-deep .mat-progress-spinner svg {
+  position: absolute;
+  transform: rotate(-90deg);
+  top: 0;
+  left: 0;
+  transform-origin: center;
+  overflow: visible;
+  height: 20px !important;
+  width: 20px !important;
+}
+
   .fields {
     display: flex;
     justify-content: space-between;
