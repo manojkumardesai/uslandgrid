@@ -49,6 +49,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   isLoading: boolean;
   payLoadWithParams: any = {};
   selectedTab = 0;
+  titleForReset = 'Applied filters will be reset.';
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
     public columnConstants: ColumnConstantsService) { }
@@ -190,10 +191,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   refreshEmit() {
     this.refresh.emit('true');
     this.selection.clear();
-    let filtersReset = {
-      filters: {}
-    }
-    this.setPayloadValueOfAllTabs(filtersReset);
+    this.deleteKeyFromAllObj('filters');
     this.onTabChange();
   }
 
@@ -418,14 +416,14 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   }
 
-  setPayloadValueOfAllTabs(valueToAssign) {
-    Object.assign(this.payLoadWithParams[0], valueToAssign);
-    Object.assign(this.payLoadWithParams[1], valueToAssign);
-    Object.assign(this.payLoadWithParams[2], valueToAssign);
-    Object.assign(this.payLoadWithParams[3], valueToAssign);
-    Object.assign(this.payLoadWithParams[4], valueToAssign);
-    Object.assign(this.payLoadWithParams[5], valueToAssign);
-    Object.assign(this.payLoadWithParams[6], valueToAssign);
+  deleteKeyFromAllObj(valueToDelete) {
+    delete this.payLoadWithParams[0][valueToDelete];
+    delete this.payLoadWithParams[1][valueToDelete];
+    delete this.payLoadWithParams[2][valueToDelete];
+    delete this.payLoadWithParams[3][valueToDelete];
+    delete this.payLoadWithParams[4][valueToDelete];
+    delete this.payLoadWithParams[5][valueToDelete];
+    delete this.payLoadWithParams[6][valueToDelete];
   }
 }
 

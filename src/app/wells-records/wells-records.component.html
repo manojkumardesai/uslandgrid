@@ -35,8 +35,8 @@
                         <div class='actionButtons' (click)="clear()">
                             <button mat-flat-button>Clear Selection</button>
                         </div>
-                        <div class='actionButtons' (click)="refreshEmit()">
-                            <button mat-flat-button>Reset</button>
+                        <div class='actionButtons' >
+                            <button mat-flat-button title="{{ titleForReset }}" [disabled]="!payLoadWithParams[selectedTab].filters" (click)="refreshEmit()"> Reset</button>
                         </div>
                         
                         <div class='actionButtons pagination'>
@@ -90,7 +90,7 @@
                       </table>
                     </div>
                     </mat-tab>
-                    <mat-tab label="CP">
+                    <mat-tab label="Completion">
                       <div class='options'>
                         <div class='actionButtons'>
                           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
@@ -114,8 +114,8 @@
                             <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                             (click)="filterEmit()">Filter By Map Extent</button>
                         </div>
-                        <div class='actionButtons' (click)="refreshEmit()">
-                            <button mat-flat-button>Reset</button>
+                        <div class='actionButtons' >
+                            <button mat-flat-button title="{{ titleForReset }}" [disabled]="!payLoadWithParams[selectedTab].filters" (click)="refreshEmit()"> Reset</button>
                         </div>
                         
                         <div class='actionButtons pagination'>
@@ -158,7 +158,7 @@
                         </table>
                       </div>
                     </mat-tab>
-                    <mat-tab label="MC">
+                    <mat-tab label="Casing">
                       <div class='options'>
                         <div class='actionButtons'>
                           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
@@ -182,8 +182,8 @@
                             <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                             (click)="filterEmit()">Filter By Map Extent</button>
                         </div>
-                        <div class='actionButtons' (click)="refreshEmit()">
-                            <button mat-flat-button>Reset</button>
+                        <div class='actionButtons' >
+                            <button mat-flat-button title="{{ titleForReset }}" [disabled]="!payLoadWithParams[selectedTab].filters" (click)="refreshEmit()"> Reset</button>
                         </div>
                         
                         <div class='actionButtons pagination'>
@@ -226,7 +226,7 @@
                         </table>
                       </div>
                     </mat-tab>
-                    <mat-tab label="FT">
+                    <mat-tab label="Formation">
                       <div class='options'>
                         <div class='actionButtons'>
                           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
@@ -250,8 +250,8 @@
                             <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                             (click)="filterEmit()">Filter By Map Extent</button>
                         </div>
-                        <div class='actionButtons' (click)="refreshEmit()">
-                            <button mat-flat-button>Reset</button>
+                        <div class='actionButtons' >
+                            <button mat-flat-button title="{{ titleForReset }}" [disabled]="!payLoadWithParams[selectedTab].filters" (click)="refreshEmit()"> Reset</button>
                         </div>
                         
                         <div class='actionButtons pagination'>
@@ -294,7 +294,7 @@
                         </table>
                       </div>
                     </mat-tab>
-                    <mat-tab label="PF">
+                    <mat-tab label="Perforation">
                       <div class='options'>
                         <div class='actionButtons'>
                           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
@@ -318,8 +318,8 @@
                             <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                             (click)="filterEmit()">Filter By Map Extent</button>
                         </div>
-                        <div class='actionButtons' (click)="refreshEmit()">
-                            <button mat-flat-button>Reset</button>
+                        <div class='actionButtons' >
+                            <button mat-flat-button title="{{ titleForReset }}" [disabled]="!payLoadWithParams[selectedTab].filters" (click)="refreshEmit()"> Reset</button>
                         </div>
                         
                         <div class='actionButtons pagination'>
@@ -386,8 +386,8 @@
                             <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                             (click)="filterEmit()">Filter By Map Extent</button>
                         </div>
-                        <div class='actionButtons' (click)="refreshEmit()">
-                            <button mat-flat-button>Reset</button>
+                        <div class='actionButtons' >
+                            <button mat-flat-button title="{{ titleForReset }}" [disabled]="!payLoadWithParams[selectedTab].filters" (click)="refreshEmit()"> Reset</button>
                         </div>
                         
                         <div class='actionButtons pagination'>
@@ -430,7 +430,7 @@
                         </table>
                       </div>
                     </mat-tab>
-                    <mat-tab label="IP Volume">
+                    <mat-tab label="Initial Potential">
                       <div class='options'>
                     <div class='actionButtons'>
                       <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
@@ -454,8 +454,8 @@
                         <button mat-flat-button [ngClass]="{'active': filterByMapExtentFlag}"
                         (click)="filterEmit()">Filter By Map Extent</button>
                     </div>
-                    <div class='actionButtons' (click)="refreshEmit()">
-                        <button mat-flat-button>Reset</button>
+                    <div class='actionButtons' >
+                        <button mat-flat-button title="{{ titleForReset }}" [disabled]="!payLoadWithParams[selectedTab].filters" (click)="refreshEmit()"> Reset</button>
                     </div>
                     
                     <div class='actionButtons pagination'>
