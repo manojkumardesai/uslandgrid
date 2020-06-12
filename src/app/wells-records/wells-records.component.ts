@@ -338,7 +338,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.MC_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchMcWellDetails(payLoad).subscribe((data) => {
+    this.apiService.fetchMcWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellMcDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
@@ -359,7 +359,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.PF_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchPfWellDetails(payLoad).subscribe((data) => {
+    this.apiService.fetchPfWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellPfDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
@@ -380,7 +380,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.SURVEY_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchSurveyWellDetails(payLoad).subscribe((data) => {
+    this.apiService.fetchSurveyWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellSurveyDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
@@ -401,7 +401,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.IP_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchIpWellDetails(payLoad).subscribe((data) => {
+    this.apiService.fetchIpWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellIpVolumeDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
