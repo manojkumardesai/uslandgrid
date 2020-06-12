@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges, SimpleChange, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges, SimpleChange, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -42,8 +42,10 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   @Output() clearSelection = new EventEmitter();
   @Output() refresh = new EventEmitter();
   @Output() selectedRowEmit = new EventEmitter();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  // @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
+  // @ViewChild(MatSort, { static: true }) sort: MatSort;
   selection = new SelectionModel<any>(true, []);
   filterByMapExtentFlag: boolean;
   isLoading: boolean;
@@ -114,21 +116,51 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   }
 
   ngAfterViewInit() {
-    this.paginator.page
+    this.paginator.toArray()[0].page
       .pipe(
-        tap(() => this.onTabChange(this.paginator.pageIndex, this.paginator.pageSize))
+        tap(() => this.onTabChange(this.paginator.toArray()[0].pageIndex, this.paginator.toArray()[0].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[1].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[1].pageIndex, this.paginator.toArray()[1].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[2].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[2].pageIndex, this.paginator.toArray()[2].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[3].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[3].pageIndex, this.paginator.toArray()[3].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[4].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[4].pageIndex, this.paginator.toArray()[4].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[5].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[5].pageIndex, this.paginator.toArray()[5].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[6].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[6].pageIndex, this.paginator.toArray()[6].pageSize))
       )
       .subscribe();
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource[this.selectedTab].filter = filterValue.trim().toLowerCase();
+  // applyFilter(event: Event) {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource[this.selectedTab].filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource[this.selectedTab].paginator) {
-      this.dataSource[this.selectedTab].paginator.firstPage();
-    }
-  }
+  //   if (this.dataSource[this.selectedTab].paginator) {
+  //     this.dataSource[this.selectedTab].paginator.firstPage();
+  //   }
+  // }
 
   loadWells(offset = 0, limit = 5) {
     this.isLoading = true;
@@ -141,7 +173,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       if (Object.keys(payLoad).length) {
         Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
       }
-      this.fetchData(this.payLoadWithParams[this.selectedTab]);
+      this.fetchData(offset, limit);
     } else {
       const payLoad = {
         offset,
@@ -150,7 +182,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       if (Object.keys(payLoad).length) {
         Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
       }
-      this.fetchData(this.payLoadWithParams[this.selectedTab]);
+      this.fetchData(offset, limit);
     }
   }
 
@@ -209,16 +241,22 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     }
   }
 
-  fetchData(payLoad) {
+  fetchData(offset = 0, limit = 5) {
+    const payLoad = {
+      offset,
+      limit
+    }
+    Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
     this.isLoading = true;
     if (!this.displayedColumns[this.selectedTab]) {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.WELL_RECORD_COLUMNS];
     }
-    this.apiService.fetchWellsData(payLoad).subscribe((data) => {
+    this.apiService.fetchWellsData(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellDtos);
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
       this.availableColumns[this.selectedTab] = Object.keys(data.wellDtos[0]);
     });
   }
@@ -263,7 +301,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.isLoading = true;
     switch (this.selectedTab) {
       case 0:
-        this.fetchData(this.payLoadWithParams[this.selectedTab]);
+        this.fetchData(offset, limit);
         break;
       case 1:
         this.fetchCpWellDetail(offset, limit);
@@ -302,7 +340,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellCpDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
       this.availableColumns[this.selectedTab] = Object.keys(data.wellCpDtos[0]);
     });
   }
@@ -323,7 +362,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellFtDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
       this.availableColumns[this.selectedTab] = Object.keys(data.wellFtDtos[0]);
     });
   }
@@ -344,7 +384,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellMcDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
       this.availableColumns[this.selectedTab] = Object.keys(data.wellMcDtos[0]);
     });
   }
@@ -365,7 +406,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellPfDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
       this.availableColumns[this.selectedTab] = Object.keys(data.wellPfDtos[0]);
     });
   }
@@ -386,7 +428,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellSurveyDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
       this.availableColumns[this.selectedTab] = Object.keys(data.wellSurveyDtos[0]);
     });
   }
@@ -407,7 +450,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellIpVolumeDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
       this.availableColumns[this.selectedTab] = Object.keys(data.wellIpVolumeDtos[0]);
     });
   }

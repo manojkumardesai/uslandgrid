@@ -81,7 +81,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           return this._filter(name);
         })
       );
-    this.fetchClusterData();
+    // this.fetchClusterData();
   }
 
   fetchClusterData() {
