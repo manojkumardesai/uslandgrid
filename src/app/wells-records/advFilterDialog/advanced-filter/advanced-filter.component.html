@@ -139,7 +139,7 @@
                 </mat-form-field>
                 <mat-form-field *ngIf="valueTypeMap[i+''+j] == 'Value'">
                   <input matInput placeholder="Enter filter term here"
-                  (change) = "updateSetInput(i, j)"
+                  (change) = "updateSetInput(i, j, $event)"
                   aria-label="Value" formControlName="value">
                 </mat-form-field>
                 <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Field'"
@@ -183,10 +183,21 @@
   </div>
   <div mat-dialog-actions align="right" class="dialogActions">
     <!-- [mat-dialog-close]="data.animal" -->
-    <button mat-button [disabled]="advanceFilterForm.invalid" [mat-dialog-close]="advanceFilterForm.value">Apply</button>
+    <button mat-button [disabled]="invalidForm" [mat-dialog-close]="advanceFilterForm.value">Apply</button>
     <!-- <button mat-button [disabled]="true">Export</button> -->
     <button mat-button (click)="onNoClick()">Cancel</button>
     <button mat-button (click)="reset()">Reset</button>
-    <button mat-button (click)="reset()" class="export">Export</button>
+    <div *ngIf="isLoggedIn" class="export">
+      <mat-form-field>
+        <mat-label>Choose Format</mat-label>
+        <mat-select [(ngModel)]="reportType">
+          <mat-option *ngFor="let format of formats" [value]="format.value" >
+            {{format.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button title="{{titleMsg}}" mat-button (click)="generateReport()"
+    [disabled]="invalidForm || !isLoggedIn || !reportType">Export</button>
   </div>
 </div>

@@ -2,6 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormArray, Form, FormControl, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/_services/api.service';
+import { LoginService } from 'src/app/_services/login.service';
+import { saveAs } from 'file-saver';
 
 
 @Component({
@@ -22,6 +24,15 @@ export class AdvancedFilterComponent implements OnInit {
   valueEnabledConditions = ['starts with', 'ends with', 'contains', 'does not contain'];
   multipleValueConditions = ['is any of', 'is none of'];
   blankConditions = ['is blank', 'is not blank'];
+  formats = [
+    { value: 'SHP' },
+    { value: 'WB2' },
+    { value: 'WB4' },
+    { value: 'CSV' },
+    { value: 'XLSX' },
+    { value: 'TXT' },
+  ];
+  reportType;
 
   valueTypes = ['Unique', 'Value', 'Multiple'];
   selectedGlobalCondition;
@@ -31,6 +42,7 @@ export class AdvancedFilterComponent implements OnInit {
   conditions;
   values = [];
   valueTypeMap = [];
+  arrayForValidation = [];
   fieldValues = [
     'wellid',
     'wellname',
@@ -46,10 +58,13 @@ export class AdvancedFilterComponent implements OnInit {
     'state',
     'county',
   ];
+  isLoggedIn = false;
+  titleMsg = 'Login to export';
   advanceFilterForm: FormGroup;
   constructor(public dialogRef: MatDialogRef<AdvancedFilterComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     public fb: FormBuilder,
+    public loginService: LoginService,
     public apiService: ApiService) { }
 
   ngOnInit(): void {
@@ -119,6 +134,15 @@ export class AdvancedFilterComponent implements OnInit {
     } else {
       this.addSetToSetForm();
     }
+    this.loginService.user.subscribe((data) => {
+      this.isLoggedIn = data && data.loggedIn ? data.loggedIn : false;
+      if (this.isLoggedIn) {
+        this.titleMsg = "Choose format to download report";
+      } else {
+        this.titleMsg = 'Login to export';
+      }
+
+    });
   }
 
   populateColumns() {
@@ -363,13 +387,21 @@ export class AdvancedFilterComponent implements OnInit {
 
   updateSetInput(setIndex, expIndex, event?) {
     let valueControl = this.getValueFieldFormControlForSet(setIndex, expIndex);
+    let column = this.getExpAtSetIndex(setIndex).controls[expIndex].value.column;
     let userEnteredValue = [];
-    if (event && event.value) {
-      userEnteredValue.push(event.value);
-    } else {
-      userEnteredValue.push(valueControl.value);
+    if (column) {
+      if (event && event.value) {
+        userEnteredValue.push(event.value);
+        this.arrayForValidation[setIndex] = event.value;
+      } else if (valueControl.value) {
+        userEnteredValue.push(valueControl.value);
+        this.arrayForValidation[setIndex] = valueControl.value;
+      } else if (event.target.value) {
+        this.arrayForValidation[setIndex] = event.target.value;
+      } else {
+        this.arrayForValidation.splice(setIndex, 1);
+      }
     }
-
     valueControl.patchValue(userEnteredValue);
   }
 
@@ -379,6 +411,21 @@ export class AdvancedFilterComponent implements OnInit {
   }
 
   reset() {
+    this.arrayForValidation = [];
     this.advanceFilterForm.reset();
+  }
+
+  get invalidForm() {
+    return this.arrayForValidation.length != this.advanceFilterForm.value.set.length;
+  }
+
+  generateReport() {
+    let payLoad = this.advanceFilterForm.value;
+    payLoad['reportType'] = this.reportType;
+    this.apiService.generateReport(payLoad).subscribe((data) => {
+      const extension = this.reportType.toLowerCase() == 'shp' ? 'zip' : this.reportType.toLowerCase();
+      const blobCont = new File([data], "Report." + extension, { type: extension });
+      saveAs(blobCont);
+    })
   }
 }

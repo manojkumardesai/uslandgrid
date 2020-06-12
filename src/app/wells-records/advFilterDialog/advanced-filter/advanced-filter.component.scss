@@ -18,7 +18,8 @@
 }
 
 .export {
-  margin-left: auto;
+  margin-left: auto !important;
+  display: inline;
 }
 
 ::ng-deep .mat-menu-content {
