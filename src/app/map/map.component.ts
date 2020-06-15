@@ -81,7 +81,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           return this._filter(name);
         })
       );
-    // this.fetchClusterData();
+    this.fetchClusterData();
   }
 
   fetchClusterData() {
@@ -136,7 +136,9 @@ export class MapComponent implements AfterViewInit, OnInit {
       }
     });
     this.map.on('click', (ev) => {
-      this.showInfoPoint(ev);
+      if (this.map.getZoom() > 11) {
+        this.showInfoPoint(ev);
+      }
     });
     this.map.on('map-container-resize', () => {
       setTimeout(() => {
@@ -284,21 +286,23 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   showInfoPoint(ev) {
-    this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
-      if (data.length) {
-        if (this.infoWindowDialog) {
-          this.infoWindowDialog.close();
+    if (this.map.getZoom() > 11) {
+      this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
+        if (data.length) {
+          if (this.infoWindowDialog) {
+            this.infoWindowDialog.close();
+          }
+          this.infoWindowDialog = this.dialog.open(InfoWindowComponent, {
+            width: '350px',
+            maxWidth: 350,
+            backdropClass: 'cdk-overlay-transparent-backdrop',
+            hasBackdrop: false,
+            data
+          });
+          this.infoWindowDialog.afterClosed().subscribe((data) => console.log());
         }
-        this.infoWindowDialog = this.dialog.open(InfoWindowComponent, {
-          width: '350px',
-          maxWidth: 350,
-          backdropClass: 'cdk-overlay-transparent-backdrop',
-          hasBackdrop: false,
-          data
-        });
-        this.infoWindowDialog.afterClosed().subscribe((data) => console.log());
-      }
-    });
+      });
+    }
   }
 
   filterEmit(event) {
