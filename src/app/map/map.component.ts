@@ -122,6 +122,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         lng: option.longitude
       }
     };
+    this.markWell(option);
     this.showInfoPoint(event);
   }
 
@@ -299,7 +300,9 @@ export class MapComponent implements AfterViewInit, OnInit {
             hasBackdrop: false,
             data
           });
-          this.infoWindowDialog.afterClosed().subscribe((data) => console.log());
+          this.infoWindowDialog.afterClosed().subscribe((data) => {
+            this.markWell(null);
+          });
         }
       });
     }
