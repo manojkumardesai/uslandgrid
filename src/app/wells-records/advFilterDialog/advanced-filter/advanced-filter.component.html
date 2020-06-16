@@ -132,8 +132,8 @@
                   <input matInput placeholder="Condition" aria-label="Condition" [matAutocomplete]="conditionsAutoComplete"
                   formControlName="condition">
                   <mat-autocomplete #conditionsAutoComplete="matAutocomplete" (optionSelected)="setExpConditionChange(i, j)">
-                    <mat-option *ngFor="let condition of conditions" [value]="condition.value">
-                      <span>{{condition.name}}</span>
+                    <mat-option *ngFor="let condition of conditions[i+''+j]" [value]="condition">
+                      <span>{{condition}}</span>
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>

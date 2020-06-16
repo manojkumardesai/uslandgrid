@@ -41,6 +41,9 @@ export class AdvancedFilterComponent implements OnInit {
   columns;
   prodColumns;
   conditions;
+  dateConditions;
+  integerConditions;
+  stringConditions;
   values = [];
   valueTypeMap = [];
   arrayForValidation = [];
@@ -122,6 +125,21 @@ export class AdvancedFilterComponent implements OnInit {
         "name": "is not blank",
         "value": "is not blank"
       }
+    ];
+    this.dateConditions = ['equal', 'before', 'after'];
+    this.integerConditions = ['equal to', 'less than', 'less than or equal', 'greater than',
+      'greater than or equal'];
+    this.stringConditions = [
+      "is",
+      "is not",
+      "start with",
+      "end with",
+      "contains",
+      "does not contain",
+      "is any of",
+      "is none of",
+      "is blank",
+      "is not blank"
     ];
     this.selectedGlobalCondition = this.globalLogicalConditions[0].value;
     this.selectedSetCondition = this.setLogicalConditions[0].value;
@@ -244,7 +262,19 @@ export class AdvancedFilterComponent implements OnInit {
       type: event.option.value.type
     });
     this.valueTypeMap[setIndex + '' + expIndex] = "Unique";
+    this.setConditionsBasedOncolumntype(setIndex, expIndex, event.option.value.type);
     this.setExpSettingMenuChange(setIndex, expIndex, 'Unique');
+  }
+
+  setConditionsBasedOncolumntype(setIndex, expIndex, columnType) {
+    if (columnType.toLowerCase() === 'date') {
+      this.conditions[setIndex + '' + expIndex] = [...this.dateConditions];
+    } else if (columnType.toLowerCase() === 'integer') {
+      this.conditions[setIndex + '' + expIndex] = [...this.integerConditions];
+    } else {
+      this.conditions[setIndex + '' + expIndex] = [...this.stringConditions];
+    }
+
   }
   // End of column dropdown change event handlers
 
