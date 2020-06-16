@@ -138,7 +138,7 @@
                   </mat-autocomplete>
                 </mat-form-field>
                 <mat-form-field *ngIf="valueTypeMap[i+''+j] == 'Value'">
-                  <input matInput placeholder="Enter filter term here"
+                  <input matInput placeholder="{{valuePlaceHolder[i+''+j]}}"
                   (change) = "updateSetInput(i, j, $event)"
                   aria-label="Value" formControlName="value">
                 </mat-form-field>

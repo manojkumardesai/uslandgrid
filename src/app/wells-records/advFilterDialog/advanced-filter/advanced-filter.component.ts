@@ -21,10 +21,11 @@ export class AdvancedFilterComponent implements OnInit {
     { value: 'or', viewValue: 'Any of the following expressions in this set are true' }
   ];
   generatingReport = false;
-  allEnabledConditions = ['is', 'is not'];
+  allEnabledConditions = ['is', 'is not',];
   valueEnabledConditions = ['starts with', 'ends with', 'contains', 'does not contain'];
   multipleValueConditions = ['is any of', 'is none of'];
   blankConditions = ['is blank', 'is not blank'];
+  valuePlaceHolder = [];
   formats = [
     { value: 'SHP' },
     { value: 'WB2' },
@@ -270,10 +271,13 @@ export class AdvancedFilterComponent implements OnInit {
     let indexedExp = this.getExpAtSetIndex(setIndex);
     if (columnType.toLowerCase() === 'date') {
       this.conditions[setIndex + '' + expIndex] = [...this.dateConditions];
+      this.valuePlaceHolder[setIndex + '' + expIndex] = "Use YYYY-MM-DD format";
     } else if (columnType.toLowerCase() === 'integer') {
       this.conditions[setIndex + '' + expIndex] = [...this.integerConditions];
+      this.valuePlaceHolder[setIndex + '' + expIndex] = "Enter filter term here";
     } else {
       this.conditions[setIndex + '' + expIndex] = [...this.stringConditions];
+      this.valuePlaceHolder[setIndex + '' + expIndex] = "Enter filter term here";
     }
     indexedExp.controls[expIndex].patchValue({
       condition: this.conditions[setIndex + '' + expIndex][0]
@@ -315,9 +319,13 @@ export class AdvancedFilterComponent implements OnInit {
   setMenuValuesOfSet(setIndex, expIndex, value) {
     let indexedExp = this.getExpAtSetIndex(setIndex);
     let condition = indexedExp.value[expIndex].condition;
-    if (this.allEnabledConditions.includes(condition) && value !== 'Multiple') {
+    if ((this.allEnabledConditions.includes(condition) || this.dateConditions.includes(condition)
+      || this.integerConditions.includes(condition) || this.stringConditions.includes(condition))
+      && value !== 'Multiple') {
       return false;
-    } if (this.valueEnabledConditions.includes(condition) && value === 'Value') {
+    } if ((this.valueEnabledConditions.includes(condition) || this.dateConditions.includes(condition)
+      || this.integerConditions.includes(condition) || this.stringConditions.includes(condition))
+      && value === 'Value') {
       return false;
     } else if (this.multipleValueConditions.includes(condition) && value === 'Multiple') {
       return false;
