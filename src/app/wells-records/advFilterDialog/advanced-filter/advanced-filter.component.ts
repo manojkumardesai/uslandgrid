@@ -267,14 +267,17 @@ export class AdvancedFilterComponent implements OnInit {
   }
 
   setConditionsBasedOncolumntype(setIndex, expIndex, columnType) {
+    let indexedExp = this.getExpAtSetIndex(setIndex);
     if (columnType.toLowerCase() === 'date') {
       this.conditions[setIndex + '' + expIndex] = [...this.dateConditions];
-    } else if (columnType.toLowerCase() === 'numeric') {
+    } else if (columnType.toLowerCase() === 'integer') {
       this.conditions[setIndex + '' + expIndex] = [...this.integerConditions];
     } else {
       this.conditions[setIndex + '' + expIndex] = [...this.stringConditions];
     }
-
+    indexedExp.controls[expIndex].patchValue({
+      condition: this.conditions[setIndex + '' + expIndex][0]
+    });
   }
   // End of column dropdown change event handlers
 
