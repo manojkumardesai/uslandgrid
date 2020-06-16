@@ -257,7 +257,7 @@ export class AdvancedFilterComponent implements OnInit {
       column: event.option.value.column,
       table: event.option.value.table,
       value: [''],
-      condition: 'is',
+      condition: '',
       caseSensitive: false,
       type: event.option.value.type
     });
@@ -269,7 +269,7 @@ export class AdvancedFilterComponent implements OnInit {
   setConditionsBasedOncolumntype(setIndex, expIndex, columnType) {
     if (columnType.toLowerCase() === 'date') {
       this.conditions[setIndex + '' + expIndex] = [...this.dateConditions];
-    } else if (columnType.toLowerCase() === 'integer') {
+    } else if (columnType.toLowerCase() === 'numeric') {
       this.conditions[setIndex + '' + expIndex] = [...this.integerConditions];
     } else {
       this.conditions[setIndex + '' + expIndex] = [...this.stringConditions];
