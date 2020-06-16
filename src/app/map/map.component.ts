@@ -183,8 +183,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   addCultureLayer() {
-    this.cultureLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/Culture1/wms?', {
-      layers: 'Culture',
+    this.cultureLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/culture_webmap/wms?', {
+      layers: 'culture_webmap:Culture_Webmap',
       format: 'image/png8',
       transparent: true,
       styles: '',
@@ -194,8 +194,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   addPlssLayer() {
-    this.plssLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/national_plss/wms?', {
-      layers: 'National_PLSS',
+    this.plssLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
+      layers: 'landgrid_webmap:LandGrid_WebMap',
       format: 'image/png8',
       transparent: true,
       styles: '',
@@ -205,7 +205,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   addWellsLayer() {
-    this.wellsLayer = L.tileLayer.wms('http://maps.uslandgrid.com/geoserver/Wells/wms?', {
+    this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
       layers: 'wh_final',
       format: 'image/png8',
       transparent: true,
