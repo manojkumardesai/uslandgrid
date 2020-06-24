@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, FormArray, Form, FormControl, Validators } from
 import { ApiService } from 'src/app/_services/api.service';
 import { LoginService } from 'src/app/_services/login.service';
 import { saveAs } from 'file-saver';
-
+declare var $: any;
 
 @Component({
   selector: 'app-advanced-filter',
@@ -66,6 +66,10 @@ export class AdvancedFilterComponent implements OnInit {
   isLoggedIn = false;
   titleMsg = 'Login to export';
   advanceFilterForm: FormGroup;
+  filterForm: FormGroup;
+
+  /* new filter codes starts from here*/
+  panelOpenState: boolean = false;
   constructor(public dialogRef: MatDialogRef<AdvancedFilterComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     public fb: FormBuilder,
@@ -163,6 +167,7 @@ export class AdvancedFilterComponent implements OnInit {
       }
 
     });
+    this.filterFormMethod();
   }
 
   populateColumns() {
@@ -182,6 +187,33 @@ export class AdvancedFilterComponent implements OnInit {
 
   get setForms() {
     return this.advanceFilterForm.get('set') as FormArray;
+  }
+
+  filterFormMethod() {
+    this.filterForm = new FormGroup({
+      wells: new FormGroup({
+        string: new FormGroup({
+          option: new FormControl('option value'),
+          condtions: new FormControl('is any of')
+        })
+      }),
+      landGrid: new FormGroup({
+        string: new FormGroup({
+          option: new FormControl('option value'),
+          condtions: new FormControl('is any of')
+        })
+      }),
+      date: new FormGroup({
+        string: new FormGroup({
+          option: new FormControl('option value'),
+          condtions: new FormControl('is any of')
+        })
+      })
+    });
+  }
+
+  applyfil() {
+    console.log(this.filterForm.value)
   }
 
   addExpressionToExp() {
@@ -474,4 +506,14 @@ export class AdvancedFilterComponent implements OnInit {
       this.generatingReport = false;
     })
   }
+
+  // Toggle plus minus icon on show hide of collapse element
+  toggleCollapse() {
+    $(".collapse").on('show.bs.collapse', function () {
+      $(this).prev(".card-header").find(".fa").removeClass("fa-plus").addClass("fa-minus");
+    }).on('hide.bs.collapse', function () {
+      $(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
+    });
+  }
+
 }
