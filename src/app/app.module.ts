@@ -19,6 +19,7 @@ import { AdvancedFilterComponent } from './wells-records/advFilterDialog/advance
 import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { InfoWindowComponent } from './map/info-window/info-window.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 // import { RouterStateSnapshot } from '@angular/router';
 
 
@@ -46,7 +47,8 @@ import { InfoWindowComponent } from './map/info-window/info-window.component';
     ChartsModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    BsDatepickerModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,21 +1,206 @@
 <div>
   <div class="header">
-    <div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
-    <h3 mat-dialog-title>
-      <mat-icon>drag_handle</mat-icon>
-      Filter
-    </h3></div>
-    <div>
-      <button mat-button (click)="onNoClick()">
-        <mat-icon>close</mat-icon>
-      </button>
+    <div cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="position: absolute;">
     </div>
   </div>
-  <div class='actionButtons'>
+
+  <div class="filter-group">
+    <div class="row-filter">
+      <div class="col-filter" style="width: 86%;">
+        <div class="filter-header-set">
+          <div class="select-query">
+            <mat-radio-group aria-label="select query">
+              <mat-radio-button checked  style="margin-left: 5px;">Apply all the conditions </mat-radio-button>
+              <mat-radio-button value="2" style="margin-left: 15px;"> Apply any of the conditions</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+    
+      <div class="col-filter">
+        <div class="close-filter text-right">
+          <button class="close-filter-btn"  (click)="onNoClick()">
+           <i class="fa fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-body">
+        <div class="accordion filter-card" id="filterAccordian">
+            <div class="card">
+                <div class="card-header" 
+                id="headingOne" (click) = "toggleCollapse()"
+                data-toggle="collapse" data-target="#collapseOne">
+                <div class="row">
+                  <div class="col-md-6">
+                    <span class="toggle-icon"><i class="fa fa-plus"></i></span> 
+                    <span class="card-header-lable">Wells</span>	
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <span class="total-lable">Total</span> 
+                    <span class="count-lable">3246447</span>
+                  </div>
+                </div>
+                </div>
+                <div id="collapseOne" class="collapse" data-parent="#filterAccordian">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                        <button class="btn filter-button" aria-expanded="false"
+                        data-toggle="collapse" data-target="#wellStringCollapse">
+                        State
+                        </button>
+                        </div>
+                        <div class="col-md-6">
+                          <button class="btn filter-button" aria-expanded="false"
+                          data-toggle="collapse" data-target="#wellIntegerCollapse">
+                            TotalDepth
+                          </button>
+                        </div>
+                      </div>
+                      <div id="wellStringCollapse" class="collapse" data-parent="#collapseOne">
+                        <div class="row">
+                            <div class="col-sm-6">
+                              <div class="sub-group-wrapper">
+                                <div class="form-group filter-form-control">
+                                  <label for="wellCondtions">Text</label>
+                                  <input class="form-control" id="wellCondtions" required #wellsText>
+                                  <span *ngIf="wellsText.touched && wellsText.value == ''">Text is required</span>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+
+                      <div id="wellIntegerCollapse" class="collapse" data-parent="#collapseOne">
+                          <div class="row">
+                            <div class="offset-md-6"></div>
+                            <div class="col-md-6ss">
+                              <div class="sub-group-wrapper d-flex">
+                              <div class="form-group filter-form-control">
+                                <label for="wellIntConditions">From</label>
+                                <input type="number" class="form-control" id="wellIntConditions">
+                              </div>
+                              <div class="form-group filter-form-control">
+                                <label for="wellIntOptions">To</label>
+                                <input type="number" class="form-control" id="wellIntOptions">
+                              </div>
+                            </div>
+                            </div>
+                          </div>
+                        
+                      </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo"
+                (click) = "toggleCollapse()"
+                data-toggle="collapse" data-target="#collapseTwo">
+                <div class="row">
+                  <div class="col-md-6">
+                    <span class="toggle-icon"><i class="fa fa-plus"></i></span> 
+                    <span class="card-header-lable">Land Grid</span>	
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <span class="total-lable">Total</span> 
+                    <span class="count-lable">3246447</span>
+                  </div>
+                </div>   
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#filterAccordian">
+                    <div class="card-body">
+                        <p>Land grid goes here</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingThree"
+                (click) = "toggleCollapse()"
+                data-toggle="collapse" data-target="#collapseThree">
+                <div class="row">
+                  <div class="col-md-6">
+                    <span class="toggle-icon"><i class="fa fa-plus"></i></span> 
+                    <span class="card-header-lable">Date</span>	
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <span class="total-lable">Total</span> 
+                    <span class="count-lable">3246447</span>
+                  </div>
+                </div>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#filterAccordian">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <button class="btn filter-button" aria-expanded="false" data-toggle="collapse" data-target="#spudDateCollapse">
+                            Spud Date
+                          </button>
+                        </div>
+                      </div>
+                      <div id="spudDateCollapse" class="collapse" data-parent="#collapseThree">
+                        <div class="row">
+                            <div class="col-sm-6">
+                              <div class="sub-group-wrapper d-flex">
+                                <div class="form-group filter-form-control">
+                                  <label for="wellCondtions">From</label>
+                                  <input class="form-control" id="wellCondtions" 
+                                  placement="right"
+                                  [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                  bsDatepicker>
+                                </div>
+                                <div class="form-group filter-form-control">
+                                  <label for="wellCondtions">To</label>
+                                  <input class="form-control" id="wellCondtions"
+                                  placement="right"
+                                  [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }" 
+                                  bsDatepicker>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="heading4"
+                (click) = "toggleCollapse()"
+                data-toggle="collapse" data-target="#collapseFour">
+                <div class="row">
+                  <div class="col-md-6">
+                    <span class="toggle-icon"><i class="fa fa-plus"></i></span> 
+                    <span class="card-header-lable">Production</span>	
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <span class="total-lable">Total</span> 
+                    <span class="count-lable">3246447</span>
+                  </div>
+                </div>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingThree" data-parent="#filterAccordian">
+                    <div class="card-body">
+                        <p>Other menu goes here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+    <div class="filter-footer">
+      <button class="filter-btn-apply" (click)="applyfil()">Apply</button>
+      <button class="filter-btn-clear">Clear All</button>
+    </div>
+    
+  </div>
+
+  <!-- -<div class='actionButtons'> -->
     <!-- <button mat-button (click)="addExpressionToExp()">
       <mat-icon color="primary">add</mat-icon> Add Expression
     </button> -->
-    <button mat-button (click)="addSetToSetForm()">
+    <!-- -<button mat-button (click)="addSetToSetForm()">
       <mat-icon color="primary">add</mat-icon> Add Set
     </button>
   </div>
@@ -82,12 +267,12 @@
             <button mat-icon-button (click)="deleteExpFromExpArray(i)">
               <mat-icon>delete</mat-icon>
             </button>
-            <br/>
+            <br/> -->
             <!-- <mat-checkbox formControlName="caseSensitive">
               Case Sensitive
             </mat-checkbox> -->
             
-          </div>
+          <!-- -</div>
         </div>
         <div formArrayName='set'>
           <div *ngFor='let set of setForms.controls; let i=index;' [formGroupName]="i">
@@ -103,11 +288,11 @@
               <div>
                 <button mat-icon-button (click)="deleteSet(i)">
                   <mat-icon>delete</mat-icon>
-                </button>
+                </button> -->
                 <!-- <button mat-button (click)="addExpToSetForm(i)">
                   <mat-icon color="primary">add</mat-icon> Add Expression
                 </button> -->
-              </div>
+              <!-- -</div>
             </div>
             <div formArrayName='exp'>
             <div class="fields" *ngFor="let exp of set.get('exp').controls;let j = index;even as isEven odd as isOdd" [formGroupName]="j">
@@ -171,21 +356,21 @@
                 <button mat-icon-button *ngIf="set.get('exp').controls.length > 2" (click)="deleteExpFromSet(j, i)">
                   <mat-icon>delete</mat-icon>
                 </button>
-                <br/>
+                <br/> -->
                 <!-- <mat-checkbox formControlName="caseSensitive">
                   Case Sensitive
                 </mat-checkbox> -->
-              </div>
+              <!-- -</div>
             </div>
           </div>
         </div>
       </form>
   </div>
-  <div mat-dialog-actions align="right" class="dialogActions">
+  <div mat-dialog-actions align="right" class="dialogActions"> -->
     <!-- [mat-dialog-close]="data.animal" -->
-    <button mat-button [disabled]="invalidForm" [mat-dialog-close]="advanceFilterForm.value">Apply</button>
+    <!-- -<button mat-button [disabled]="invalidForm" [mat-dialog-close]="advanceFilterForm.value">Apply</button> -->
     <!-- <button mat-button [disabled]="true">Export</button> -->
-    <button mat-button (click)="onNoClick()">Cancel</button>
+    <!-- -<button mat-button (click)="onNoClick()">Cancel</button>
     <button mat-button (click)="reset()">Reset</button>
     <div *ngIf="isLoggedIn" class="export">
       <mat-form-field>
@@ -201,5 +386,5 @@
     [ngClass]="{'export': !isLoggedIn}"
     [disabled]="invalidForm || !isLoggedIn || !reportType">
     <mat-spinner *ngIf="generatingReport"></mat-spinner>Export</button>
-  </div>
+  </div> -->
 </div>
