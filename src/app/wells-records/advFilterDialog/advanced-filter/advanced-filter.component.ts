@@ -4,7 +4,9 @@ import { FormGroup, FormBuilder, FormArray, Form, FormControl, Validators } from
 import { ApiService } from 'src/app/_services/api.service';
 import { LoginService } from 'src/app/_services/login.service';
 import { saveAs } from 'file-saver';
+import { trigger, state, transition, animate, style } from '@angular/animations';
 declare var $: any;
+
 
 @Component({
   selector: 'app-advanced-filter',
@@ -70,11 +72,31 @@ export class AdvancedFilterComponent implements OnInit {
 
   /* new filter codes starts from here*/
   panelOpenState: boolean = false;
+  isWellsCollapsed: boolean = false;
+  isLandGridCollapsed: boolean = false;
+  isProductioCollapsed: boolean = false;
+  isDateCollapsed: boolean = false;
+
+  payLoad = [];
+  /* Grid list */
+  grids: any;
+  wells: any = {};
+  landGrids: any = {};
+  productions: any = {};
+  dates: any = {};
+  isAllGridLoaded: boolean = false;
+  isWellGridLoaded: boolean = false;
+  isLandGridLoaded: boolean = false;
+  isProductionLoaded: boolean = false;
+  isDateLoaded: boolean = false;
+
   constructor(public dialogRef: MatDialogRef<AdvancedFilterComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     public fb: FormBuilder,
     public loginService: LoginService,
-    public apiService: ApiService) { }
+    public apiService: ApiService) {
+    console.log(this.dialogRef)
+  }
 
   ngOnInit(): void {
 
@@ -168,6 +190,7 @@ export class AdvancedFilterComponent implements OnInit {
 
     });
     this.filterFormMethod();
+    this.getGridList();
   }
 
   populateColumns() {
@@ -191,29 +214,299 @@ export class AdvancedFilterComponent implements OnInit {
 
   filterFormMethod() {
     this.filterForm = new FormGroup({
-      wells: new FormGroup({
-        string: new FormGroup({
-          option: new FormControl('option value'),
-          condtions: new FormControl('is any of')
-        })
+      well: new FormGroup({
+        Well_ID: new FormControl(''),
+        Operator: new FormControl(''),
+        Well_Name: new FormControl(''),
+        Well_Number: new FormControl(''),
+        Status: new FormControl(''),
+        Classification: new FormControl(),
+        TD: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        Formation_at_TD: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        Spud_Date: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        Completion_Date: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        Permit_Date: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        Permit_Number: new FormControl(''),
+        Area: new FormControl(''),
+        District: new FormControl(''),
+        Field: new FormControl(''),
+        State: new FormControl(''),
+        County: new FormControl(''),
+        Lease_Name: new FormControl(''),
+        Drill_Type: new FormControl(''),
+        Completion_Type: new FormControl(''),
+        Formation: new FormControl(''),
+        Oil_Volume: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        Gas_Volume: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        Water_Volume: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        Casing_Size: new FormControl(''),
+        Casing_Type: new FormControl(''),
       }),
+
       landGrid: new FormGroup({
-        string: new FormGroup({
-          option: new FormControl('option value'),
-          condtions: new FormControl('is any of')
-        })
+        Area: new FormControl(''),
+        District: new FormControl(''),
+        Field: new FormControl(''),
+        State: new FormControl(''),
+        County: new FormControl(''),
+        Meridian: new FormControl(''),
+        Section: new FormControl(''),
+        Township: new FormControl(''),
+        Township_Direction: new FormControl(''),
+        Range: new FormControl(''),
+        Range_Direction: new FormControl(''),
+        TX_Abstract: new FormControl(''),
+        TX_Survey: new FormControl(''),
+        TX_Blocks: new FormControl(''),
       }),
+
+      production: new FormGroup({
+        Well_ID: new FormControl(''),
+        Operator: new FormControl(''),
+        Well_Name: new FormControl(''),
+        TD: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        District: new FormControl(''),
+        Field: new FormControl(''),
+        State: new FormControl(''),
+        County: new FormControl(''),
+        Zone: new FormControl(''),
+        Activity_Type: new FormControl(''),
+        AnnualOilProduction: new FormControl(''),
+        AnnualGasProduction: new FormControl(''),
+        AnnualWaterProduction: new FormControl(''),
+        AnnualNGLProduction: new FormControl(''),
+        Last6MonthsOilProduction: new FormControl(''),
+        Last6MonthsGasProduction: new FormControl(''),
+        Last6MonthsWaterProduction: new FormControl(''),
+        Last6MonthsNGLProduction: new FormControl(''),
+        Production_Date: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        Status: new FormControl(''),
+        Drill_Type: new FormControl('')
+      }),
+
       date: new FormGroup({
-        string: new FormGroup({
-          option: new FormControl('option value'),
-          condtions: new FormControl('is any of')
+        Spud_Date: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        Completion_Date: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        District: new FormControl(''),
+        State: new FormControl(''),
+        County: new FormControl(''),
+        Test_Date: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        Production_Date: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
+        }),
+        First_Production_Date: new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl('')
         })
       })
     });
   }
 
+  generateFormControl(formObj): FormGroup {
+    let controls = {};
+    formObj.forEach(col => {
+      if (col.type == 'Integer') {
+        controls[col.column.replace(/\s+/g, '_')] = [{
+          from: '',
+          to: ''
+        }];
+      } else {
+        controls[col.column.replace(/\s+/g, '_')] = ['hello word'];
+      }
+    });
+    return this.fb.group(controls);
+  }
+  getGridList() {
+    this.apiService.fetchColumns().subscribe((res: any) => {
+      this.grids = res;
+      this.generateDropdownForStringFields();
+    },
+      (err) => console.log(err));
+  }
+
+  removeSpaceInText(txt) {
+    return txt.replace(/\s+/g, '_');
+  }
+
+  generateDropdownForStringFields() {
+
+    if (this.grids && Object.keys(this.grids).length) {
+      for (let key in this.grids) {
+        if (key == 'well') {
+          let wellStringFields = this.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
+          wellStringFields.forEach(col => {
+            this.wells[col] = [];
+          });
+          this.grids[key].filter((col, ind, arr) => {
+            if (col.type == 'String') {
+              this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
+                this.wells[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
+                console.log(this.wells);
+              });
+            }
+            this.isWellGridLoaded = ind == this.grids[key].length - 1 ? true : false;
+          });
+        }
+        if (key == 'landGrid') {
+          let landGridStringFields = this.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
+          landGridStringFields.forEach(col => {
+            this.landGrids[col] = [];
+          });
+          this.grids[key].filter((col, ind, arr) => {
+            if (col.type == 'String') {
+              this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
+                this.landGrids[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
+                console.log(this.landGrids);
+              });
+            }
+            this.isLandGridLoaded = ind == this.grids[key].length - 1 ? true : false;
+          });
+        }
+        if (key == 'production') {
+          let productionStringFields = this.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
+          productionStringFields.forEach(col => {
+            this.productions[col] = [];
+          });
+          this.grids[key].filter((col, ind, arr) => {
+            if (col.type == 'String') {
+              this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
+                this.productions[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
+                console.log(this.productions);
+              });
+            }
+            this.isProductionLoaded = ind == this.grids[key].length - 1 ? true : false;
+          });
+        }
+        if (key == 'date') {
+          let dateStringFields = this.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
+          dateStringFields.forEach(col => {
+            this.dates[col] = [];
+          });
+          this.grids[key].filter((col, ind, arr) => {
+            if (col.type == 'String') {
+              this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
+                this.dates[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
+                console.log(this.dates);
+              });
+            }
+            this.isDateLoaded = ind == this.grids[key].length - 1 ? true : false;
+          });
+        }
+      }
+    }
+  }
+
   applyfil() {
+    this.payLoad = [];
     console.log(this.filterForm.value)
+    for (let key in this.grids) {
+      this.grids[key].forEach(col => {
+        if (col.type == 'String') {
+          this.payLoad.push({
+            colomn: col.column,
+            type: col.type,
+            table: col.table,
+            value: [this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value]
+          });
+        } else if (col.type == 'Integer') {
+          this.payLoad.push({
+            colomn: col.column,
+            type: col.type,
+            table: col.table,
+            min: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString(),
+            max: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString(),
+          });
+        } else if (col.type == 'Date') {
+          this.payLoad.push({
+            colomn: col.column,
+            type: col.type,
+            table: col.table,
+            min: new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString()).toLocaleDateString(),
+            max: new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString()).toLocaleDateString(),
+          });
+        }
+
+      });
+    }
+
+    console.log(this.payLoad)
+  }
+
+
+  searchString(key, table, group) {
+    let searchValue = this.filterForm.get([group, key]).value;
+    if (group == 'well' && searchValue.length) {
+      if (this.wells[key].indexOf(searchValue.toUpperCase()) == - 1) {
+        this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
+          this.wells[key] = res['uniqueValue'];
+        },
+          (err) => console.log(err))
+      }
+    }
+    if (group == 'landGrid' && searchValue.length) {
+      if (this.landGrids[key].indexOf(searchValue.toUpperCase()) == - 1) {
+        this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
+          this.landGrids[key] = res['uniqueValue'];
+        },
+          (err) => console.log(err))
+      }
+    }
+    if (group == 'production' && searchValue.length) {
+      if (this.productions[key].indexOf(searchValue.toUpperCase()) == - 1) {
+        this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
+          this.productions[key] = res['uniqueValue'];
+        },
+          (err) => console.log(err))
+      }
+    }
+    if (group == 'date' && searchValue.length) {
+      if (this.dates[key].indexOf(searchValue.toUpperCase()) == - 1) {
+        this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
+          this.dates[key] = res['uniqueValue'];
+        },
+          (err) => console.log(err))
+      }
+    }
   }
 
   addExpressionToExp() {
@@ -508,12 +801,36 @@ export class AdvancedFilterComponent implements OnInit {
   }
 
   // Toggle plus minus icon on show hide of collapse element
-  toggleCollapse() {
-    $(".collapse").on('show.bs.collapse', function () {
-      $(this).prev(".card-header").find(".fa").removeClass("fa-plus").addClass("fa-minus");
-    }).on('hide.bs.collapse', function () {
-      $(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
-    });
+  toggleCollapse(grid) {
+    if (grid == 'wells') {
+      this.isWellsCollapsed = !this.isWellsCollapsed;
+      this.isLandGridCollapsed = false;
+      this.isProductioCollapsed = false;
+      this.isDateCollapsed = false;
+    }
+    if (grid == 'langGrid') {
+      this.isLandGridCollapsed = !this.isLandGridCollapsed;
+      this.isWellsCollapsed = false;
+      this.isProductioCollapsed = false;
+      this.isDateCollapsed = false;
+    }
+    if (grid == 'production') {
+      this.isProductioCollapsed = !this.isProductioCollapsed;
+      this.isWellsCollapsed = false;
+      this.isLandGridCollapsed = false;
+      this.isDateCollapsed = false;
+    }
+    if (grid == 'date') {
+      this.isProductioCollapsed = false;
+      this.isWellsCollapsed = false;
+      this.isLandGridCollapsed = false;
+      this.isDateCollapsed = !this.isDateCollapsed;
+    }
+    // $(".collapse").on('show.bs.collapse', function () {
+    //   $(this).prev(".card-header").find(".fa").removeClass("fa-plus").addClass("fa-minus");
+    // }).on('hide.bs.collapse', function () {
+    //   $(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
+    // });
   }
 
 }

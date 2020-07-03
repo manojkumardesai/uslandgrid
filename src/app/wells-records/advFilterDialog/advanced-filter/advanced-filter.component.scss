@@ -112,6 +112,7 @@
   display: flex;
   justify-content: center;
   font-size: 13px;
+  padding-right: 5px;
   .mat-radio-container {
     height: 16px;
     width: 16px;
@@ -122,10 +123,10 @@
   }
   .mat-radio-outer-circle,
   .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-    border-color: rgba(119, 173, 28, 1);
+    border-color: #1a76ab;
   } 
   .mat-radio-button.mat-accent .mat-radio-inner-circle {
-    background-color: rgba(119, 173, 28, 1);
+    background-color: #1a76ab;
   }
   label {
     margin-bottom: 0px;
@@ -138,7 +139,7 @@
   text-align: right;
   margin-top: -1px;
   .filter-btn-apply {
-    background-color:  rgba(119, 173, 28, 1);
+    background-color:  #1a76ab;
     color: white;
     border: none;
     padding: 3px 6px;
@@ -159,6 +160,7 @@
 ::ng-deep .mat-dialog-container {
   padding: 10px;
   width: 610px;
+  left: -320px;
 }
 
 ::ng-deep .cdk-global-overlay-wrapper {
@@ -172,6 +174,7 @@
   .card {
     border: 1px solid #424242;
     border-bottom: 1px solid gray;
+    margin-bottom: 7px;
     .card-header {
       background-color: #424242;
       padding: 3px 3px 3px 0px;
@@ -184,7 +187,7 @@
         .fa-minus {
           font-size: 12px;
           padding: 2px 3px;
-          background-color:  rgba(119, 173, 28, 1);
+          background-color:  #1a76ab;
         }
       }
       .card-header-lable {
@@ -243,7 +246,7 @@
 }
 
 button.filter-button[aria-expanded="true"]{
-  background-color:  rgba(119, 173, 28, 1);
+  background-color:  #1a76ab;
   color: white;
 }
 
@@ -261,4 +264,107 @@ button.filter-button[aria-expanded="true"]{
 
 ::ng-deep .cdk-overlay-pane {
   width: 600px;
+}
+
+.filter-body {
+  height: auto;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.filter-card {
+  border: 0px;
+    border-bottom: 1px solid gray;
+    border-radius: 0px;
+    margin-bottom: 2px;
+  .card-header {
+    border-radius: 0px;
+    padding: 3px 4px;
+    background-color: #424242;
+    cursor: pointer;
+    .subgroup-btn {
+      background-color: gray;
+      width: 100%;
+      border: 0;
+      color: white;
+      font-size: 13px;
+      text-align: left;
+      padding: 3px 4px;
+      &:focus {
+        outline: none;
+        border: 0px;
+      }
+      &[aria-expanded="true"]{
+        background-color: #1a76ab;
+        .fa-plus {
+          display: none;
+        }
+     }
+     &[aria-expanded="false"]{
+       .fa-minus {
+         display: none;
+       }
+     }
+    }
+    
+    a {
+      font-size: 13px;
+    }
+    .fa-plus {
+      padding: 2px 3px;
+      border: 1px solid gray;
+    }
+    .fa-minus {
+      padding: 2px 3px;
+      background-color: #1a76ab;
+    }
+    .total-label {
+      color: gray;
+      font-size: 12px;
+      padding-right: 5px;
+    }
+    .count-label {
+      font-size: 12px;
+    }
+
+  }
+  .card-body {
+    padding: 0px 4px;
+    background-color: #424242;
+
+    .card {
+      border: 0px;
+      .card-header, .card-body {
+        padding: 0px;
+      }
+    }
+  }
+}
+
+.filter-form-group {
+  padding: 3px;
+  margin-bottom: 0px;
+  background-color: gray;
+  label {
+    margin-bottom: 0px;
+    font-size: 13px;
+    color: white;
+  }
+  .form-control {
+    border-radius: 0px;
+    padding: 2px 3px;
+    height: auto;
+    background: #424242;
+    border: 1px solid gray;
+    color: white;
+    font-size: 13px;
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
+  }
+}
+
+::ng-deep .bs-datepicker-container {
+  padding: 0px !important;
 }
