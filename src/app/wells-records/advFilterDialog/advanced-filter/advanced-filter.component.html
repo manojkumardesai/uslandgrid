@@ -4,6 +4,7 @@
     </div>
   </div>
 
+  
   <div class="filter-group">
     <div class="row-filter">
       <div class="col-filter" style="width: 86%;">
@@ -26,171 +27,393 @@
       </div>
     </div>
 
-    <div class="filter-body">
-        <div class="accordion filter-card" id="filterAccordian">
-            <div class="card">
-                <div class="card-header" 
-                id="headingOne" (click) = "toggleCollapse()"
-                data-toggle="collapse" data-target="#collapseOne">
-                <div class="row">
-                  <div class="col-md-6">
-                    <span class="toggle-icon"><i class="fa fa-plus"></i></span> 
-                    <span class="card-header-lable">Wells</span>	
+    <div class="loading" *ngIf="!isWellGridLoaded && !isLandGridLoaded && !isProductionLoaded && !isDateLoaded"><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color: blue"></i> Please Wait</div>
+    <form [formGroup] = "filterForm" *ngIf="isWellGridLoaded && isLandGridLoaded && isProductionLoaded && isDateLoaded">
+    <div class="filter-wrapper mt-4">
+      <div class="filter-body">
+        <div id="main-accordian" style="overflow-x: hidden;">
+         
+          <div class="card filter-card" formGroupName="well">
+            <div class="card-header" (click)="toggleCollapse('wells')">
+              <a class="collapsed card-link"
+               data-toggle="collapse" 
+               data-target="#wells-collapse" 
+               aria-expanded="false">
+                <div class="d-flex w-100">
+                  <div class="col-sm-6 px-0">
+                  <span class="fa fa-plus"
+                  data-toggle="collapse" data-target="#wells-collapse" 
+                  *ngIf="!isWellsCollapsed"></span> 
+                  <span class="fa fa-minus" 
+                  data-toggle="collapse" data-target="#wells-collapse"
+                  *ngIf="isWellsCollapsed"></span> Wells
                   </div>
-                  <div class="col-md-6 text-right">
-                    <span class="total-lable">Total</span> 
-                    <span class="count-lable">3246447</span>
+                  <div class="col-sm-6 px-0 text-right d-none">
+                    <span class="total-label">Total:</span> <span class="count-label">4321</span>
                   </div>
                 </div>
-                </div>
-                <div id="collapseOne" class="collapse" data-parent="#filterAccordian">
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-md-6">
-                        <button class="btn filter-button" aria-expanded="false"
-                        data-toggle="collapse" data-target="#wellStringCollapse">
-                        State
-                        </button>
+                
+              </a>
+            </div>
+            <div id="wells-collapse" class="collapse" data-parent="#main-accordian">
+              <div class="card-body">
+                <div id="wells-subgroup">
+                  <ng-container *ngIf="grids && grids['well'].length">
+                  <div class="row">
+                    <div class="col-sm-6"  *ngFor="let welCol of grids['well']">
+                      <div class="card">
+                        <div class="card-header">
+                            <button type="button" class="subgroup-btn" data-toggle="collapse" 
+                            [attr.href]="'#well_'+removeSpaceInText(welCol['column'])" aria-expanded="false"
+                            [attr.aria-controls]="'well_'+removeSpaceInText(welCol['column'])">{{welCol.column}}
+                            </button>
                         </div>
-                        <div class="col-md-6">
-                          <button class="btn filter-button" aria-expanded="false"
-                          data-toggle="collapse" data-target="#wellIntegerCollapse">
-                            TotalDepth
-                          </button>
-                        </div>
-                      </div>
-                      <div id="wellStringCollapse" class="collapse" data-parent="#collapseOne">
-                        <div class="row">
-                            <div class="col-sm-6">
-                              <div class="sub-group-wrapper">
-                                <div class="form-group filter-form-control">
-                                  <label for="wellCondtions">Text</label>
-                                  <input class="form-control" id="wellCondtions" required #wellsText>
-                                  <span *ngIf="wellsText.touched && wellsText.value == ''">Text is required</span>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
-                      </div>
-
-                      <div id="wellIntegerCollapse" class="collapse" data-parent="#collapseOne">
-                          <div class="row">
-                            <div class="offset-md-6"></div>
-                            <div class="col-md-6ss">
-                              <div class="sub-group-wrapper d-flex">
-                              <div class="form-group filter-form-control">
-                                <label for="wellIntConditions">From</label>
-                                <input type="number" class="form-control" id="wellIntConditions">
-                              </div>
-                              <div class="form-group filter-form-control">
-                                <label for="wellIntOptions">To</label>
-                                <input type="number" class="form-control" id="wellIntOptions">
-                              </div>
-                            </div>
+                        <div [id]="'well_'+removeSpaceInText(welCol['column'])" class="collapse" 
+                        data-parent="#wells-subgroup" 
+                        [attr.aria-labelledby]="'well_'+removeSpaceInText(welCol['column'])">
+                          <div class="card-body"  *ngIf="welCol.type == 'String'">
+                            <div class="form-group filter-form-group">
+                              <label [for]="'wellLabel'+removeSpaceInText(welCol['column'])">Name</label>
+                              <input type="text" 
+                              (keypress) ="searchString( welCol['column'], welCol['table'], 'well')"
+                              [formControlName]="removeSpaceInText(welCol['column'])"
+                              [attr.list]="'well_list_'+removeSpaceInText(welCol['column'])" 
+                              [id]="'wellLabel'+removeSpaceInText(welCol['column'])" class="form-control" >
+                              <datalist [id]="'well_list_'+removeSpaceInText(welCol['column'])">
+                                <ng-container *ngFor="let val of wells[removeSpaceInText(welCol['column'])]">
+                                  <option [value]="val">{{val}}</option>
+                                </ng-container>
+                              </datalist>
                             </div>
                           </div>
-                        
-                      </div>
-
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header" id="headingTwo"
-                (click) = "toggleCollapse()"
-                data-toggle="collapse" data-target="#collapseTwo">
-                <div class="row">
-                  <div class="col-md-6">
-                    <span class="toggle-icon"><i class="fa fa-plus"></i></span> 
-                    <span class="card-header-lable">Land Grid</span>	
-                  </div>
-                  <div class="col-md-6 text-right">
-                    <span class="total-lable">Total</span> 
-                    <span class="count-lable">3246447</span>
-                  </div>
-                </div>   
-                </div>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#filterAccordian">
-                    <div class="card-body">
-                        <p>Land grid goes here</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header" id="headingThree"
-                (click) = "toggleCollapse()"
-                data-toggle="collapse" data-target="#collapseThree">
-                <div class="row">
-                  <div class="col-md-6">
-                    <span class="toggle-icon"><i class="fa fa-plus"></i></span> 
-                    <span class="card-header-lable">Date</span>	
-                  </div>
-                  <div class="col-md-6 text-right">
-                    <span class="total-lable">Total</span> 
-                    <span class="count-lable">3246447</span>
-                  </div>
-                </div>
-                </div>
-                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#filterAccordian">
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-md-6">
-                          <button class="btn filter-button" aria-expanded="false" data-toggle="collapse" data-target="#spudDateCollapse">
-                            Spud Date
-                          </button>
+                          <div class="card-body d-flex"  *ngIf="welCol.type == 'Integer'" [formGroupName]="removeSpaceInText(welCol['column'])">
+                            <div class="form-group filter-form-group">
+                              <label [for]="'wellLabel'+removeSpaceInText(welCol['column'])+'from'">From</label>
+                              <input type="number" 
+                              formControlName="from"
+                              [id]="'wellLabel'+removeSpaceInText(welCol['column'])+'from'" class="form-control" >
+                            </div>
+                            <div class="form-group filter-form-group">
+                              <label [for]="'wellLabel'+removeSpaceInText(welCol['column'])+'to'">To</label>
+                              <input type="number" 
+                              formControlName="to"
+                              [id]="'wellLabel'+removeSpaceInText(welCol['column'])+'to'" class="form-control" >
+                            </div>
+                          </div>
+                          <div class="card-body d-flex"  *ngIf="welCol.type == 'Date'" [formGroupName]="removeSpaceInText(welCol['column'])">
+                            <div class="form-group filter-form-group">
+                              <label [for]="'wellLabel'+removeSpaceInText(welCol['column'])+'from'">From</label>
+                              <input type="text" 
+                              formControlName="from"
+                              [id]="'wellLabel'+removeSpaceInText(welCol['column'])+'from'" class="form-control" 
+                              placement="right"
+                              [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                              bsDatepicker>
+                            </div>
+                            <div class="form-group filter-form-group">
+                              <label [for]="'wellLabel'+removeSpaceInText(welCol['column'])+'to'">To</label>
+                              <input type="text" 
+                              formControlName="to"
+                              [id]="'wellLabel'+removeSpaceInText(welCol['column'])+'to'" class="form-control" 
+                              placement="right"
+                              [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                              bsDatepicker>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div id="spudDateCollapse" class="collapse" data-parent="#collapseThree">
-                        <div class="row">
-                            <div class="col-sm-6">
-                              <div class="sub-group-wrapper d-flex">
-                                <div class="form-group filter-form-control">
-                                  <label for="wellCondtions">From</label>
-                                  <input class="form-control" id="wellCondtions" 
-                                  placement="right"
-                                  [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
-                                  bsDatepicker>
-                                </div>
-                                <div class="form-group filter-form-control">
-                                  <label for="wellCondtions">To</label>
-                                  <input class="form-control" id="wellCondtions"
-                                  placement="right"
-                                  [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }" 
-                                  bsDatepicker>
-                                </div>
+                    </div>
+                  </div>
+                </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card filter-card" formGroupName="landGrid">
+            <div class="card-header" (click)="toggleCollapse('landGrid')">
+              <a class="collapsed card-link" 
+              data-toggle="collapse" data-target="#landGrid-collapse">
+                <div class="d-flex w-100">
+                  <div class="col-sm-6 px-0">
+                    <span class="fa fa-plus" 
+                    data-toggle="collapse" data-target="#landGrid-collapse"
+                    *ngIf="!isLandGridCollapsed"></span>
+                    <span class="fa fa-minus"
+                    data-toggle="collapse" data-target="#landGrid-collapse"
+                     *ngIf="isLandGridCollapsed"></span> LandGrid
+                  </div>
+                  <div class="col-sm-6 px-0 text-right d-none">
+                    <span class="total-label">Total:</span> <span class="count-label">4321</span>
+                  </div>
+                </div>
+            </a>
+            </div>
+            <div id="landGrid-collapse" class="collapse" data-parent="#main-accordian">
+              <div class="card-body">
+                <div id="landGrid-subgroup">
+                  <ng-container *ngIf="grids && grids['landGrid'].length">
+                    <div class="row">
+                      <div class="col-sm-6" *ngFor="let landGrid of grids['landGrid']">
+                        <div class="card">
+                          <div class="card-header">
+                              <button type="button" class="subgroup-btn" data-toggle="collapse" 
+                              [attr.href]="'#landGrid_'+removeSpaceInText(landGrid['column'])" aria-expanded="false"
+                              [attr.aria-controls]="'landGrid_'+removeSpaceInText(landGrid['column'])">{{landGrid.column}}
+                              </button>
+                          </div>
+                          <div [id]="'landGrid_'+removeSpaceInText(landGrid['column'])" class="collapse" 
+                          data-parent="#landGrid-subgroup" 
+                          [attr.aria-labelledby]="'landGrid_'+removeSpaceInText(landGrid['column'])">
+                            <div class="card-body"  *ngIf="landGrid.type == 'String'">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'landGridLabel'+removeSpaceInText(landGrid['column'])">Name</label>
+                                <input type="text" 
+                                (keypress) ="searchString( landGrid['column'], landGrid['table'], 'landGrid')"
+                                [formControlName]="removeSpaceInText(landGrid['column'])"
+                                [attr.list]="'landGrid_list_'+removeSpaceInText(landGrid['column'])" 
+                                [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])" class="form-control" >
+                                <datalist [id]="'landGrid_list_'+removeSpaceInText(landGrid['column'])">
+                                  <ng-container *ngFor="let val of landGrids[removeSpaceInText(landGrid['column'])] || []">
+                                    <option [value]="val">{{val}}</option>
+                                  </ng-container>
+                                </datalist>
                               </div>
                             </div>
+                            <div class="card-body d-flex"  *ngIf="landGrid.type == 'Integer'" [formGroupName]="removeSpaceInText(landGrid['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'landgridLabel'+removeSpaceInText(landGrid['column'])+'from'">From</label>
+                                <input type="number" 
+                                formControlName="from"
+                                [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])+'from'" class="form-control" >
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'landgridLabel'+removeSpaceInText(landGrid['column'])+'to'">To</label>
+                                <input type="number" 
+                                formControlName="to"
+                                [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])+'to'" class="form-control" >
+                              </div>
+                            </div>
+                            <div class="card-body d-flex"  *ngIf="landGrid.type == 'Date'" [formGroupName]="removeSpaceInText(landGrid['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'landgridLabel'+removeSpaceInText(landGrid['column'])+'from'">From</label>
+                                <input type="text" 
+                                formControlName="from"
+                                [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])+'from'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                bsDatepicker>
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'landgridLabel'+removeSpaceInText(landGrid['column'])+'to'">To</label>
+                                <input type="text" 
+                                formControlName="to"
+                                [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])+'to'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                bsDatepicker>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
+                  </ng-container>
                 </div>
+              </div>
             </div>
-            <div class="card">
-                <div class="card-header" id="heading4"
-                (click) = "toggleCollapse()"
-                data-toggle="collapse" data-target="#collapseFour">
-                <div class="row">
-                  <div class="col-md-6">
-                    <span class="toggle-icon"><i class="fa fa-plus"></i></span> 
-                    <span class="card-header-lable">Production</span>	
+          </div>
+          <div class="card filter-card" formGroupName="production">
+            <div class="card-header" (click)="toggleCollapse('production')">
+              <a class="collapsed card-link" data-toggle="collapse" data-target="#production-collapse">
+                <div class="d-flex w-100">
+                  <div class="col-sm-6 px-0">
+                    <span class="fa fa-plus"
+                    data-toggle="collapse" data-target="#production-collapse" 
+                    *ngIf="!isProductioCollapsed"></span>
+                    <span class="fa fa-minus"
+                    data-toggle="collapse" data-target="#production-collapse" 
+                    *ngIf="isProductioCollapsed"></span> Production
                   </div>
-                  <div class="col-md-6 text-right">
-                    <span class="total-lable">Total</span> 
-                    <span class="count-lable">3246447</span>
+                  <div class="col-sm-6 px-0 text-right d-none">
+                    <span class="total-label">Total:</span> <span class="count-label">4321</span>
                   </div>
-                </div>
-                </div>
-                <div id="collapseFour" class="collapse" aria-labelledby="headingThree" data-parent="#filterAccordian">
-                    <div class="card-body">
-                        <p>Other menu goes here</p>
+                </div> 
+              </a>
+            </div>
+            <div id="production-collapse" class="collapse" data-parent="#main-accordian">
+              <div class="card-body">
+                <div id="production-subgroup">
+                  <ng-container *ngIf="grids && grids['production'].length">
+                    <div class="row">
+                      <div class="col-sm-6"  *ngFor="let production of grids['production']">
+                        <div class="card">
+                          <div class="card-header">
+                              <button type="button" class="subgroup-btn" data-toggle="collapse" 
+                              [attr.href]="'#production_'+removeSpaceInText(production['column'])" aria-expanded="false"
+                              [attr.aria-controls]="'production_'+removeSpaceInText(production['column'])">{{production.column}}
+                              </button>
+                          </div>
+                          <div [id]="'production_'+removeSpaceInText(production['column'])" class="collapse" 
+                          data-parent="#production-subgroup" 
+                          [attr.aria-labelledby]="'production_'+removeSpaceInText(production['column'])">
+                            <div class="card-body"  *ngIf="production.type == 'String'">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'productionLabel'+removeSpaceInText(production['column'])">Name</label>
+                                <input type="text" 
+                                (keypress) ="searchString( production['column'], production['table'], 'production')"
+                                [formControlName]="removeSpaceInText(production['column'])"
+                                [attr.list]="'production_list_'+removeSpaceInText(production['column'])" 
+                                [id]="'productionLabel'+removeSpaceInText(production['column'])" class="form-control" >
+                                <datalist [id]="'production_list_'+removeSpaceInText(production['column'])">
+                                  <ng-container *ngFor="let val of productions[removeSpaceInText(production['column'])]">
+                                    <option [value]="val">{{val}}</option>
+                                  </ng-container>
+                                </datalist>
+                              </div>
+                            </div>
+                            <div class="card-body d-flex"  *ngIf="production.type == 'Integer'" [formGroupName]="removeSpaceInText(production['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'productionLabel'+removeSpaceInText(production['column'])+'from'">From</label>
+                                <input type="number" 
+                                formControlName="from"
+                                [id]="'productionLabel'+removeSpaceInText(production['column'])+'from'" class="form-control" >
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'productionLabel'+removeSpaceInText(production['column'])+'to'">To</label>
+                                <input type="number" 
+                                formControlName="to"
+                                [id]="'productionLabel'+removeSpaceInText(production['column'])+'to'" class="form-control" >
+                              </div>
+                            </div>
+                            <div class="card-body d-flex"  *ngIf="production.type == 'Date'" [formGroupName]="removeSpaceInText(production['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'productionLabel'+removeSpaceInText(production['column'])+'from'">From</label>
+                                <input type="text" 
+                                formControlName="from"
+                                [id]="'productionLabel'+removeSpaceInText(production['column'])+'from'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                bsDatepicker>
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'productionLabel'+removeSpaceInText(production['column'])+'to'">To</label>
+                                <input type="text" 
+                                formControlName="to"
+                                [id]="'productionLabel'+removeSpaceInText(production['column'])+'to'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                bsDatepicker>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                  </ng-container>
                 </div>
+              </div>
             </div>
+          </div>
+          <div class="card filter-card border-bottom-0"  formGroupName="date">
+            <div class="card-header" (click)="toggleCollapse('date')">
+              <a class="collapsed card-link" data-toggle="collapse" data-target="#date-collapse">
+                <div class="d-flex w-100">
+                  <div class="col-sm-6 px-0">
+                    <span class="fa fa-plus"
+                    data-toggle="collapse" data-target="#date-collapse" 
+                    *ngIf="!isDateCollapsed"></span>
+                    <span class="fa fa-minus"
+                    data-toggle="collapse" data-target="#date-collapse" 
+                    *ngIf="isDateCollapsed"></span> Date
+                  </div>
+                  <div class="col-sm-6 px-0 text-right d-none">
+                    <span class="total-label">Total:</span> <span class="count-label">4321</span>
+                  </div>
+                </div> 
+                
+              </a>
+            </div>
+            <div id="date-collapse" class="collapse" data-parent="#main-accordian">
+              <div class="card-body">
+                <div id="date-subgroup">
+                  <ng-container *ngIf="grids && grids['date'].length">
+                    <div class="row">
+                      <div class="col-sm-6"  *ngFor="let date of grids['date']">
+                        <div class="card">
+                          <div class="card-header">
+                              <button type="button" class="subgroup-btn" data-toggle="collapse" 
+                              [attr.href]="'#date_'+removeSpaceInText(date['column'])" aria-expanded="false"
+                              [attr.aria-controls]="'date_'+removeSpaceInText(date['column'])">{{date.column}}
+                              </button>
+                          </div>
+                          <div [id]="'date_'+removeSpaceInText(date['column'])" class="collapse" 
+                          data-parent="#date-subgroup" 
+                          [attr.aria-labelledby]="'date_'+removeSpaceInText(date['column'])">
+                            <div class="card-body"  *ngIf="date.type == 'String'">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'dateLabel'+removeSpaceInText(date['column'])">Name</label>
+                                <input type="text" 
+                                (keypress) ="searchString( date['column'], date['table'], 'date')"
+                                [formControlName]="removeSpaceInText(date['column'])"
+                                [attr.list]="'date_list_'+removeSpaceInText(date['column'])" 
+                                [id]="'dateLabel'+removeSpaceInText(date['column'])" class="form-control" >
+                                <datalist [id]="'date_list_'+removeSpaceInText(date['column'])">
+                                  <ng-container *ngFor="let val of dates[removeSpaceInText(date['column'])]">
+                                    <option [value]="val">{{val}}</option>
+                                  </ng-container>
+                                </datalist>
+                              </div>
+                            </div>
+                            <div class="card-body d-flex"  *ngIf="date.type == 'Integer'" [formGroupName]="removeSpaceInText(date['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'dateLabel'+removeSpaceInText(date['column'])+'from'">From</label>
+                                <input type="number" 
+                                formControlName="from"
+                                [id]="'dateLabel'+removeSpaceInText(date['column'])+'from'" class="form-control" >
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'dateLabel'+removeSpaceInText(date['column'])+'to'">To</label>
+                                <input type="number" 
+                                formControlName="to"
+                                [id]="'dateLabel'+removeSpaceInText(date['column'])+'to'" class="form-control" >
+                              </div>
+                            </div>
+                            <div class="card-body d-flex"  *ngIf="date.type == 'Date'" [formGroupName]="removeSpaceInText(date['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'dateLabel'+removeSpaceInText(date['column'])+'from'">From</label>
+                                <input type="text" 
+                                formControlName="from"
+                                [id]="'dateLabel'+removeSpaceInText(date['column'])+'from'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                bsDatepicker>
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'dateLabel'+removeSpaceInText(date['column'])+'to'">To</label>
+                                <input type="text" 
+                                formControlName="to"
+                                [id]="'dateLabel'+removeSpaceInText(date['column'])+'to'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                bsDatepicker>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      
+      </div>
+    
     </div>
+  </form>
     <div class="filter-footer">
-      <button class="filter-btn-apply" (click)="applyfil()">Apply</button>
+      <button class="filter-btn-apply" (click) ="applyfil()">Apply</button>
       <button class="filter-btn-clear">Clear All</button>
     </div>
     

@@ -58,4 +58,14 @@ export class ApiService {
   fetchIpWellDetails(payload): Observable<any> {
     return this.http.post(this.baseUrl + `welllist/ipvolume`, payload);
   }
+  fetchColumns(): Observable<any> {
+    return this.http.get(this.baseUrl + `group/column`);
+  }
+
+  fetchColValues(column, table): Observable<any> {
+    return this.http.get(this.baseUrl + `unique/${column}?table=${table}&offset=0&limit=20`);
+  }
+  fetchSingleColValues(column, table, key): Observable<any> {
+    return this.http.get(this.baseUrl + `unique/${column}?table=${table}&offset=0&limit=20&searchKey=${key}`);
+  }
 }
