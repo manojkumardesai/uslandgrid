@@ -33,3 +33,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .text-right {
     text-align: right;
 } 
+
+@keyframes slideDown {
+    0% { }
+    100%{
+        transform: translateX(0%);
+    }
+    }
+    
+    ::ng-deep .cdk-overlay-pane{
+        transform: translateX(-250%);
+        animation: slideDown 0.5s forwards 0s ease-in;
+    }
+    ::ng-deep .cdk-overlay-container > * {
+        transition: none;
+    }

@@ -47,7 +47,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   constructor(public apiService: ApiService,
     public dialog: MatDialog) { }
 
-  openFilterDialog(): void {
+  openFilterDialog($event): void {
     this.openAdvancedFilter = true;
     // const dialogRef = this.dialog.open(FilterDialog, {
     //   width: '350px',

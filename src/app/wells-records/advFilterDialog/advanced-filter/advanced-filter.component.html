@@ -1,6 +1,6 @@
 <div>
   <div class="header">
-    <div cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="position: absolute;">
+    <div style="position: absolute;">
     </div>
   </div>
 
@@ -10,10 +10,16 @@
       <div class="col-filter" style="width: 86%;">
         <div class="filter-header-set">
           <div class="select-query">
-            <mat-radio-group aria-label="select query">
-              <mat-radio-button checked  style="margin-left: 5px;">Apply all the conditions </mat-radio-button>
-              <mat-radio-button value="2" style="margin-left: 15px;"> Apply any of the conditions</mat-radio-button>
-            </mat-radio-group>
+            <mat-radio-group aria-label="Select an option">
+            <mat-radio-button value="1" 
+            (click)="appllyCondtions('all')" 
+            [checked] = 'this.apiService.appllyAllCondtions'
+            style="margin-left: 5px;">Apply all the conditions </mat-radio-button>
+            <mat-radio-button value="2" 
+            (click)="appllyCondtions('any')" 
+            [checked] = 'this.apiService.appllyAnyCondtion'
+            style="margin-left: 15px;"> Apply any of the conditions</mat-radio-button>
+          </mat-radio-group>
           </div>
         </div>
       </div>
@@ -27,8 +33,8 @@
       </div>
     </div>
 
-    <div class="loading" *ngIf="!isWellGridLoaded && !isLandGridLoaded && !isProductionLoaded && !isDateLoaded"><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color: blue"></i> Please Wait</div>
-    <form [formGroup] = "filterForm" *ngIf="isWellGridLoaded && isLandGridLoaded && isProductionLoaded && isDateLoaded">
+    <!-- <div class="loading" *ngIf="!isWellGridLoaded && !isLandGridLoaded && !isProductionLoaded && !isDateLoaded"><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color: blue"></i> Please Wait</div> -->
+    <form [formGroup] = "filterForm">
     <div class="filter-wrapper mt-4">
       <div class="filter-body">
         <div id="main-accordian" style="overflow-x: hidden;">
@@ -58,9 +64,9 @@
             <div id="wells-collapse" class="collapse" data-parent="#main-accordian">
               <div class="card-body">
                 <div id="wells-subgroup">
-                  <ng-container *ngIf="grids && grids['well'].length">
+                  <ng-container *ngIf="this.apiService.grids && this.apiService.grids['well'].length">
                   <div class="row">
-                    <div class="col-sm-6"  *ngFor="let welCol of grids['well']">
+                    <div class="col-sm-6"  *ngFor="let welCol of this.apiService.grids['well']">
                       <div class="card">
                         <div class="card-header">
                             <button type="button" class="subgroup-btn" data-toggle="collapse" 
@@ -80,7 +86,7 @@
                               [attr.list]="'well_list_'+removeSpaceInText(welCol['column'])" 
                               [id]="'wellLabel'+removeSpaceInText(welCol['column'])" class="form-control" >
                               <datalist [id]="'well_list_'+removeSpaceInText(welCol['column'])">
-                                <ng-container *ngFor="let val of wells[removeSpaceInText(welCol['column'])]">
+                                <ng-container *ngFor="let val of this.apiService.wells[removeSpaceInText(welCol['column'])]">
                                   <option [value]="val">{{val}}</option>
                                 </ng-container>
                               </datalist>
@@ -107,7 +113,7 @@
                               formControlName="from"
                               [id]="'wellLabel'+removeSpaceInText(welCol['column'])+'from'" class="form-control" 
                               placement="right"
-                              [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                              [bsConfig]="datePickerConfig"
                               bsDatepicker>
                             </div>
                             <div class="form-group filter-form-group">
@@ -116,7 +122,7 @@
                               formControlName="to"
                               [id]="'wellLabel'+removeSpaceInText(welCol['column'])+'to'" class="form-control" 
                               placement="right"
-                              [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                              [bsConfig]="datePickerConfig"
                               bsDatepicker>
                             </div>
                           </div>
@@ -151,9 +157,9 @@
             <div id="landGrid-collapse" class="collapse" data-parent="#main-accordian">
               <div class="card-body">
                 <div id="landGrid-subgroup">
-                  <ng-container *ngIf="grids && grids['landGrid'].length">
+                  <ng-container *ngIf="this.apiService.grids && this.apiService.grids['landGrid'].length">
                     <div class="row">
-                      <div class="col-sm-6" *ngFor="let landGrid of grids['landGrid']">
+                      <div class="col-sm-6" *ngFor="let landGrid of this.apiService.grids['landGrid']">
                         <div class="card">
                           <div class="card-header">
                               <button type="button" class="subgroup-btn" data-toggle="collapse" 
@@ -173,7 +179,7 @@
                                 [attr.list]="'landGrid_list_'+removeSpaceInText(landGrid['column'])" 
                                 [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])" class="form-control" >
                                 <datalist [id]="'landGrid_list_'+removeSpaceInText(landGrid['column'])">
-                                  <ng-container *ngFor="let val of landGrids[removeSpaceInText(landGrid['column'])] || []">
+                                  <ng-container *ngFor="let val of this.apiService.landGrids[removeSpaceInText(landGrid['column'])]">
                                     <option [value]="val">{{val}}</option>
                                   </ng-container>
                                 </datalist>
@@ -200,7 +206,7 @@
                                 formControlName="from"
                                 [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])+'from'" class="form-control" 
                                 placement="right"
-                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                [bsConfig]="datePickerConfig"
                                 bsDatepicker>
                               </div>
                               <div class="form-group filter-form-group">
@@ -209,7 +215,7 @@
                                 formControlName="to"
                                 [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])+'to'" class="form-control" 
                                 placement="right"
-                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                [bsConfig]="datePickerConfig"
                                 bsDatepicker>
                               </div>
                             </div>
@@ -243,9 +249,9 @@
             <div id="production-collapse" class="collapse" data-parent="#main-accordian">
               <div class="card-body">
                 <div id="production-subgroup">
-                  <ng-container *ngIf="grids && grids['production'].length">
+                  <ng-container *ngIf="this.apiService.grids && this.apiService.grids['production'].length">
                     <div class="row">
-                      <div class="col-sm-6"  *ngFor="let production of grids['production']">
+                      <div class="col-sm-6"  *ngFor="let production of this.apiService.grids['production']">
                         <div class="card">
                           <div class="card-header">
                               <button type="button" class="subgroup-btn" data-toggle="collapse" 
@@ -265,7 +271,7 @@
                                 [attr.list]="'production_list_'+removeSpaceInText(production['column'])" 
                                 [id]="'productionLabel'+removeSpaceInText(production['column'])" class="form-control" >
                                 <datalist [id]="'production_list_'+removeSpaceInText(production['column'])">
-                                  <ng-container *ngFor="let val of productions[removeSpaceInText(production['column'])]">
+                                  <ng-container *ngFor="let val of this.apiService.productions[removeSpaceInText(production['column'])]">
                                     <option [value]="val">{{val}}</option>
                                   </ng-container>
                                 </datalist>
@@ -292,7 +298,7 @@
                                 formControlName="from"
                                 [id]="'productionLabel'+removeSpaceInText(production['column'])+'from'" class="form-control" 
                                 placement="right"
-                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                [bsConfig]="datePickerConfig"
                                 bsDatepicker>
                               </div>
                               <div class="form-group filter-form-group">
@@ -301,7 +307,7 @@
                                 formControlName="to"
                                 [id]="'productionLabel'+removeSpaceInText(production['column'])+'to'" class="form-control" 
                                 placement="right"
-                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                [bsConfig]="datePickerConfig"
                                 bsDatepicker>
                               </div>
                             </div>
@@ -336,9 +342,9 @@
             <div id="date-collapse" class="collapse" data-parent="#main-accordian">
               <div class="card-body">
                 <div id="date-subgroup">
-                  <ng-container *ngIf="grids && grids['date'].length">
+                  <ng-container *ngIf="this.apiService.grids && this.apiService.grids['date'].length">
                     <div class="row">
-                      <div class="col-sm-6"  *ngFor="let date of grids['date']">
+                      <div class="col-sm-6"  *ngFor="let date of this.apiService.grids['date']">
                         <div class="card">
                           <div class="card-header">
                               <button type="button" class="subgroup-btn" data-toggle="collapse" 
@@ -358,7 +364,7 @@
                                 [attr.list]="'date_list_'+removeSpaceInText(date['column'])" 
                                 [id]="'dateLabel'+removeSpaceInText(date['column'])" class="form-control" >
                                 <datalist [id]="'date_list_'+removeSpaceInText(date['column'])">
-                                  <ng-container *ngFor="let val of dates[removeSpaceInText(date['column'])]">
+                                  <ng-container *ngFor="let val of this.apiService.dates[removeSpaceInText(date['column'])]">
                                     <option [value]="val">{{val}}</option>
                                   </ng-container>
                                 </datalist>
@@ -385,7 +391,7 @@
                                 formControlName="from"
                                 [id]="'dateLabel'+removeSpaceInText(date['column'])+'from'" class="form-control" 
                                 placement="right"
-                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                [bsConfig]="datePickerConfig"
                                 bsDatepicker>
                               </div>
                               <div class="form-group filter-form-group">
@@ -394,7 +400,7 @@
                                 formControlName="to"
                                 [id]="'dateLabel'+removeSpaceInText(date['column'])+'to'" class="form-control" 
                                 placement="right"
-                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                                [bsConfig]="datePickerConfig"
                                 bsDatepicker>
                               </div>
                             </div>
@@ -413,8 +419,21 @@
     </div>
   </form>
     <div class="filter-footer">
-      <button class="filter-btn-apply" (click) ="applyfil()">Apply</button>
-      <button class="filter-btn-clear">Clear All</button>
+      <button class="filter-btn-apply" (click) ="applyfilter()">Apply</button>
+      <button class="filter-btn-clear" (click) = "clearFilters()">Clear All</button>
+      <div *ngIf="isLoggedIn">
+        <select name="cars" class="custom-select choose-format"  [(ngModel)]="reportType">
+          <option value="null">Choose Format</option>
+          <option *ngFor="let format of formats" [value]="format.value" >{{format.value}}</option>
+        </select>
+      </div>
+      <button class="filter-btn-clear" 
+      *ngIf="isLoggedIn"
+      style="margin-left: 12px;"
+      title="{{titleMsg}}" (click)="generateReport()"
+      [ngClass]="{'export': !isLoggedIn}"
+      [disabled]="invalidForm || !isLoggedIn || !reportType || reportType == 'null'">
+      <mat-spinner *ngIf="generatingReport"></mat-spinner>Export</button>
     </div>
     
   </div>

@@ -275,12 +275,13 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     }
   }
 
-  filterAdvanced() {
+  filterAdvanced($event?) {
     const dialogRef = this.dialog.open(AdvancedFilterComponent, {
       width: '750px',
       // maxWidth: 350,
       backdropClass: 'cdk-overlay-transparent-backdrop',
       hasBackdrop: true,
+      autoFocus: false,
       data: this.payLoadWithParams[this.selectedTab].filters ? this.payLoadWithParams[this.selectedTab].filters : ''
     });
 
