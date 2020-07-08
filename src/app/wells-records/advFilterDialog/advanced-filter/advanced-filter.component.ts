@@ -4,7 +4,9 @@ import { FormGroup, FormBuilder, FormArray, Form, FormControl, Validators } from
 import { ApiService } from 'src/app/_services/api.service';
 import { LoginService } from 'src/app/_services/login.service';
 import { saveAs } from 'file-saver';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { trigger, state, transition, animate, style } from '@angular/animations';
+import { Debounce } from 'lodash';
 declare var $: any;
 
 
@@ -14,6 +16,7 @@ declare var $: any;
   styleUrls: ['./advanced-filter.component.scss']
 })
 export class AdvancedFilterComponent implements OnInit {
+  datePickerConfig: Partial<BsDatepickerConfig>;
   globalLogicalConditions = [
     { value: 'and', viewValue: 'Display features in the layer that match all of the following expressions' },
     { value: 'or', viewValue: 'Display features in the layer that match any of the following expressions' }
@@ -36,7 +39,7 @@ export class AdvancedFilterComponent implements OnInit {
     { value: 'XLSX' },
     { value: 'TXT' },
   ];
-  reportType;
+  reportType = null;
 
   valueTypes = ['Unique', 'Value', 'Multiple'];
   selectedGlobalCondition;
@@ -79,11 +82,7 @@ export class AdvancedFilterComponent implements OnInit {
 
   payLoad = [];
   /* Grid list */
-  grids: any;
-  wells: any = {};
-  landGrids: any = {};
-  productions: any = {};
-  dates: any = {};
+
   isAllGridLoaded: boolean = false;
   isWellGridLoaded: boolean = false;
   isLandGridLoaded: boolean = false;
@@ -96,6 +95,10 @@ export class AdvancedFilterComponent implements OnInit {
     public loginService: LoginService,
     public apiService: ApiService) {
     console.log(this.dialogRef)
+    this.datePickerConfig = Object.assign({}, {
+      dateInputFormat: 'YYYY-MM-DD',
+      containerClass: 'theme-dark-blue'
+    });
   }
 
   ngOnInit(): void {
@@ -175,11 +178,11 @@ export class AdvancedFilterComponent implements OnInit {
       exp: this.fb.array([]),
       set: this.fb.array([])
     });
-    if (this.data) {
-      this.setDefaultFormValues();
-    } else {
-      this.addSetToSetForm();
-    }
+    // if (this.data) {
+    //   this.setDefaultFormValues();
+    // } else {
+    //   this.addSetToSetForm();
+    // }
     this.loginService.user.subscribe((data) => {
       this.isLoggedIn = data && data.loggedIn ? data.loggedIn : false;
       if (this.isLoggedIn) {
@@ -225,10 +228,7 @@ export class AdvancedFilterComponent implements OnInit {
           from: new FormControl(''),
           to: new FormControl('')
         }),
-        Formation_at_TD: new FormGroup({
-          from: new FormControl(''),
-          to: new FormControl('')
-        }),
+        Formation_at_TD: new FormControl(''),
         Spud_Date: new FormGroup({
           from: new FormControl(''),
           to: new FormControl('')
@@ -357,11 +357,14 @@ export class AdvancedFilterComponent implements OnInit {
     return this.fb.group(controls);
   }
   getGridList() {
-    this.apiService.fetchColumns().subscribe((res: any) => {
-      this.grids = res;
-      this.generateDropdownForStringFields();
-    },
-      (err) => console.log(err));
+    if (this.apiService.grids == undefined || Object.keys(this.apiService.grids).length == 0) {
+      this.apiService.fetchColumns().subscribe((res: any) => {
+        this.apiService.grids = res;
+        this.generateDropdownForStringFields();
+      },
+        (err) => console.log(err));
+    }
+
   }
 
   removeSpaceInText(txt) {
@@ -369,140 +372,194 @@ export class AdvancedFilterComponent implements OnInit {
   }
 
   generateDropdownForStringFields() {
+    if (
+      Object.keys(this.apiService.wells).length == 0 &&
+      Object.keys(this.apiService.landGrids).length == 0 &&
+      Object.keys(this.apiService.productions).length == 0 &&
+      Object.keys(this.apiService.dates).length == 0
+    ) {
+      if (this.apiService.grids && Object.keys(this.apiService.grids).length) {
+        for (let key in this.apiService.grids) {
+          if (key == 'well') {
+            let wellStringFields = this.apiService.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
+            wellStringFields.forEach(col => {
+              this.apiService.wells[col] = [];
+            });
+            this.apiService.grids[key].filter((col, ind, arr) => {
+              if (col.type == 'String') {
+                this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
+                  this.apiService.wells[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
+                  console.log(this.apiService.wells);
+                });
+              }
+            });
+          }
+          if (key == 'landGrid') {
+            let landGridStringFields = this.apiService.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
+            landGridStringFields.forEach(col => {
+              this.apiService.landGrids[col] = [];
+            });
+            this.apiService.grids[key].filter((col, ind, arr) => {
+              if (col.type == 'String') {
+                this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
+                  this.apiService.landGrids[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
+                  console.log(this.apiService.landGrids);
+                });
+              }
+            });
+          }
+          if (key == 'production') {
+            let productionStringFields = this.apiService.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
+            productionStringFields.forEach(col => {
+              this.apiService.productions[col] = [];
+            });
+            this.apiService.grids[key].filter((col, ind, arr) => {
+              if (col.type == 'String') {
+                this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
+                  this.apiService.productions[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
+                  console.log(this.apiService.productions);
+                });
+              }
+            });
 
-    if (this.grids && Object.keys(this.grids).length) {
-      for (let key in this.grids) {
-        if (key == 'well') {
-          let wellStringFields = this.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
-          wellStringFields.forEach(col => {
-            this.wells[col] = [];
-          });
-          this.grids[key].filter((col, ind, arr) => {
-            if (col.type == 'String') {
-              this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
-                this.wells[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
-                console.log(this.wells);
-              });
-            }
-            this.isWellGridLoaded = ind == this.grids[key].length - 1 ? true : false;
-          });
-        }
-        if (key == 'landGrid') {
-          let landGridStringFields = this.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
-          landGridStringFields.forEach(col => {
-            this.landGrids[col] = [];
-          });
-          this.grids[key].filter((col, ind, arr) => {
-            if (col.type == 'String') {
-              this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
-                this.landGrids[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
-                console.log(this.landGrids);
-              });
-            }
-            this.isLandGridLoaded = ind == this.grids[key].length - 1 ? true : false;
-          });
-        }
-        if (key == 'production') {
-          let productionStringFields = this.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
-          productionStringFields.forEach(col => {
-            this.productions[col] = [];
-          });
-          this.grids[key].filter((col, ind, arr) => {
-            if (col.type == 'String') {
-              this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
-                this.productions[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
-                console.log(this.productions);
-              });
-            }
-            this.isProductionLoaded = ind == this.grids[key].length - 1 ? true : false;
-          });
-        }
-        if (key == 'date') {
-          let dateStringFields = this.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
-          dateStringFields.forEach(col => {
-            this.dates[col] = [];
-          });
-          this.grids[key].filter((col, ind, arr) => {
-            if (col.type == 'String') {
-              this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
-                this.dates[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
-                console.log(this.dates);
-              });
-            }
-            this.isDateLoaded = ind == this.grids[key].length - 1 ? true : false;
-          });
+          }
+          if (key == 'date') {
+            let dateStringFields = this.apiService.grids[key].filter(colType => colType.type == 'String').map(col => col.column.replace(/\s+/g, '_'));
+            dateStringFields.forEach(col => {
+              this.apiService.dates[col] = [];
+            });
+            this.apiService.grids[key].filter((col, ind, arr) => {
+              if (col.type == 'String') {
+                this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
+                  this.apiService.dates[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
+                  console.log(this.apiService.dates);
+                });
+              }
+            });
+          }
         }
       }
     }
+
   }
 
-  applyfil() {
-    this.payLoad = [];
-    console.log(this.filterForm.value)
-    for (let key in this.grids) {
-      this.grids[key].forEach(col => {
+  appllyCondtions(type?) {
+    if (type == 'all') {
+      this.apiService.appllyAllCondtions = true;
+      this.apiService.appllyAnyCondtion = false;
+    }
+    if (type == 'any') {
+      this.apiService.appllyAllCondtions = false;
+      this.apiService.appllyAnyCondtion = true;
+    }
+  }
+
+  filterFormObject() {
+    for (let key in this.apiService.grids) {
+      this.apiService.grids[key].forEach(col => {
         if (col.type == 'String') {
           this.payLoad.push({
-            colomn: col.column,
+            column: col.column,
             type: col.type,
             table: col.table,
-            value: [this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value]
+            value: this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value && this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value.length ? [this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value] : []
           });
         } else if (col.type == 'Integer') {
           this.payLoad.push({
-            colomn: col.column,
+            column: col.column,
             type: col.type,
             table: col.table,
-            min: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString(),
-            max: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString(),
+            min: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value !== null ? this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString() : '',
+            max: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value !== null ? this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString() : '',
           });
         } else if (col.type == 'Date') {
           this.payLoad.push({
-            colomn: col.column,
+            column: col.column,
             type: col.type,
             table: col.table,
-            min: new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString()).toLocaleDateString(),
-            max: new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString()).toLocaleDateString(),
+            min: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString().length ? new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString()).toLocaleDateString() : '',
+            max: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString().length ? new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString()).toLocaleDateString() : '',
+          });
+        }
+
+      });
+    }
+  }
+
+  applyfilter() {
+    this.payLoad = [];
+    for (let key in this.apiService.grids) {
+      this.apiService.grids[key].forEach(col => {
+        if (col.type == 'String') {
+          this.payLoad.push({
+            column: col.column,
+            type: col.type,
+            table: col.table,
+            value: this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value && this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value.length ? [this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value] : []
+          });
+        } else if (col.type == 'Integer') {
+          this.payLoad.push({
+            column: col.column,
+            type: col.type,
+            table: col.table,
+            min: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value !== null ? this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString() : '',
+            max: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value !== null ? this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString() : '',
+          });
+        } else if (col.type == 'Date') {
+          this.payLoad.push({
+            column: col.column,
+            type: col.type,
+            table: col.table,
+            min: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString().length ? new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString()).toLocaleDateString() : '',
+            max: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString().length ? new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString()).toLocaleDateString() : '',
           });
         }
 
       });
     }
 
-    console.log(this.payLoad)
+    let payloadWithValues = {};
+    payloadWithValues['operator'] = this.apiService.appllyAllCondtions ? 'and' : 'or';
+    payloadWithValues['exp'] = this.payLoad.filter(obj => obj.min || obj.max || obj.value && obj.value.length);
+    this.dialogRef.close(payloadWithValues);
   }
 
+  clearFilters() {
+    this.filterForm.reset();
+    this.dialogRef.close();
+  }
 
-  searchString(key, table, group) {
+  searchString(keys, table, group) {
+    let key = keys.replace(/\s+/g, '_')
     let searchValue = this.filterForm.get([group, key]).value;
     if (group == 'well' && searchValue.length) {
-      if (this.wells[key].indexOf(searchValue.toUpperCase()) == - 1) {
-        this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
-          this.wells[key] = res['uniqueValue'];
+      if (this.apiService.wells[key].indexOf(searchValue.toUpperCase()) == - 1) {
+        this.apiService.fetchSingleColValues(keys, table, searchValue).subscribe((res) => {
+          this.apiService.wells[key] = res['uniqueValue'];
         },
           (err) => console.log(err))
       }
     }
     if (group == 'landGrid' && searchValue.length) {
-      if (this.landGrids[key].indexOf(searchValue.toUpperCase()) == - 1) {
+      if (this.apiService.landGrids[key].indexOf(searchValue.toUpperCase()) == - 1) {
         this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
-          this.landGrids[key] = res['uniqueValue'];
+          this.apiService.landGrids[key] = res['uniqueValue'];
         },
           (err) => console.log(err))
       }
     }
     if (group == 'production' && searchValue.length) {
-      if (this.productions[key].indexOf(searchValue.toUpperCase()) == - 1) {
+      if (this.apiService.productions[key].indexOf(searchValue.toUpperCase()) == - 1) {
         this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
-          this.productions[key] = res['uniqueValue'];
+          this.apiService.productions[key] = res['uniqueValue'];
         },
           (err) => console.log(err))
       }
     }
     if (group == 'date' && searchValue.length) {
-      if (this.dates[key].indexOf(searchValue.toUpperCase()) == - 1) {
+      if (this.apiService.dates[key].indexOf(searchValue.toUpperCase()) == - 1) {
         this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
-          this.dates[key] = res['uniqueValue'];
+          this.apiService.dates[key] = res['uniqueValue'];
         },
           (err) => console.log(err))
       }
@@ -788,9 +845,12 @@ export class AdvancedFilterComponent implements OnInit {
   }
 
   generateReport() {
+    this.filterFormObject();
     let payLoad = {};
     payLoad['reportType'] = this.reportType;
-    payLoad['filters'] = this.advanceFilterForm.value;
+    payLoad['filters'] = {};
+    payLoad['filters']['operator'] = this.apiService.appllyAllCondtions ? 'and' : 'or';
+    payLoad['filters']['exp'] = this.payLoad.filter(obj => obj.min || obj.max || obj.value && obj.value.length);;
     this.generatingReport = true;
     this.apiService.generateReport(payLoad).subscribe((data) => {
       const extension = this.reportType.toLowerCase() == 'shp' ? 'zip' : this.reportType.toLowerCase();
@@ -808,7 +868,7 @@ export class AdvancedFilterComponent implements OnInit {
       this.isProductioCollapsed = false;
       this.isDateCollapsed = false;
     }
-    if (grid == 'langGrid') {
+    if (grid == 'landGrid') {
       this.isLandGridCollapsed = !this.isLandGridCollapsed;
       this.isWellsCollapsed = false;
       this.isProductioCollapsed = false;
@@ -826,11 +886,6 @@ export class AdvancedFilterComponent implements OnInit {
       this.isLandGridCollapsed = false;
       this.isDateCollapsed = !this.isDateCollapsed;
     }
-    // $(".collapse").on('show.bs.collapse', function () {
-    //   $(this).prev(".card-header").find(".fa").removeClass("fa-plus").addClass("fa-minus");
-    // }).on('hide.bs.collapse', function () {
-    //   $(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
-    // });
   }
 
 }

@@ -9,7 +9,13 @@ import { environment } from 'src/environments/environment';
 })
 export class ApiService {
   baseUrl = environment.baseUrl;
-
+  grids: any;
+  wells: any = {};
+  landGrids: any = {};
+  productions: any = {};
+  dates: any = {};
+  appllyAllCondtions: boolean = true;
+  appllyAnyCondtion: boolean = false;
   constructor(private http: HttpClient) { }
 
   fetchWellsByPayLoad(payLoad, offset, limit): Observable<any> {
@@ -67,5 +73,14 @@ export class ApiService {
   }
   fetchSingleColValues(column, table, key): Observable<any> {
     return this.http.get(this.baseUrl + `unique/${column}?table=${table}&offset=0&limit=20&searchKey=${key}`);
+  }
+
+  fetchWell(filterDetails) {
+    let payload = {};
+    payload['reportType'] = 'shp';
+    payload['filters'] = {};
+    payload['filters']['operator'] = 'and';
+    payload['filters']['exp'] = filterDetails;
+    return this.http.post(this.baseUrl + `report/well`, payload)
   }
 }
