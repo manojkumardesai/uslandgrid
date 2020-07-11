@@ -342,19 +342,19 @@ export class AdvancedFilterComponent implements OnInit {
     });
   }
 
-  generateFormControl(formObj): FormGroup {
+  generateFormControl(formObj) {
     let controls = {};
     formObj.forEach(col => {
-      if (col.type == 'Integer') {
-        controls[col.column.replace(/\s+/g, '_')] = [{
-          from: '',
-          to: ''
-        }];
+      if (col.type == 'Integer' || col.type == 'Date') {
+        controls[col.column.replace(/\s+/g, '_')] = new FormGroup({
+          from: new FormControl(''),
+          to: new FormControl(''),
+        });
       } else {
-        controls[col.column.replace(/\s+/g, '_')] = ['hello word'];
+        controls[col.column.replace(/\s+/g, '_')] = new FormControl('');
       }
     });
-    return this.fb.group(controls);
+    return new FormGroup(controls);
   }
   getGridList() {
     if (this.apiService.grids == undefined || Object.keys(this.apiService.grids).length == 0) {
@@ -389,7 +389,6 @@ export class AdvancedFilterComponent implements OnInit {
               if (col.type == 'String') {
                 this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
                   this.apiService.wells[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
-                  console.log(this.apiService.wells);
                 });
               }
             });
@@ -403,7 +402,6 @@ export class AdvancedFilterComponent implements OnInit {
               if (col.type == 'String') {
                 this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
                   this.apiService.landGrids[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
-                  console.log(this.apiService.landGrids);
                 });
               }
             });
@@ -417,7 +415,6 @@ export class AdvancedFilterComponent implements OnInit {
               if (col.type == 'String') {
                 this.apiService.fetchColValues(col.column, col.table).subscribe((res: any) => {
                   this.apiService.productions[col.column.replace(/\s+/g, '_')] = res['uniqueValue'];
-                  console.log(this.apiService.productions);
                 });
               }
             });
@@ -488,36 +485,7 @@ export class AdvancedFilterComponent implements OnInit {
 
   applyfilter() {
     this.payLoad = [];
-    for (let key in this.apiService.grids) {
-      this.apiService.grids[key].forEach(col => {
-        if (col.type == 'String') {
-          this.payLoad.push({
-            column: col.column,
-            type: col.type,
-            table: col.table,
-            value: this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value && this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value.length ? [this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value] : []
-          });
-        } else if (col.type == 'Integer') {
-          this.payLoad.push({
-            column: col.column,
-            type: col.type,
-            table: col.table,
-            min: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value !== null ? this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString() : '',
-            max: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value !== null ? this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString() : '',
-          });
-        } else if (col.type == 'Date') {
-          this.payLoad.push({
-            column: col.column,
-            type: col.type,
-            table: col.table,
-            min: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString().length ? new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString()).toLocaleDateString() : '',
-            max: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString().length ? new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString()).toLocaleDateString() : '',
-          });
-        }
-
-      });
-    }
-
+    this.filterFormObject();
     let payloadWithValues = {};
     payloadWithValues['operator'] = this.apiService.appllyAllCondtions ? 'and' : 'or';
     payloadWithValues['exp'] = this.payLoad.filter(obj => obj.min || obj.max || obj.value && obj.value.length);
@@ -857,7 +825,7 @@ export class AdvancedFilterComponent implements OnInit {
       const blobCont = new File([data], "Report." + extension, { type: extension });
       saveAs(blobCont);
       this.generatingReport = false;
-    })
+    });
   }
 
   // Toggle plus minus icon on show hide of collapse element

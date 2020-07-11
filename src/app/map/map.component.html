@@ -4,7 +4,9 @@
     </div>
 </div>
 <div class="left-icons-placeholder">
-    <span class="material-icons leftIcon" style="font-size: 22px;" (click)="openFilterDialog($event)" title="Filter">
+    <span class="material-icons leftIcon" style="font-size: 22px;" 
+    [style.color]="openAdvancedFilter ? '#1a76ab': 'black'"
+    (click)="openFilterDialog($event)" title="Filter">
         filter_alt
     </span>
     <hr style="margin-top: 1px;margin-bottom:  1px;"/>
