@@ -1,0 +1,122 @@
+$color-text : #0066a2;
+
+  .wrap-box-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .login-wrapper {
+    h1.login-title {
+      font-size: 18px;
+      font-weight: normal;
+      color: #666666;
+      margin-left: 8px;
+      margin-bottom: 0px;
+    }
+  }
+
+    .login-right-panel {
+    padding: 10px 20px;
+    position: relative;
+    h4.title {
+      font-size: 14px;
+      color: $color-text;
+      display: inline-block;
+      position: absolute;
+      top: -12px;
+        left: 17px;
+      background: white;
+      padding: 3px 5px;
+    }
+    p.caption {
+      font-size: 12px;
+      margin-bottom: 10px;
+      color: $color-text;
+    }
+    p.forgot-password {
+      font-size: 12px;
+      margin-bottom: 0px;
+      color: #666666;
+      transition: 0.3s ease-in-out;
+      cursor: pointer;
+      &:hover {
+        color: $color-text;
+        transition: 0.3s ease-in-out;
+      }
+    }
+    .form-group {
+      margin-bottom: 10px;
+      label {
+        font-size: 13px;
+      }
+      .form-control {
+        border-radius: 0px;
+        font-size: 12px;
+        color: #a7a6a6;
+        transition: 0.3s ease-in-out;
+        &:focus {
+          color: $color-text;
+          transition: 0.3s ease-in-out;
+          box-shadow: none !important;
+          outline: none !important;
+          border-color: #ddd;
+        }
+      }
+      
+    }
+  }
+
+  .login-btn {
+    font-size: 14px;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+    text-transform: none;
+    padding: 9px 20px;
+    -webkit-border-radius: 18px;
+    -moz-border-radius: 18px;
+    border-radius: 18px;
+    color: #ffffff;
+    border: 1px solid #e5e5e5;
+    background: #666666;
+    display: inline-block;
+    cursor: pointer;
+    &:hover {
+      -webkit-transition: all 0.2s ease-out;
+      -moz-transition: all 0.2s ease-out;
+      -o-transition: all 0.2s ease-out;
+      transition: all 0.2s ease-out;
+      background-color: $color-text;
+    }
+    &:focus {
+        outline-style: none;
+        outline: none;
+    }
+  }
+
+  .other-option {
+    margin: 0.5rem;
+    p.caption {
+        font-size: 12px;
+        margin-bottom: 10px;
+        color: $color-text;
+      }
+      p.forgot-password {
+        font-size: 12px;
+        margin-bottom: 0px;
+        color: #666666;
+        transition: 0.3s ease-in-out;
+        cursor: pointer;
+        &:hover {
+          color: $color-text;
+          transition: 0.3s ease-in-out;
+        }
+      }
+  }
+
+  .error-text {
+    font-size: 11px;
+  }

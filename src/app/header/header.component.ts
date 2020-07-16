@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
   }
 
   routeToLogin() {
-    this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.routerState.snapshot.url } })
+    this.router.navigate(['/user-auth'], { queryParams: { returnUrl: this.router.routerState.snapshot.url } })
   }
 
   openLegends() {

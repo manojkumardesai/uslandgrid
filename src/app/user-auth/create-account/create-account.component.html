@@ -1,0 +1,110 @@
+<div class="container wrap-box-center">
+    <div class="login-wrapper w-100">
+        <h1 class="login-title">Create an Account</h1>
+        <form [formGroup]="createAccountForm"   (ngSubmit)="submitCreateAccountForm()">
+            <div class="row mt-3">
+                <div class="col-sm-12">
+                    <div class="border m-2">
+                        <div class="login-right-panel">
+                            <h4 class="title">Personal Information</h4>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="first_name" class="mb-0">First Name <sup>*</sup></label>
+                                        <input type="text"
+                                        formControlName = 'first_name' 
+                                        class="form-control" id="first_name" autocomplete="off">
+                                        <div *ngIf="submitted && createAccountForm.controls.first_name.errors" class="text-danger">
+                                            <div *ngIf="createAccountForm.controls.first_name.errors?.required" class="error-text">
+                                                First name is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="last_name" class="mb-0">Last Name <sup>*</sup></label>
+                                        <input type="text"
+                                        formControlName = 'last_name' 
+                                        class="form-control" id="last_name" autocomplete="off">
+                                        <div *ngIf="submitted && createAccountForm.controls.last_name.errors" class="text-danger">
+                                            <div *ngIf="createAccountForm.controls.last_name.errors?.required" class="error-text">
+                                                Last name is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="mb-0">Email Address <sup>*</sup></label>
+                                <input type="text"
+                                formControlName = 'email' 
+                                class="form-control" id="email" autocomplete="off">
+                                <div *ngIf="submitted && createAccountForm.controls.email.errors" class="text-danger">
+                                    <div *ngIf="createAccountForm.controls.email.errors?.required" class="error-text">
+                                        Email is required
+                                    </div>
+                                    <div *ngIf="createAccountForm.controls.email.errors?.email" class="error-text">
+                                        Email is not valid
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="border mt-3 ml-2 mr-2 mb-0">
+                        <div class="login-right-panel">
+                            <h4 class="title">Login Information</h4>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="password" class="mb-0">Password <sup>*</sup></label>
+                                        <input type="password"
+                                        formControlName = 'password' 
+                                        class="form-control" id="password" autocomplete="off">
+                                        <div *ngIf="submitted && createAccountForm.controls.password.errors" class="text-danger">
+                                            <div *ngIf="createAccountForm.controls.password.errors?.required" class="error-text">
+                                                Password is required
+                                            </div>
+                                            <div *ngIf="createAccountForm.controls.password.errors?.minlength" class="error-text">
+                                                Password length should be minimum 8 charecters
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="confirm_password" class="mb-0">Confirm Password<sup>*</sup></label>
+                                        <input type="password" 
+                                        formControlName='confirm_password' 
+                                        class="form-control" id="confirm_password" 
+                                        autocomplete="off">
+                                        <div *ngIf="submitted && createAccountForm.controls.confirm_password.errors" class="text-danger">
+                                            <div *ngIf="createAccountForm.controls.confirm_password.errors?.required" class="error-text">
+                                                Confirm Password is required
+                                            </div>
+                                        </div>
+                                        <div *ngIf="createAccountForm.controls.password.value !== createAccountForm.controls.confirm_password.value"
+                                        class="error-text text-danger">
+                                        Confirm password does not match with password
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="other-option">
+                        <p class="caption mt-3"><sup>*</sup> Required Fields.</p>
+                        <p class="forgot-password">
+                            <span routerLink="/user-auth/login"><small>« </small>Back to Login</span>
+                        </p>
+                        <div class="text-right">
+                            <button type="submit" class="login-btn">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

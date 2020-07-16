@@ -1,0 +1,95 @@
+
+<div class="container wrap-box-center">
+    <div class="login-wrapper">
+        <h1 class="login-title">Login or Create an Account</h1>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="border m-2">
+                    <div class="login-left-panel">
+                        <div style="min-height: 236px;">
+                            <h4 class="title">New Customers</h4>
+                            <p class="caption">By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
+                        </div>
+                        
+                        <div class="text-right">
+                            <div class="login-btn" routerLink="/user-auth/create-account">Create an Account</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="border m-2">
+                    <div class="login-right-panel">
+                        <h4 class="title">Registered Customers</h4>
+                        <p class="caption">If you have an account with us, please log in.</p>
+
+                        <form [formGroup]="loginForm" (ngSubmit)="submitLoginForm()">
+                            <div class="form-group">
+                                <label for="email" class="mb-0">Email Address <sup>*</sup></label>
+                                <input type="text"
+                                formControlName = 'email' 
+                                class="form-control" id="email" autocomplete="off">
+                                <div *ngIf="submitted && loginForm.controls.email.errors" class="text-danger">
+                                    <div *ngIf="loginForm.controls.email.errors.required" class="error-text">
+                                        Email is required
+                                    </div>
+                                    <div *ngIf="loginForm.controls.email.errors.email" class="error-text">
+                                        Email is not valid
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-0">
+                                <label for="password" class="mb-0">Password <sup>*</sup></label>
+                                <input type="password"
+                                formControlName = 'password'
+                                class="form-control" id="password" autocomplete="off">
+                                <div *ngIf="submitted && loginForm.controls.password.errors" class="text-danger">
+                                    <div *ngIf="loginForm.controls.password.errors.required" class="error-text">
+                                        Password is required
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="caption mt-3"><sup>*</sup> Required Fields.</p>
+                            <p class="forgot-password">
+                                <span routerLink="/user-auth/forgot-password">Forgot Your Password?</span>
+                            </p>
+                            <div class="text-right">
+                                <button type="submit" class="login-btn">Login</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="loginBackground">
+    <mat-card>
+        <mat-card-content>
+            <form [formGroup]="form" class='loginForm'>
+                <p>
+                    <mat-form-field>
+                        <mat-icon matPrefix>account_box</mat-icon>
+                        <input type="text" matInput placeholder="Username" formControlName="username">
+                    </mat-form-field>
+                </p>
+                <p>
+                    <mat-form-field>
+                        <mat-icon matPrefix>vpn_key</mat-icon>
+                        <input type="password" matInput placeholder="Password" formControlName="pwd">
+                    </mat-form-field>
+                </p>
+
+                <p *ngIf="error" class="error">
+                    {{ error }}
+                </p>
+
+                <div class="button">
+                    <button type="submit" (click)='login()' mat-raised-button>Login</button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div> -->

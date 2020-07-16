@@ -1,0 +1,31 @@
+
+
+
+<div class="container">
+    <h1 class="user-list-title">List of Users</h1>
+    <div class="user-list-wrapper">
+    <table class="table table-hover stickyTable">
+        <tr>
+            <th style="width: 10%;">#</th>
+            <th style="width: 15%;">First Name</th>
+            <th style="width: 15%;">Last Name</th>
+            <th style="width: 20%;">Email Name</th>
+            <th style="width: 40%;" colspan="2">Actions</th>
+        </tr>
+    </table>
+    <table class="table table-hover">
+        <tr *ngFor="let user of users">
+            <td style="width: 10%;">{{user.id}}</td>
+            <td style="width: 15%;">{{user.first_name}}</td>
+            <td style="width: 15%;">{{user.last_name}}</td>
+            <td style="width: 20%;">{{user.email}}</td>
+            <td style="width: 20%;">
+                <button class="btn btn-success rounded-0">Approve</button>
+            </td>
+            <td style="width: 20%;">
+                <button class="btn btn-danger rounded-0"><i class="fa fa-trash"></i></button>
+            </td>
+        </tr>
+    </table>
+</div>
+</div>
