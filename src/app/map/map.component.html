@@ -4,12 +4,14 @@
     </div>
 </div>
 <div class="left-icons-placeholder">
-    <span class="material-icons leftIcon" style="font-size: 22px;" 
+    <span class="material-icons leftIcon" style="font-size: 22px; color: black; height: 30px; 
+    display: block; border-bottom: 1px solid #ddd;"
     [style.color]="openAdvancedFilter ? '#1a76ab': 'black'"
+    [style.background]="openAdvancedFilter ? '#424242' : 'white'"
     (click)="openFilterDialog($event)" title="Filter">
         filter_alt
     </span>
-    <hr style="margin-top: 1px;margin-bottom:  1px;"/>
+    <!-- <hr style="margin-top: 1px;margin-bottom:  1px;"/> -->
     <span class="material-icons leftIcon" style="font-size: 22px;" (click)="homeLocation()" title="Default extent">
         home
     </span>
