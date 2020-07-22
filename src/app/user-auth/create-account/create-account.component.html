@@ -85,7 +85,7 @@
                                                 Confirm Password is required
                                             </div>
                                         </div>
-                                        <div *ngIf="createAccountForm.controls.password.value !== createAccountForm.controls.confirm_password.value"
+                                        <div *ngIf="submitted && createAccountForm.controls.password.value !== createAccountForm.controls.confirm_password.value"
                                         class="error-text text-danger">
                                         Confirm password does not match with password
                                     </div>

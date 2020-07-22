@@ -24,6 +24,8 @@ import { LoginComponent } from './user-auth/login/login.component';
 import { ForgotPasswordComponent } from './user-auth/forgot-password/forgot-password.component';
 import { CreateAccountComponent } from './user-auth/create-account/create-account.component';
 import { AdminComponent } from './admin/admin.component';
+import { ResetPasswordComponent } from './user-auth/reset-password/reset-password.component';
+import { UserInfoComponent } from './admin/user-info/user-info.component';
 // import { RouterStateSnapshot } from '@angular/router';
 
 
@@ -43,7 +45,9 @@ import { AdminComponent } from './admin/admin.component';
     UserAuthComponent,
     ForgotPasswordComponent,
     CreateAccountComponent,
-    AdminComponent
+    AdminComponent,
+    ResetPasswordComponent,
+    UserInfoComponent
   ],
   imports: [
     BrowserModule,

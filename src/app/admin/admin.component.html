@@ -6,26 +6,34 @@
     <div class="user-list-wrapper">
     <table class="table table-hover stickyTable">
         <tr>
-            <th style="width: 10%;">#</th>
-            <th style="width: 15%;">First Name</th>
-            <th style="width: 15%;">Last Name</th>
-            <th style="width: 20%;">Email Name</th>
-            <th style="width: 40%;" colspan="2">Actions</th>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email Address</th>
+            <th class="text-center">Status</th>
+            <th>Subscribe Valid</th>
+            <th colspan="2">Actions</th>
         </tr>
-    </table>
-    <table class="table table-hover">
         <tr *ngFor="let user of users">
-            <td style="width: 10%;">{{user.id}}</td>
-            <td style="width: 15%;">{{user.first_name}}</td>
-            <td style="width: 15%;">{{user.last_name}}</td>
-            <td style="width: 20%;">{{user.email}}</td>
-            <td style="width: 20%;">
-                <button class="btn btn-success rounded-0">Approve</button>
+            <td>{{user.id}}</td>
+            <td>{{user.firstName}}</td>
+            <td>{{user.lastName}}</td>
+            <td>{{user.emailAddress}}</td>
+            <td class="text-center">
+                <i class="fa"
+                [title]="user.status == 'ACTIVE'? 'ACTIVE' : 'INACTIVE'" 
+                [ngClass]="user.status == 'ACTIVE' ? 'fa-eye': 'fa-eye-slash'"></i>
+                <!-- {{user.status}} -->
             </td>
-            <td style="width: 20%;">
+            <td>{{user.subscribeValid}}</td>
+            <td>
+                <button class="btn btn-success rounded-0" (click)="gotoUser(user.id)">Approval</button>
+            </td>
+            <td>
                 <button class="btn btn-danger rounded-0"><i class="fa fa-trash"></i></button>
             </td>
         </tr>
     </table>
 </div>
+<!-- <router-outlet></router-outlet> -->
 </div>

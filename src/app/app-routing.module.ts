@@ -7,6 +7,8 @@ import { UserAuthComponent } from './user-auth/user-auth.component';
 import { ForgotPasswordComponent } from './user-auth/forgot-password/forgot-password.component';
 import { CreateAccountComponent } from './user-auth/create-account/create-account.component';
 import { AdminComponent } from './admin/admin.component';
+import { ResetPasswordComponent } from './user-auth/reset-password/reset-password.component';
+import { UserInfoComponent } from './admin/user-info/user-info.component';
 
 
 const routes: Routes = [
@@ -42,12 +44,20 @@ const routes: Routes = [
       {
         path: 'create-account',
         component: CreateAccountComponent
+      },
+      {
+        path: 'reset-password',
+        component: ResetPasswordComponent
       }
     ]
   },
   {
     path: 'admin',
-    component: AdminComponent
+    component: AdminComponent,
+  },
+  {
+    path: 'user-info/:id',
+    component: UserInfoComponent
   }
 
 ];

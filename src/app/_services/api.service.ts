@@ -83,4 +83,12 @@ export class ApiService {
     payload['filters']['exp'] = filterDetails;
     return this.http.post(this.baseUrl + `report/well`, payload)
   }
+
+  createUser(payload) {
+    return this.http.post(this.baseUrl + `user/create`, payload);
+  }
+
+  getListOfUser() {
+    return this.http.get(this.baseUrl + `/user/list?offset=0&limit=20`);
+  }
 }
