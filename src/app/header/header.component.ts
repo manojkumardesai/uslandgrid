@@ -36,8 +36,11 @@ export class HeaderComponent implements OnInit {
     dialogRef.afterClosed().subscribe(console.log);
   }
 
+
   logout() {
-    this.loginService.publishLoginResponseFalse();
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('loginToken');
+    this.router.navigate(['/home']);
     this.openSnackBar('Logged out successfully', 'Dismiss');
   }
 

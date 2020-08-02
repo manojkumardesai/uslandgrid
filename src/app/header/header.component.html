@@ -4,12 +4,12 @@
     </div>
     <div>
         <button mat-button  routerLink='/admin' class="mx-3">Admin Board</button>
-        <button mat-button  *ngIf='!isLoggedIn' routerLink='/user-auth'>
+        <button mat-button  *ngIf='!loginService.isloggedin()' routerLink='/user-auth'>
             <span>
                 Login
             </span>
         </button>
-        <button  mat-button *ngIf='isLoggedIn' (click)='logout()'>
+        <button  mat-button *ngIf='loginService.isloggedin()' (click)='logout()'>
             <span>
                 Logout
             </span>

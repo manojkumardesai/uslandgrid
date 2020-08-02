@@ -1,10 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-// import { LoginService } from './_services/login.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoginService } from '../../_services/login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { ApiService } from '../../_services/api.service';
 
 @Component({
   selector: 'app-login',
@@ -20,8 +19,8 @@ export class LoginComponent implements OnInit {
   @Input() error: string | null;
   submitted: boolean = false;
   loginForm: FormGroup;
-  constructor(private router: Router, public loginService: LoginService, public _snackBar: MatSnackBar,
-    public activeRoute: ActivatedRoute) { }
+  constructor(private router: Router, public apiService: ApiService, public _snackBar: MatSnackBar,
+    public activeRoute: ActivatedRoute, private loginService: LoginService) { }
 
   ngOnInit(): void {
 
@@ -30,16 +29,25 @@ export class LoginComponent implements OnInit {
 
   generateLoginForm() {
     this.loginForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required])
+      username: new FormControl('', [Validators.required, Validators.email]),
+      pwd: new FormControl('', [Validators.required])
     });
   }
 
   submitLoginForm() {
     this.submitted = true;
     if (this.loginForm.invalid) {
-      return
+      return;
     }
+    this.apiService.login(JSON.stringify(this.loginForm.value)).subscribe((data) => {
+      if (data['statusCode'] == 200 && data['message'] == 'Login successfully') {
+        this.openSnackBar(data['message'], 'Dismiss');
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        localStorage.setItem('loginToken', data['token']);
+        let returnUrl = this.activeRoute.snapshot.queryParamMap.get('returnUrl');
+        this.router.navigate([returnUrl || '/home']);
+      }
+    });
   }
   login(): void {
     if (this.form.value.username == 'admin' && this.form.value.pwd == 'USLG7969!') {

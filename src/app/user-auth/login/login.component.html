@@ -27,24 +27,24 @@
                             <div class="form-group">
                                 <label for="email" class="mb-0">Email Address <sup>*</sup></label>
                                 <input type="text"
-                                formControlName = 'email' 
+                                formControlName = 'username'
                                 class="form-control" id="email" autocomplete="off">
-                                <div *ngIf="submitted && loginForm.controls.email.errors" class="text-danger">
-                                    <div *ngIf="loginForm.controls.email.errors.required" class="error-text">
+                                <div *ngIf="submitted && loginForm.controls.username.errors" class="text-danger">
+                                    <div *ngIf="loginForm.controls.username.errors.required" class="error-text">
                                         Email is required
                                     </div>
-                                    <div *ngIf="loginForm.controls.email.errors.email" class="error-text">
-                                        Email is not valid
+                                    <div *ngIf="loginForm.controls.username.errors.email" class="error-text">
+                                        Username is not valid
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group mb-0">
                                 <label for="password" class="mb-0">Password <sup>*</sup></label>
                                 <input type="password"
-                                formControlName = 'password'
+                                formControlName = 'pwd'
                                 class="form-control" id="password" autocomplete="off">
-                                <div *ngIf="submitted && loginForm.controls.password.errors" class="text-danger">
-                                    <div *ngIf="loginForm.controls.password.errors.required" class="error-text">
+                                <div *ngIf="submitted && loginForm.controls.pwd.errors" class="text-danger">
+                                    <div *ngIf="loginForm.controls.pwd.errors.required" class="error-text">
                                         Password is required
                                     </div>
                                 </div>

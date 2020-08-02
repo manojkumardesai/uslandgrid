@@ -26,6 +26,7 @@ import { CreateAccountComponent } from './user-auth/create-account/create-accoun
 import { AdminComponent } from './admin/admin.component';
 import { ResetPasswordComponent } from './user-auth/reset-password/reset-password.component';
 import { UserInfoComponent } from './admin/user-info/user-info.component';
+import { httpInterceptorProviders } from './_services/auth/httpInterceptorProviders';
 // import { RouterStateSnapshot } from '@angular/router';
 
 
@@ -62,7 +63,9 @@ import { UserInfoComponent } from './admin/user-info/user-info.component';
     NgxMatSelectSearchModule,
     BsDatepickerModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    httpInterceptorProviders
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

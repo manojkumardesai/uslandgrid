@@ -1,0 +1,77 @@
+$color-text : #0066a2;
+
+.list {
+    margin-left: 0;
+    padding-left: 7px;
+    li {
+        list-style-type: none;
+        label {
+            font-size: 12px;
+        }
+        input[typpe="checkbox"] {
+            vertical-align: -3px;
+        }
+    }
+}
+
+.dropdown-menu {
+    height: auto;
+    max-height: 400px;
+    overflow: auto;
+    .dropdown-item {
+        padding: 0px !important;
+        .form-check {
+            margin-bottom: 0px;
+        }
+    }
+}
+.user-card {
+    .card-header {
+        padding: 7px 10px;
+        h4 {
+            margin-bottom: 0;
+            font-size: 15px;
+            text-transform: capitalize;
+        }
+    }
+    .card-body {
+        padding: 7px 10px;
+        .info-table {
+            font-size: 12px;
+            width: 100%;
+        }
+
+    }
+    .card-footer {
+        padding: 7px 10px;
+    }
+}
+
+.login-btn {
+    font-size: 14px;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+    text-transform: none;
+    padding: 9px 20px;
+    -webkit-border-radius: 18px;
+    -moz-border-radius: 18px;
+    border-radius: 18px;
+    color: #ffffff;
+    border: 1px solid #e5e5e5;
+    background: #666666;
+    display: inline-block;
+    cursor: pointer;
+    &:hover {
+      -webkit-transition: all 0.2s ease-out;
+      -moz-transition: all 0.2s ease-out;
+      -o-transition: all 0.2s ease-out;
+      transition: all 0.2s ease-out;
+      background-color: $color-text;
+    }
+    &:focus {
+      outline-style: none;
+      outline: none;
+    }
+  }
