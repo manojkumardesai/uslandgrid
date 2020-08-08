@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
   }
 
   routeToLogin() {
-    this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.routerState.snapshot.url } })
+    this.router.navigate(['/user-auth'], { queryParams: { returnUrl: this.router.routerState.snapshot.url } })
   }
 
   openLegends() {
@@ -36,8 +36,11 @@ export class HeaderComponent implements OnInit {
     dialogRef.afterClosed().subscribe(console.log);
   }
 
+
   logout() {
-    this.loginService.publishLoginResponseFalse();
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('loginToken');
+    this.router.navigate(['/home']);
     this.openSnackBar('Logged out successfully', 'Dismiss');
   }
 

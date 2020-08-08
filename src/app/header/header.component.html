@@ -3,12 +3,13 @@
         <img class="logo pointerClass" routerLink = '/home' src="../assets/USLandGrid3.png">
     </div>
     <div>
-        <button mat-button  *ngIf='!isLoggedIn' (click)='routeToLogin()'>
+        <button mat-button  routerLink='/admin' class="mx-3" *ngIf="loginService.isAdmin()">Admin Board</button>
+        <button mat-button  *ngIf='!loginService.isloggedin()' routerLink='/user-auth'>
             <span>
                 Login
             </span>
         </button>
-        <button  mat-button *ngIf='isLoggedIn' (click)='logout()'>
+        <button  mat-button *ngIf='loginService.isloggedin()' (click)='logout()'>
             <span>
                 Logout
             </span>

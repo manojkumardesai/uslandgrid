@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 
@@ -16,6 +16,8 @@ export class ApiService {
   dates: any = {};
   appllyAllCondtions: boolean = true;
   appllyAnyCondtion: boolean = false;
+  headers = new HttpHeaders().set('Content-Type', 'application/json').set('Access-Control-Allow-Origin', '*')
+    .set('Cache-Control', ' no-cache').set('Accept', '*/*').set('Accept-Encoding', 'gzip, deflate, br');
   constructor(private http: HttpClient) { }
 
   fetchWellsByPayLoad(payLoad, offset, limit): Observable<any> {
@@ -83,4 +85,52 @@ export class ApiService {
     payload['filters']['exp'] = filterDetails;
     return this.http.post(this.baseUrl + `report/well`, payload)
   }
+
+  createUser(payload) {
+    return this.http.post(this.baseUrl + `user/create`, payload);
+  }
+
+  getListOfUser() {
+    return this.http.get(this.baseUrl + `/user/list?offset=0&limit=20`);
+  }
+
+  login(info): Observable<any> {
+
+    return this.http.post(this.baseUrl + `user/login`, info, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST',
+        'Cache-Control': 'no-cache'
+      }
+    });
+  }
+
+  forgotPassword(info): Observable<any> {
+    return this.http.post(this.baseUrl + 'user/forgetpwd', info, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'PUT',
+        'Cache-Control': 'no-cache'
+      }
+    });
+  }
+
+  changePassword(payload): Observable<any> {
+    return this.http.post(this.baseUrl + `user/changepwd`, payload);
+  }
+
+  activateUser(token) {
+    return this.http.post(this.baseUrl + `user/activateuser`, token);
+  }
+
+  userDetails(id): Observable<any> {
+    return this.http.get(this.baseUrl + `user/${id}`)
+  }
+
+  updateUser(payload) {
+    return this.http.post(this.baseUrl + 'user/update', payload);
+  }
+
 }

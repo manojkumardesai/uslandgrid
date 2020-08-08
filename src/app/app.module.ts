@@ -10,7 +10,6 @@ import { AngularMaterialModule } from './modules/material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { WellDetailComponent } from './well-detail/well-detail.component';
 import { ChartsModule } from 'ng2-charts';
-import { LoginComponent } from './login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterDialog } from './utils/matDialog/filterDialog.component';
 import { HeaderComponent } from './header/header.component';
@@ -20,6 +19,15 @@ import { MultiSelectComponent } from './shared/multi-select/multi-select.compone
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { InfoWindowComponent } from './map/info-window/info-window.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { UserAuthComponent } from './user-auth/user-auth.component';
+import { LoginComponent } from './user-auth/login/login.component';
+import { ForgotPasswordComponent } from './user-auth/forgot-password/forgot-password.component';
+import { CreateAccountComponent } from './user-auth/create-account/create-account.component';
+import { AdminComponent } from './admin/admin.component';
+import { ResetPasswordComponent } from './user-auth/reset-password/reset-password.component';
+import { UserInfoComponent } from './admin/user-info/user-info.component';
+import { httpInterceptorProviders } from './_services/auth/httpInterceptorProviders';
+import { ActivateUser } from './user-auth/activate-user/activate-user.component';
 // import { RouterStateSnapshot } from '@angular/router';
 
 
@@ -35,7 +43,14 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     MapLegendComponent,
     AdvancedFilterComponent,
     MultiSelectComponent,
-    InfoWindowComponent
+    InfoWindowComponent,
+    UserAuthComponent,
+    ForgotPasswordComponent,
+    CreateAccountComponent,
+    AdminComponent,
+    ResetPasswordComponent,
+    UserInfoComponent,
+    ActivateUser
   ],
   imports: [
     BrowserModule,
@@ -50,7 +65,9 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     NgxMatSelectSearchModule,
     BsDatepickerModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    httpInterceptorProviders
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

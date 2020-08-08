@@ -194,6 +194,9 @@ export class AdvancedFilterComponent implements OnInit {
     });
     this.filterFormMethod();
     this.getGridList();
+    if (this.loginService.isloggedin()) {
+      this.getAllocatedFileTypes();
+    }
   }
 
   populateColumns() {
@@ -532,6 +535,16 @@ export class AdvancedFilterComponent implements OnInit {
           (err) => console.log(err))
       }
     }
+  }
+
+
+  getAllocatedFileTypes() {
+    let userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    let id = userInfo.userId;
+    this.apiService.userDetails(id).subscribe(user => {
+      this.formats = user['userPermissionDto'].reportTypes;
+    });
+
   }
 
   addExpressionToExp() {
