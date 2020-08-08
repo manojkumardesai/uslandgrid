@@ -9,6 +9,8 @@ import { CreateAccountComponent } from './user-auth/create-account/create-accoun
 import { AdminComponent } from './admin/admin.component';
 import { ResetPasswordComponent } from './user-auth/reset-password/reset-password.component';
 import { UserInfoComponent } from './admin/user-info/user-info.component';
+import { ActivateUser } from './user-auth/activate-user/activate-user.component';
+import { AuthGuard } from './_services/auth/auth.guard';
 
 
 const routes: Routes = [
@@ -48,12 +50,17 @@ const routes: Routes = [
       {
         path: 'reset-password',
         component: ResetPasswordComponent
+      },
+      {
+        path: 'activate-user',
+        component: ActivateUser
       }
     ]
   },
   {
     path: 'admin',
     component: AdminComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'user-info/:id',

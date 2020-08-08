@@ -33,6 +33,11 @@ export class LoginService {
     return localStorage.getItem('loginToken') !== null ? true : false;
   }
 
+  isAdmin() {
+    let userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    return userInfo && userInfo.role == 'ADMIN' ? true : false;
+  }
+
 
 
 }

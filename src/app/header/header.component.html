@@ -3,7 +3,7 @@
         <img class="logo pointerClass" routerLink = '/home' src="../assets/USLandGrid3.png">
     </div>
     <div>
-        <button mat-button  routerLink='/admin' class="mx-3">Admin Board</button>
+        <button mat-button  routerLink='/admin' class="mx-3" *ngIf="loginService.isAdmin()">Admin Board</button>
         <button mat-button  *ngIf='!loginService.isloggedin()' routerLink='/user-auth'>
             <span>
                 Login

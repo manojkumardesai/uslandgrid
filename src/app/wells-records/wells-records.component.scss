@@ -62,8 +62,9 @@ tr.mat-row {
 }
 
 .wellsTableContainer {
-    height: 230px;
-    overflow-y: auto;
+    height: 180px;
+    // overflow-y: auto;
+    overflow: auto;
 }
 
 .mat-expansion-indicator {
@@ -200,10 +201,12 @@ tr.mat-row {
       table tr td {
           border: 1px solid black;
           padding-left: 5px !important;
+          white-space: nowrap;
       }
       table tr th {
         border: 1px solid black;
         padding-left: 5px !important;
+        white-space: nowrap;
       }
       table tbody tr:nth-child(odd) {
           background-color: #fff;

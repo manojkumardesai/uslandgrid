@@ -117,6 +117,14 @@ export class ApiService {
     });
   }
 
+  changePassword(payload): Observable<any> {
+    return this.http.post(this.baseUrl + `user/changepwd`, payload);
+  }
+
+  activateUser(token) {
+    return this.http.post(this.baseUrl + `user/activateuser`, token);
+  }
+
   userDetails(id): Observable<any> {
     return this.http.get(this.baseUrl + `user/${id}`)
   }

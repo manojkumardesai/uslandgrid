@@ -15,10 +15,12 @@ export class AuthInterceptor implements HttpInterceptor {
         if (this.loginService.isloggedin()) {
             const authToken = this.token;
             req = req.clone({
-                setHeaders:
-                    { Authorization: authToken }
-            }
-            );
+                headers: req.headers.set(
+                    'Authorization',
+                    this.token
+                )
+            })
+
         }
 
         return next.handle(req);

@@ -47,6 +47,10 @@ export class LoginComponent implements OnInit {
         let returnUrl = this.activeRoute.snapshot.queryParamMap.get('returnUrl');
         this.router.navigate([returnUrl || '/home']);
       }
+      if (data['statusCode'] == 401) {
+        this.openSnackBar(data['message'], 'Dismiss');
+        this.loginForm.reset();
+      }
     });
   }
   login(): void {

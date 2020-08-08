@@ -27,6 +27,7 @@ import { AdminComponent } from './admin/admin.component';
 import { ResetPasswordComponent } from './user-auth/reset-password/reset-password.component';
 import { UserInfoComponent } from './admin/user-info/user-info.component';
 import { httpInterceptorProviders } from './_services/auth/httpInterceptorProviders';
+import { ActivateUser } from './user-auth/activate-user/activate-user.component';
 // import { RouterStateSnapshot } from '@angular/router';
 
 
@@ -48,7 +49,8 @@ import { httpInterceptorProviders } from './_services/auth/httpInterceptorProvid
     CreateAccountComponent,
     AdminComponent,
     ResetPasswordComponent,
-    UserInfoComponent
+    UserInfoComponent,
+    ActivateUser
   ],
   imports: [
     BrowserModule,

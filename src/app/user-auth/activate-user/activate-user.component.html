@@ -1,0 +1,15 @@
+<div class="container h-100">
+    <div class="user-wrapper">
+        <div class="jumbotron w-100">
+            <h1 style="font-size: 1.5rem;">USLandGrid</h1>
+            <div class="alert alert-success" *ngIf="isSuccess">
+                <div style="font-size: 13px">{{message}}</div>
+            </div>      
+            <div class="alert alert-danger" *ngIf="isFailed">
+                <div style="font-size: 13px">{{message}}</div>
+            </div>      
+            <p><span class="hover-class" (click)="activateUser()">Click here</span> to activate the user</p>
+        </div>
+    </div>
+    
+  </div>
