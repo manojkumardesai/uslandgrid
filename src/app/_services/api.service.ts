@@ -91,7 +91,7 @@ export class ApiService {
   }
 
   getListOfUser() {
-    return this.http.get(this.baseUrl + `/user/list?offset=0&limit=20`);
+    return this.http.get(this.baseUrl + `user/v1/list`);
   }
 
   login(info): Observable<any> {

@@ -43,10 +43,12 @@
                                             </button>
                                             <div class="dropdown-menu">
                                                 <ul class="list">
-                                                    <li class="dropdown-item" *ngFor="let county of countrieslist">
-                                                        <div class="form-check mb-2">
+                                                    <li class="dropdown-item" *ngFor="let county of countrieslist" (click)="stopCloseDropdown($event)">
+                                                        <div class="form-check">
                                                             <label class="form-check-label" [for]="county">
-                                                              <input class="form-check-input"
+                                                              <input 
+                                                              style="margin-top: 1px;"
+                                                              class="form-check-input"
                                                               [checked]="isCountyAlloted(county)"
                                                               (change) ="addOrRemovedCounty(county)"
                                                               type="checkbox" [id]="county"> {{county}}
@@ -65,10 +67,12 @@
                                             </button>
                                             <div class="dropdown-menu">
                                                 <ul class="list">
-                                                    <li *ngFor="let table of tables">
-                                                        <div class="form-check mb-2 mr-sm-2">
+                                                    <li *ngFor="let table of tables" (click)="stopCloseDropdown($event)">
+                                                        <div class="form-check">
                                                             <label class="form-check-label" [for]="table">
-                                                              <input class="form-check-input"
+                                                              <input 
+                                                              style="margin-top: 1px;"
+                                                              class="form-check-input"
                                                               [checked] = "isTablesAllocated(table)"
                                                               (change) = "addOrRemoveTables(table)" 
                                                               type="checkbox" [id]="table"> {{table}}
@@ -87,10 +91,12 @@
                                             </button>
                                             <div class="dropdown-menu">
                                                 <ul class="list">
-                                                    <li *ngFor="let report of reportTypes">
-                                                        <div class="form-check mb-2 mr-sm-2">
+                                                    <li *ngFor="let report of reportTypes" (click)="stopCloseDropdown($event)">
+                                                        <div class="form-check">
                                                             <label class="form-check-label" [for]="report">
-                                                              <input class="form-check-input"
+                                                              <input 
+                                                              style="margin-top: 1px;"
+                                                              class="form-check-input"
                                                               [checked] ="isReportAllocated(report)" 
                                                               (change) = "addOrRemoveReportType(report)"
                                                               type="checkbox" [id]="report"> {{report}}

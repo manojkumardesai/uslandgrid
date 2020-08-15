@@ -5,8 +5,10 @@ $color-text : #0066a2;
     padding-left: 7px;
     li {
         list-style-type: none;
+        cursor: pointer;
         label {
             font-size: 12px;
+            cursor: pointer;
         }
         input[typpe="checkbox"] {
             vertical-align: -3px;
