@@ -4,6 +4,13 @@
 <div class="container">
     <h1 class="user-list-title">List of Users</h1>
     <div class="user-list-wrapper">
+        <div class="search-user">
+            <div class="form-group search-btn">
+                <input type="search"  [(ngModel)]="searchKey" class="form-control" 
+                (change)="searchUser()"
+                placeholder="Search User">
+            </div>
+        </div>
     <table class="table table-hover stickyTable">
         <tr>
             <th>#</th>
@@ -13,7 +20,7 @@
             <th>Email Address</th>
             <th class="text-center">Status</th>
             <th>Subscribe Valid</th>
-            <th colspan="2">Actions</th>
+            <th>Actions</th>
         </tr>
         <tr *ngFor="let user of users; let index = index">
             <td>{{index + 1}}</td>

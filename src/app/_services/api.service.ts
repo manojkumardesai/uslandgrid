@@ -94,6 +94,10 @@ export class ApiService {
     return this.http.get(this.baseUrl + `user/v1/list`);
   }
 
+  search(searchKey) {
+    return this.http.get(this.baseUrl + `user/v1/list?offset=0&limit=20&searchKey=${searchKey}`)
+  }
+
   login(info): Observable<any> {
 
     return this.http.post(this.baseUrl + `user/login`, info, {
