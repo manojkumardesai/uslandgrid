@@ -90,4 +90,8 @@ export class UserInfoComponent implements OnInit {
             }
         })
     }
+
+    stopCloseDropdown($event) {
+        $event.stopPropagation();
+    }
 }

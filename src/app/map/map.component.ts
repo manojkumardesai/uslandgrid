@@ -25,6 +25,7 @@ export interface DialogData {
 
 export class MapComponent implements AfterViewInit, OnInit {
   public map;
+  public miniMap;
   public infoPointMarker;
   public tiles;
   public esriBaseLayer;
@@ -108,6 +109,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     this.initMap();
+    this.initMiniMap();
   }
 
   displayFn(well): string {
@@ -167,6 +169,20 @@ export class MapComponent implements AfterViewInit, OnInit {
     // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
 
+  }
+
+  initMiniMap(): void {
+    this.miniMap = L.map('mini-map', {
+      center: [66.1605, -153.3691],
+      zoom: 8,
+      zoomControl: false
+    });
+    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: false
+    });
+
+    tiles.addTo(this.miniMap);
   }
 
   addTileLayer() {

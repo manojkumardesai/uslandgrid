@@ -10,19 +10,34 @@ import { Router } from "@angular/router";
 
 
 export class AdminComponent implements OnInit {
-
+    users: any = [];
+    count: number = 0;
+    searchKey: string = '';
     constructor(private _apiService: ApiService, private _router: Router) {
 
     }
 
-    users: any = [];
+
+
 
     ngOnInit() {
         this.getListOfUser();
     }
 
     getListOfUser() {
-        this._apiService.getListOfUser().subscribe((data) => this.users = data);
+        this._apiService.getListOfUser().subscribe((data) => {
+            this.users = data['users'];
+            this.users = this.users.sort((a, b) => a['id'] < b['id'] ? 1 : -1);
+            this.count = data['count'];
+        });
+    }
+
+    searchUser() {
+        this._apiService.search(this.searchKey).subscribe((data) => {
+            this.users = data['users'];
+            this.users = this.users.sort((a, b) => a['id'] < b['id'] ? 1 : -1);
+            this.count = data['count'];
+        })
     }
 
     gotoUser(id) {

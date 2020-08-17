@@ -71,3 +71,21 @@
   }
 
 
+.mini-map-container {
+  position: absolute;
+    z-index: 9999;
+    bottom: 315px;
+    left: 15px;
+    // border: 3px solid #fff;
+    // padding: 2px;
+    height: 200px;
+    width: 200px;
+    .mini-map-frame {
+      border: 2px solid black;
+      height: 100%;
+      #mini-map {
+        height: 100%;
+      }
+    }
+}
+
