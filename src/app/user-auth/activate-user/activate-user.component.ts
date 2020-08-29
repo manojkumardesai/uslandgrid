@@ -28,7 +28,7 @@ export class ActivateUser implements OnInit {
 
     activateUser() {
         let payload = {};
-        payload['activateToken'] = this.token;
+        payload['token'] = this.token;
         this._apiservice.activateUser(payload).subscribe(data => {
             if (data['statusCode'] == 200) {
                 this.message = data['message'];
