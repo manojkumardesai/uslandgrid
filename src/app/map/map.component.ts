@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit, HostListener } from '@angular/core';
 import * as L from 'leaflet';
 import { BetterWMS } from '../utils/betterWms.util';
 import { FormControl } from '@angular/forms';
@@ -11,6 +11,7 @@ import { InfoWindowComponent } from './info-window/info-window.component';
 import "leaflet-mouse-position";
 import "leaflet.markercluster";
 import * as esri from "esri-leaflet";
+declare var $: any
 
 export interface DialogData {
   animal: string;
@@ -44,6 +45,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   name: string;
   myControl = new FormControl();
   options: any[] = [];
+  satelight_layer: any;
+  wells_layer: any;
+  culture_layer: any;
+  psll_layer: any;
   filteredOptions: Observable<any[]>;
   constructor(public apiService: ApiService,
     public dialog: MatDialog) { }
@@ -110,8 +115,58 @@ export class MapComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
     this.initMap();
     this.initMiniMap();
+
+    this.satelight_layer = $('input[type=checkbox]')[1];
+    this.culture_layer = $('input[type=checkbox]')[2];
+    this.psll_layer = $('input[type=checkbox]')[3];
+    this.wells_layer = $('input[type=checkbox]')[4];
   }
 
+  @HostListener('change') onChange(e: any) {
+    if (this.satelight_layer.checked) {
+      this.esriImageryLayer = esri.basemapLayer('Imagery');
+      this.miniMap.addLayer(this.esriImageryLayer);
+    } else {
+      this.esriBaseLayer = esri.basemapLayer('Gray');
+      this.miniMap.addLayer(this.esriBaseLayer);
+    }
+    if (this.culture_layer.checked) {
+      this.cultureLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/culture_webmap/wms?', {
+        layers: 'culture_webmap:Culture_Webmap',
+        format: 'image/png8',
+        transparent: true,
+        styles: '',
+        attribution: null
+      });
+      this.miniMap.addLayer(this.cultureLayer);
+    } else {
+      this.miniMap.removeLayer(this.cultureLayer);
+    }
+    if (this.psll_layer.checked) {
+      this.plssLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
+        layers: 'landgrid_webmap:LandGrid_WebMap',
+        format: 'image/png8',
+        transparent: true,
+        styles: '',
+        attribution: null
+      });
+      this.miniMap.addLayer(this.plssLayer);
+    } else {
+      this.miniMap.removeLayer(this.plssLayer);
+    }
+    if (this.wells_layer.checkbox) {
+      this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
+        layers: 'wh_final',
+        format: 'image/png8',
+        transparent: true,
+        styles: '',
+        attribution: null
+      });
+      this.miniMap.addLayer(this.wellsLayer);
+    } else {
+      this.miniMap.removeLayer(this.wellsLayer);
+    }
+  }
   displayFn(well): string {
     return well && well.wellName ? well.wellName : '';
   }
@@ -173,16 +228,13 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   initMiniMap(): void {
     this.miniMap = L.map('mini-map', {
-      center: [66.1605, -153.3691],
-      zoom: 8,
+      center: [65.1605, -153.3691],
+      zoom: 3,
       zoomControl: false
     });
-    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: false
-    });
-
-    tiles.addTo(this.miniMap);
+    this.esriBaseLayer = esri.basemapLayer('Gray');
+    this.miniMap.addLayer(this.esriBaseLayer);
+    this.addWellsLayer_1();
   }
 
   addTileLayer() {
@@ -197,6 +249,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.esriBaseLayer = esri.basemapLayer('Gray');
     this.esriImageryLayer = esri.basemapLayer('Imagery');
     this.map.addLayer(this.esriBaseLayer);
+
   }
 
   addCultureLayer() {
@@ -207,7 +260,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       styles: '',
       attribution: null
     });
-    //this.map.addLayer(this.cultureLayer);
+    this.map.addLayer(this.cultureLayer);
   }
 
   addPlssLayer() {
@@ -232,6 +285,16 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map.addLayer(this.wellsLayer);
   }
 
+  addWellsLayer_1() {
+    this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
+      layers: 'wh_final',
+      format: 'image/png8',
+      transparent: true,
+      styles: '',
+      attribution: null
+    });
+    this.miniMap.addLayer(this.wellsLayer);
+  }
   addClusterLayer() {
     //Adding Cluster layer
     this.clusterLayer = L.markerClusterGroup({
@@ -285,6 +348,21 @@ export class MapComponent implements AfterViewInit, OnInit {
     L.control.layers(baseLayerMaps, overLay).addTo(this.map);
     L.control.mousePosition().addTo(this.map);
     L.control.scale().addTo(this.map);
+  }
+
+  layerControl_1() {
+    let baseLayerMaps = {};
+    let overLay = {
+      'Base Map': this.esriBaseLayer,
+      'Satellite': this.esriImageryLayer,
+      // 'Culture': this.cultureLayer,
+      // 'PLSS': this.plssLayer,
+      // 'Wells': this.wellsLayer
+
+    }
+    L.control.layers(baseLayerMaps, overLay).addTo(this.miniMap);
+    L.control.mousePosition().addTo(this.miniMap);
+    L.control.scale().addTo(this.miniMap);
   }
 
   betterWmsFunction(url?, options?) {
