@@ -424,18 +424,18 @@
     <div class="filter-footer">
       <button class="filter-btn-apply" (click) ="applyfilter()">Apply</button>
       <button class="filter-btn-clear" (click) = "clearFilters()">Clear All</button>
-      <div *ngIf="loginService.isloggedin">
+      <div *ngIf="loginService.isloggedin()">
         <select name="cars" class="custom-select choose-format"  [(ngModel)]="reportType">
           <option value="null">Choose Format</option>
-          <option *ngFor="let format of formats" [value]="format.value" >{{format.value}}</option>
+          <option *ngFor="let file of this.formats" [value]="file" >{{file}}</option>
         </select>
       </div>
       <button class="filter-btn-clear" 
-      *ngIf="loginService.isloggedin"
+      *ngIf="loginService.isloggedin()"
       style="margin-left: 12px;"
       title="{{titleMsg}}" (click)="generateReport()"
       [ngClass]="{'export': !loginService.isloggedin}"
-      [disabled]="invalidForm || !loginService.isloggedin || !reportType || reportType == 'null'">
+      [disabled]="invalidForm || !loginService.isloggedin() || !reportType || reportType == 'null'">
       <mat-spinner *ngIf="generatingReport"></mat-spinner>Export</button>
     </div>
     
@@ -633,3 +633,5 @@
     <mat-spinner *ngIf="generatingReport"></mat-spinner>Export</button>
   </div> -->
 </div>
+
+

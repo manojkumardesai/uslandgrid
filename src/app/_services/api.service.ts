@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, from } from 'rxjs';
+import { Observable, from, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 
@@ -16,6 +16,10 @@ export class ApiService {
   dates: any = {};
   appllyAllCondtions: boolean = true;
   appllyAnyCondtion: boolean = false;
+
+  public checkStateOfFilter = new Subject<any>();
+
+  public clusterTestData = [];
   headers = new HttpHeaders().set('Content-Type', 'application/json').set('Access-Control-Allow-Origin', '*')
     .set('Cache-Control', ' no-cache').set('Accept', '*/*').set('Accept-Encoding', 'gzip, deflate, br');
   constructor(private http: HttpClient) { }
@@ -135,6 +139,10 @@ export class ApiService {
 
   updateUser(payload) {
     return this.http.post(this.baseUrl + 'user/update', payload);
+  }
+
+  closeFilter(val: any) {
+    this.checkStateOfFilter.next(val);
   }
 
 }

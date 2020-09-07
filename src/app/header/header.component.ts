@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MapLegendComponent } from '../map-legend/map-legend.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiService } from '../_services/api.service';
+declare var $: any;
 
 @Component({
   selector: 'app-header',
@@ -13,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class HeaderComponent implements OnInit {
   isLoggedIn = false;
   constructor(public loginService: LoginService, public router: Router,
-    public dialog: MatDialog, public _snackBar: MatSnackBar) { }
+    public dialog: MatDialog, public _snackBar: MatSnackBar, public api_service: ApiService) { }
 
   ngOnInit() {
     this.loginService.user.subscribe((data) => {
@@ -40,7 +42,8 @@ export class HeaderComponent implements OnInit {
   logout() {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('loginToken');
-    this.router.navigate(['/home']);
+    // this.router.navigate(['/home']);
+    window.location.reload(true);
     this.openSnackBar('Logged out successfully', 'Dismiss');
   }
 
@@ -52,4 +55,8 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  closeinfoModal() {
+    $('#authDialog').toggle();
+    this.api_service.closeFilter(true);
+  }
 }

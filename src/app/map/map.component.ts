@@ -41,10 +41,11 @@ export class MapComponent implements AfterViewInit, OnInit {
   public isMapExtentApplied = false;
   payLoadFromFilter = [];
   public mapExtent = [];
-  public clusterTestData = [];
+  // public clusterTestData = [];
   name: string;
   myControl = new FormControl();
   options: any[] = [];
+  base_layer: any;
   satelight_layer: any;
   wells_layer: any;
   culture_layer: any;
@@ -91,16 +92,23 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   fetchClusterData() {
-    const cluster1 = this.apiService.fetchClusters(0, 100000);
-    const cluster2 = this.apiService.fetchClusters(100001, 100000);
-    const cluster3 = this.apiService.fetchClusters(200001, 100000);
-    const cluster4 = this.apiService.fetchClusters(300001, 100000);
-    const cluster5 = this.apiService.fetchClusters(400001, 100000);
-    const mergedCall = forkJoin(cluster1, cluster2, cluster3, cluster4, cluster5);
-    mergedCall.subscribe((clusterData: any) => {
-      this.clusterTestData = clusterData.flat(1);
-      this.addClusterLayer();
-    });
+    if (this.apiService.clusterTestData.length == 0) {
+      const cluster1 = this.apiService.fetchClusters(0, 100000);
+      const cluster2 = this.apiService.fetchClusters(100001, 100000);
+      const cluster3 = this.apiService.fetchClusters(200001, 100000);
+      const cluster4 = this.apiService.fetchClusters(300001, 100000);
+      const cluster5 = this.apiService.fetchClusters(400001, 100000);
+      const mergedCall = forkJoin(cluster1, cluster2, cluster3, cluster4, cluster5);
+      mergedCall.subscribe((clusterData: any) => {
+        this.apiService.clusterTestData = clusterData.flat(1);
+        this.addClusterLayer();
+      });
+    }
+    else {
+      setTimeout(() => {
+        this.addClusterLayer();
+      }, 1000);
+    }
   }
 
   private _filter(value: any): Observable<any[]> {
@@ -116,6 +124,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.initMap();
     this.initMiniMap();
 
+    this.base_layer = $('input[type=checkbox]')[0];
     this.satelight_layer = $('input[type=checkbox]')[1];
     this.culture_layer = $('input[type=checkbox]')[2];
     this.psll_layer = $('input[type=checkbox]')[3];
@@ -123,12 +132,19 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   @HostListener('change') onChange(e: any) {
+    if (this.base_layer.checked) {
+      this.esriBaseLayer = esri.basemapLayer('Gray');
+      this.miniMap.addLayer(this.esriBaseLayer);
+    } else {
+      this.esriBaseLayer = esri.basemapLayer('Gray');
+      this.miniMap.removeLayer(this.esriBaseLayer);
+    }
     if (this.satelight_layer.checked) {
       this.esriImageryLayer = esri.basemapLayer('Imagery');
       this.miniMap.addLayer(this.esriImageryLayer);
     } else {
-      this.esriBaseLayer = esri.basemapLayer('Gray');
-      this.miniMap.addLayer(this.esriBaseLayer);
+      this.esriImageryLayer = esri.basemapLayer('Imagery');
+      this.miniMap.removeLayer(this.esriImageryLayer);
     }
     if (this.culture_layer.checked) {
       this.cultureLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/culture_webmap/wms?', {
@@ -324,8 +340,8 @@ export class MapComponent implements AfterViewInit, OnInit {
     });
 
 
-    for (var i = 0; i < this.clusterTestData.length; i++) {
-      var a = this.clusterTestData[i];
+    for (var i = 0; i < this.apiService.clusterTestData.length; i++) {
+      var a = this.apiService.clusterTestData[i];
       var title = a[2];
       var marker = L.marker(new L.LatLng(a[0], a[1]), { icon: mapIcon });
       //marker.bindPopup(title);
@@ -381,6 +397,9 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map.setView(new L.LatLng(lat, lng), 12);
   }
 
+  goToLocationAlaska(lat, lng) {
+    this.map.setView(new L.LatLng(lat, lng), 5);
+  }
   showInfoPoint(ev) {
     if (this.map.getZoom() > 11) {
       this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {

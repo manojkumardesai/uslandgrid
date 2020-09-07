@@ -18,7 +18,7 @@ export class UserInfoComponent implements OnInit {
     isFailure: boolean = false;
     message: string = ""
     tables = ['WELL RECORDS', 'COMPLETION', 'CASING', 'FORMATION', 'PERFORATION', 'SURVEY', 'INITIAL POTENTIAL'];
-    reportTypes = ['SHP', 'WB2', 'WB4', 'CSV', 'XLSX', 'TXT']
+    reportTypes = ['shp', 'wb2', 'wb4', 'csv', 'xlsx', 'txt']
 
     constructor(private _activateRoute: ActivatedRoute,
         private _loginService: LoginService,
@@ -31,7 +31,6 @@ export class UserInfoComponent implements OnInit {
             this.id = +params['id'];
             this._apiservice.userDetails(this.id).subscribe(data => {
                 this.user = data;
-                console.log(this.user);
                 this.countries();
             });
         });
@@ -56,6 +55,18 @@ export class UserInfoComponent implements OnInit {
         }
     }
 
+    selectAllCounty() {
+        if (this.countrieslist.every(county => this.user['userPermissionDto'].counties.includes(county))) {
+            this.user['userPermissionDto'].counties = [];
+        } else {
+            this.user['userPermissionDto'].counties = this.countrieslist;
+        }
+    }
+
+    isAllCountySelected() {
+        return this.countrieslist && this.countrieslist.every(county => this.user['userPermissionDto'].counties.includes(county));
+    }
+
     isReportAllocated(name) {
         return this.user['userPermissionDto'].reportTypes.includes(name.toLowerCase()) ? true : false;
     }
@@ -69,6 +80,18 @@ export class UserInfoComponent implements OnInit {
         }
     }
 
+    selectAllReports() {
+        if (this.reportTypes.every(report => this.user['userPermissionDto'].reportTypes.includes(report))) {
+            this.user['userPermissionDto'].reportTypes = [];
+        } else {
+            this.user['userPermissionDto'].reportTypes = this.reportTypes;
+        }
+    }
+
+    isAllReportsSelected() {
+        return this.reportTypes.every(report => this.user['userPermissionDto'].reportTypes.includes(report));
+    }
+
     isTablesAllocated(name) {
         return this.user['userPermissionDto'].tables.includes(name) ? true : false;
     }
@@ -80,6 +103,18 @@ export class UserInfoComponent implements OnInit {
         } else {
             this.user['userPermissionDto'].tables.push(name);
         }
+    }
+
+    selectAllTables() {
+        if (this.tables.every(table => this.user['userPermissionDto'].tables.includes(table))) {
+            this.user['userPermissionDto'].tables = [];
+        } else {
+            this.user['userPermissionDto'].tables = this.tables;
+        }
+    }
+
+    isAllTableSelected() {
+        return this.tables.every(table => this.user['userPermissionDto'].tables.includes(table));
     }
 
     updateUser() {

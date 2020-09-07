@@ -39,10 +39,23 @@
                                     <td>
                                         <div class="dropdown">
                                             <button type="button" class="dropdown-toggle login-btn" data-toggle="dropdown">
-                                              Countries
+                                              Counties
                                             </button>
                                             <div class="dropdown-menu">
                                                 <ul class="list">
+                                                    <li class="dropdown-item" (click)="stopCloseDropdown($event)">
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" [for]="selectAllCounty">
+                                                              <input 
+                                                              style="margin-top: 1px;"
+                                                              class="form-check-input"
+                                                              [checked]="isAllCountySelected()"
+                                                              (change) ="selectAllCounty()"
+                                                              type="checkbox" [id]="selectAllCounty"> Select All
+                                                            </label>
+                                                          </div>
+                                                        
+                                                    </li>
                                                     <li class="dropdown-item" *ngFor="let county of countrieslist" (click)="stopCloseDropdown($event)">
                                                         <div class="form-check">
                                                             <label class="form-check-label" [for]="county">
@@ -67,6 +80,19 @@
                                             </button>
                                             <div class="dropdown-menu">
                                                 <ul class="list">
+                                                    <li class="dropdown-item" (click)="stopCloseDropdown($event)">
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" [for]="selectAllTables">
+                                                              <input 
+                                                              style="margin-top: 1px;"
+                                                              class="form-check-input"
+                                                              [checked]="isAllTableSelected()"
+                                                              (change) ="selectAllTables()"
+                                                              type="checkbox" [id]="selectAllTables"> Select All
+                                                            </label>
+                                                          </div>
+                                                        
+                                                    </li>
                                                     <li *ngFor="let table of tables" (click)="stopCloseDropdown($event)">
                                                         <div class="form-check">
                                                             <label class="form-check-label" [for]="table">
@@ -91,6 +117,19 @@
                                             </button>
                                             <div class="dropdown-menu">
                                                 <ul class="list">
+                                                    <li class="dropdown-item" (click)="stopCloseDropdown($event)">
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" [for]="selectAllReports">
+                                                              <input 
+                                                              style="margin-top: 1px;"
+                                                              class="form-check-input"
+                                                              [checked]="isAllReportsSelected()"
+                                                              (change) ="selectAllReports()"
+                                                              type="checkbox" [id]="selectAllReports"> Select All
+                                                            </label>
+                                                          </div>
+                                                        
+                                                    </li>
                                                     <li *ngFor="let report of reportTypes" (click)="stopCloseDropdown($event)">
                                                         <div class="form-check">
                                                             <label class="form-check-label" [for]="report">
