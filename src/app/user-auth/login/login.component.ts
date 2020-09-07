@@ -45,7 +45,8 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('userInfo', JSON.stringify(data));
         localStorage.setItem('loginToken', data['token']);
         let returnUrl = this.activeRoute.snapshot.queryParamMap.get('returnUrl');
-        this.router.navigate([returnUrl || '/home']);
+        window.location.replace('/home');
+        // this.router.navigate([returnUrl || '/home']);
       }
       if (data['statusCode'] == 401) {
         this.openSnackBar(data['message'], 'Dismiss');

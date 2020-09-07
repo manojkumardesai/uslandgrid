@@ -31,14 +31,8 @@ export class AdvancedFilterComponent implements OnInit {
   multipleValueConditions = ['is any of', 'is none of'];
   blankConditions = ['is blank', 'is not blank'];
   valuePlaceHolder = [];
-  formats = [
-    { value: 'SHP' },
-    { value: 'WB2' },
-    { value: 'WB4' },
-    { value: 'CSV' },
-    { value: 'XLSX' },
-    { value: 'TXT' },
-  ];
+  formats = [];
+  counties = [];
   reportType = null;
 
   valueTypes = ['Unique', 'Value', 'Multiple'];
@@ -88,13 +82,13 @@ export class AdvancedFilterComponent implements OnInit {
   isLandGridLoaded: boolean = false;
   isProductionLoaded: boolean = false;
   isDateLoaded: boolean = false;
+  subscriptions: any = []
 
   constructor(public dialogRef: MatDialogRef<AdvancedFilterComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     public fb: FormBuilder,
     public loginService: LoginService,
     public apiService: ApiService) {
-    console.log(this.dialogRef)
     this.datePickerConfig = Object.assign({}, {
       dateInputFormat: 'YYYY-MM-DD',
       containerClass: 'theme-dark-blue'
@@ -197,6 +191,13 @@ export class AdvancedFilterComponent implements OnInit {
     if (this.loginService.isloggedin()) {
       this.getAllocatedFileTypes();
     }
+
+    this.subscriptions.push(
+      this.apiService.checkStateOfFilter.subscribe(
+        res => this.dialogRef.close(),
+        err => console.error(err)
+      )
+    )
   }
 
   populateColumns() {
@@ -542,7 +543,8 @@ export class AdvancedFilterComponent implements OnInit {
     let userInfo = JSON.parse(localStorage.getItem('userInfo'));
     let id = userInfo.userId;
     this.apiService.userDetails(id).subscribe(user => {
-      this.formats = user['userPermissionDto'].reportTypes;
+      this.formats = user['userPermissionDto']['reportTypes'];
+      this.counties = user['userPermissionDto']['counties'];
     });
 
   }
@@ -831,13 +833,23 @@ export class AdvancedFilterComponent implements OnInit {
     payLoad['reportType'] = this.reportType;
     payLoad['filters'] = {};
     payLoad['filters']['operator'] = this.apiService.appllyAllCondtions ? 'and' : 'or';
-    payLoad['filters']['exp'] = this.payLoad.filter(obj => obj.min || obj.max || obj.value && obj.value.length);;
+    payLoad['filters']['exp'] = this.payLoad.filter(obj => obj.min || obj.max || obj.value && obj.value.length);
+    let payloadCounties = this.payLoad.filter(col => col.column == 'County').map(v => v.value[0] || "").filter(arr => arr.length);
+    let allotedCounties = this.counties.filter(arr => arr.length);
+    let userinfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (userinfo['role'] !== 'ADMIN' && !payloadCounties.every(item => allotedCounties.includes(item))) {
+      $('#authDialog').toggle();
+      this.filterForm.reset();
+      return;
+    }
     this.generatingReport = true;
     this.apiService.generateReport(payLoad).subscribe((data) => {
       const extension = this.reportType.toLowerCase() == 'shp' ? 'zip' : this.reportType.toLowerCase();
       const blobCont = new File([data], "Report." + extension, { type: extension });
       saveAs(blobCont);
       this.generatingReport = false;
+      this.dialogRef.close();
+      this.filterForm.reset();
     });
   }
 
