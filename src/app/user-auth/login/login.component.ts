@@ -42,8 +42,8 @@ export class LoginComponent implements OnInit {
     this.apiService.login(JSON.stringify(this.loginForm.value)).subscribe((data) => {
       if (data['statusCode'] == 200 && data['message'] == 'Login successfully') {
         this.openSnackBar(data['message'], 'Dismiss');
-        localStorage.setItem('userInfo', JSON.stringify(data));
-        localStorage.setItem('loginToken', data['token']);
+        sessionStorage.setItem('userInfo', JSON.stringify(data));
+        sessionStorage.setItem('loginToken', data['token']);
         let returnUrl = this.activeRoute.snapshot.queryParamMap.get('returnUrl');
         window.location.replace('/home');
         // this.router.navigate([returnUrl || '/home']);
@@ -51,6 +51,9 @@ export class LoginComponent implements OnInit {
       if (data['statusCode'] == 401) {
         this.openSnackBar(data['message'], 'Dismiss');
         this.loginForm.reset();
+      }
+      if (data['statusCode'] == 400 || data['statusCode'] == 501) {
+        this.openSnackBar(data['message'], 'Dismiss');
       }
     });
   }

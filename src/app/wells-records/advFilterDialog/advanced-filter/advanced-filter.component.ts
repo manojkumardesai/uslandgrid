@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, AfterViewInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormArray, Form, FormControl, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/_services/api.service';
@@ -15,7 +15,7 @@ declare var $: any;
   templateUrl: './advanced-filter.component.html',
   styleUrls: ['./advanced-filter.component.scss']
 })
-export class AdvancedFilterComponent implements OnInit {
+export class AdvancedFilterComponent implements OnInit, AfterViewInit {
   datePickerConfig: Partial<BsDatepickerConfig>;
   globalLogicalConditions = [
     { value: 'and', viewValue: 'Display features in the layer that match all of the following expressions' },
@@ -198,6 +198,12 @@ export class AdvancedFilterComponent implements OnInit {
         err => console.error(err)
       )
     )
+  }
+
+  ngAfterViewInit() {
+    if (this.apiService.savedFormData !== undefined) {
+      this.filterForm.patchValue(this.apiService.savedFormData);
+    }
   }
 
   populateColumns() {
@@ -463,7 +469,7 @@ export class AdvancedFilterComponent implements OnInit {
             column: col.column,
             type: col.type,
             table: col.table,
-            value: this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value && this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value.length ? [this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value] : []
+            value: this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value !== null && this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value && this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value.length ? [this.filterForm.get([key, col.column.replace(/\s+/g, '_')]).value] : []
           });
         } else if (col.type == 'Integer') {
           this.payLoad.push({
@@ -478,8 +484,8 @@ export class AdvancedFilterComponent implements OnInit {
             column: col.column,
             type: col.type,
             table: col.table,
-            min: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString().length ? new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString()).toLocaleDateString() : '',
-            max: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString().length ? new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString()).toLocaleDateString() : '',
+            min: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value !== null && this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString().length ? new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'from']).value.toString()).toLocaleDateString() : '',
+            max: this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value !== null && this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString().length ? new Date(this.filterForm.get([key, col.column.replace(/\s+/g, '_'), 'to']).value.toString()).toLocaleDateString() : '',
           });
         }
 
@@ -488,6 +494,7 @@ export class AdvancedFilterComponent implements OnInit {
   }
 
   applyfilter() {
+    this.apiService.savedFormData = this.filterForm.value;
     this.payLoad = [];
     this.filterFormObject();
     let payloadWithValues = {};
@@ -498,6 +505,7 @@ export class AdvancedFilterComponent implements OnInit {
 
   clearFilters() {
     this.filterForm.reset();
+    this.apiService.savedFormData = this.filterForm.value;
     this.dialogRef.close();
   }
 
@@ -540,7 +548,7 @@ export class AdvancedFilterComponent implements OnInit {
 
 
   getAllocatedFileTypes() {
-    let userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     let id = userInfo.userId;
     this.apiService.userDetails(id).subscribe(user => {
       this.formats = user['userPermissionDto']['reportTypes'];
@@ -836,10 +844,10 @@ export class AdvancedFilterComponent implements OnInit {
     payLoad['filters']['exp'] = this.payLoad.filter(obj => obj.min || obj.max || obj.value && obj.value.length);
     let payloadCounties = this.payLoad.filter(col => col.column == 'County').map(v => v.value[0] || "").filter(arr => arr.length);
     let allotedCounties = this.counties.filter(arr => arr.length);
-    let userinfo = JSON.parse(localStorage.getItem('userInfo'))
+    let userinfo = JSON.parse(sessionStorage.getItem('userInfo'))
     if (userinfo['role'] !== 'ADMIN' && !payloadCounties.every(item => allotedCounties.includes(item))) {
       $('#authDialog').toggle();
-      this.filterForm.reset();
+      // this.filterForm.reset();
       return;
     }
     this.generatingReport = true;
@@ -849,7 +857,7 @@ export class AdvancedFilterComponent implements OnInit {
       saveAs(blobCont);
       this.generatingReport = false;
       this.dialogRef.close();
-      this.filterForm.reset();
+      // this.filterForm.reset();
     });
   }
 

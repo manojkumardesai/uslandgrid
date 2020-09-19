@@ -30,11 +30,11 @@ export class LoginService {
   }
 
   isloggedin() {
-    return localStorage.getItem('loginToken') !== null ? true : false;
+    return sessionStorage.getItem('loginToken') !== null ? true : false;
   }
 
   isAdmin() {
-    let userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     return userInfo && userInfo.role == 'ADMIN' ? true : false;
   }
 
