@@ -64,7 +64,8 @@ const routes: Routes = [
   },
   {
     path: 'user-info/:id',
-    component: UserInfoComponent
+    component: UserInfoComponent,
+    canActivate: [AuthGuard]
   }
 
 ];

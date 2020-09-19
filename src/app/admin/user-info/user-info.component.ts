@@ -18,7 +18,7 @@ export class UserInfoComponent implements OnInit {
     isFailure: boolean = false;
     message: string = ""
     tables = ['WELL RECORDS', 'COMPLETION', 'CASING', 'FORMATION', 'PERFORATION', 'SURVEY', 'INITIAL POTENTIAL'];
-    reportTypes = ['shp', 'wb2', 'wb4', 'csv', 'xlsx', 'txt']
+    reportTypes = ['shp', 'wb2', 'wb4', 'csv', 'xlsx'];
 
     constructor(private _activateRoute: ActivatedRoute,
         private _loginService: LoginService,

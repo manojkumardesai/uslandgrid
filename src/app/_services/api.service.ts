@@ -16,6 +16,7 @@ export class ApiService {
   dates: any = {};
   appllyAllCondtions: boolean = true;
   appllyAnyCondtion: boolean = false;
+  savedFormData: any;
 
   public checkStateOfFilter = new Subject<any>();
 
