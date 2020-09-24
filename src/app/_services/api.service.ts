@@ -146,4 +146,8 @@ export class ApiService {
     this.checkStateOfFilter.next(val);
   }
 
+  cluster(data) {
+    return this.http.post(this.baseUrl + 'well/clusterpoint', data)
+  }
+
 }

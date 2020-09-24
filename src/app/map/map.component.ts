@@ -41,7 +41,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   public isMapExtentApplied = false;
   payLoadFromFilter = [];
   public mapExtent = [];
-  // public clusterTestData = [];
+  public clusterTestData; any = [];
   name: string;
   myControl = new FormControl();
   options: any[] = [];
@@ -92,23 +92,24 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   fetchClusterData() {
-    if (this.apiService.clusterTestData.length == 0) {
-      const cluster1 = this.apiService.fetchClusters(0, 100000);
-      const cluster2 = this.apiService.fetchClusters(100001, 100000);
-      const cluster3 = this.apiService.fetchClusters(200001, 100000);
-      const cluster4 = this.apiService.fetchClusters(300001, 100000);
-      const cluster5 = this.apiService.fetchClusters(400001, 100000);
-      const mergedCall = forkJoin(cluster1, cluster2, cluster3, cluster4, cluster5);
-      mergedCall.subscribe((clusterData: any) => {
-        this.apiService.clusterTestData = clusterData.flat(1);
-        this.addClusterLayer();
-      });
-    }
-    else {
-      setTimeout(() => {
-        this.addClusterLayer();
-      }, 1000);
-    }
+    // if (this.apiService.clusterTestData.length == 0) {
+    //   const cluster1 = this.apiService.fetchClusters(0, 100000);
+    //   const cluster2 = this.apiService.fetchClusters(100001, 100000);
+    //   const cluster3 = this.apiService.fetchClusters(200001, 100000);
+    //   const cluster4 = this.apiService.fetchClusters(300001, 100000);
+    //   const cluster5 = this.apiService.fetchClusters(400001, 100000);
+    //   const mergedCall = forkJoin(cluster1, cluster2, cluster3, cluster4, cluster5);
+    //   mergedCall.subscribe((clusterData: any) => {
+    //     this.apiService.clusterTestData = clusterData.flat(1);
+    //     this.addClusterLayer();
+    //   });
+    // }
+    // else {
+    //   setTimeout(() => {
+    //     this.addClusterLayer();
+    //   }, 1000);
+    // }
+    this.clusterData();
   }
 
   private _filter(value: any): Observable<any[]> {
@@ -229,7 +230,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         if (!this.map.hasLayer(this.clusterLayer)) {
           this.map.addLayer(this.clusterLayer);
         }
-      }
+      };
     });
     this.addTileLayer();
     this.addCultureLayer();
@@ -239,7 +240,6 @@ export class MapComponent implements AfterViewInit, OnInit {
     //this.addClusterLayer();
     // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
-
   }
 
   initMiniMap(): void {
@@ -340,10 +340,10 @@ export class MapComponent implements AfterViewInit, OnInit {
     });
 
 
-    for (var i = 0; i < this.apiService.clusterTestData.length; i++) {
-      var a = this.apiService.clusterTestData[i];
-      var title = a[2];
-      var marker = L.marker(new L.LatLng(a[0], a[1]), { icon: mapIcon });
+    for (var i = 0; i < this.clusterTestData.length; i++) {
+      var a = this.clusterTestData[i];
+      var title = a.count;
+      var marker = L.marker(new L.LatLng(a.latitude, a.longitude), { icon: mapIcon });
       //marker.bindPopup(title);
       this.clusterLayer.addLayer(marker);
     }
@@ -475,5 +475,33 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   clearSearchInput() {
     this.myControl.patchValue('');
+  }
+
+  clusterData() {
+    setTimeout(() => {
+      const extent = this.map.getBounds();
+      const points = [{
+        lat: extent.getNorthWest().lat,
+        lon: extent.getNorthWest().lng
+      }, {
+        lat: extent._northEast.lat,
+        lon: extent._northEast.lng
+      }, {
+        lat: extent.getSouthEast().lat,
+        lon: extent.getSouthEast().lng
+      }, {
+        lat: extent._southWest.lat,
+        lon: extent._southWest.lng
+      }, {
+        lat: extent.getNorthWest().lat,
+        lon: extent.getNorthWest().lng
+      }];
+      this.mapExtent = points;
+      this.apiService.cluster({ points: this.mapExtent, zoom: this.map.getZoom() }).subscribe(val => {
+        this.clusterTestData = val;
+        this.addClusterLayer();
+      })
+    }, 10);
+
   }
 }
