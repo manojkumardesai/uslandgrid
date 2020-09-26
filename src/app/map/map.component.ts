@@ -224,13 +224,14 @@ export class MapComponent implements AfterViewInit, OnInit {
     //Control the cluster visibility based on zoom level
     this.map.on("zoomend", () => {
       let zoom = this.map.getZoom();
-      if (zoom > 11) {
-        this.map.removeLayer(this.clusterLayer);
-      } else {
-        if (!this.map.hasLayer(this.clusterLayer)) {
-          this.map.addLayer(this.clusterLayer);
-        }
-      };
+      this.clusterData();
+      // if (zoom > 11) {
+      //   this.map.removeLayer(this.clusterLayer);
+      // } else {
+      //   if (!this.map.hasLayer(this.clusterLayer)) {
+      //     this.map.addLayer(this.clusterLayer);
+      //   }
+      // };
     });
     this.addTileLayer();
     this.addCultureLayer();
