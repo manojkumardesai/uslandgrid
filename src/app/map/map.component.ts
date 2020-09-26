@@ -51,6 +51,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   culture_layer: any;
   psll_layer: any;
   filteredOptions: Observable<any[]>;
+  clusterSubcribe: any;
+  circleGroup = L.featureGroup();
   constructor(public apiService: ApiService,
     public dialog: MatDialog) { }
 
@@ -344,7 +346,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     for (var i = 0; i < this.clusterTestData.length; i++) {
       var a = this.clusterTestData[i];
       var title = a.count;
-      var marker = L.marker(new L.LatLng(a.latitude, a.longitude), { icon: mapIcon });
+      var marker = L.marker(new L.LatLng(+a.latitude.toFixed(2), +a.longitude.toFixed(2)), { icon: mapIcon });
       //marker.bindPopup(title);
       this.clusterLayer.addLayer(marker);
     }
@@ -498,11 +500,42 @@ export class MapComponent implements AfterViewInit, OnInit {
         lon: extent.getNorthWest().lng
       }];
       this.mapExtent = points;
-      this.apiService.cluster({ points: this.mapExtent, zoom: this.map.getZoom() }).subscribe(val => {
-        this.clusterTestData = val;
-        this.addClusterLayer();
-      })
+
+      if (this.clusterSubcribe) {
+        this.clusterSubcribe.unsubscribe();
+        if (this.circleGroup) {
+          this.map.removeLayer(this.circleGroup);
+        }
+        this.drawCircle();
+      } else {
+        this.drawCircle();
+      }
+
     }, 10);
 
+  }
+
+  drawCircle() {
+    var myIcon = L.divIcon({ className: 'my-div-icon' });
+    this.clusterSubcribe = this.apiService.cluster({ points: this.mapExtent, zoom: this.map.getZoom() }).subscribe(val => {
+      if (this.circleGroup) {
+        this.map.removeLayer(this.circleGroup);
+      }
+      this.clusterTestData = val;
+      var circleOptions = {
+        color: 'rgba(110,204,57,.6)',
+        fillColor: 'rgba(110,204,57,.6)',
+        fillOpacity: 1,
+        radius: 20,
+      }
+      for (let i = 0; i < this.clusterTestData.length; i++) {
+        var circle = L.circleMarker([this.clusterTestData[i].latitude, this.clusterTestData[i].longitude], circleOptions);
+        let dvText = L.marker([this.clusterTestData[i].latitude, this.clusterTestData[i].longitude], { icon: myIcon });
+        circle.addTo(this.circleGroup);
+        dvText.addTo(this.circleGroup);
+        this.map.addLayer(this.circleGroup);
+        document.getElementsByClassName('my-div-icon')[i].innerHTML = this.clusterTestData[i].count;
+      }
+    });
   }
 }
