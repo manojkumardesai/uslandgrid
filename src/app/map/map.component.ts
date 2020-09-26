@@ -53,6 +53,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   filteredOptions: Observable<any[]>;
   clusterSubcribe: any;
   circleGroup = L.featureGroup();
+  clusterGroup = L.layerGroup();
   constructor(public apiService: ApiService,
     public dialog: MatDialog) { }
 
@@ -505,6 +506,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.clusterSubcribe.unsubscribe();
         if (this.circleGroup) {
           this.map.removeLayer(this.circleGroup);
+          this.circleGroup.clearLayers();
         }
         this.drawCircle();
       } else {
@@ -520,6 +522,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.clusterSubcribe = this.apiService.cluster({ points: this.mapExtent, zoom: this.map.getZoom() }).subscribe(val => {
       if (this.circleGroup) {
         this.map.removeLayer(this.circleGroup);
+        this.circleGroup.clearLayers();
       }
       this.clusterTestData = val;
       var circleOptions = {
@@ -528,6 +531,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         fillOpacity: 1,
         radius: 20,
       }
+
       for (let i = 0; i < this.clusterTestData.length; i++) {
         var circle = L.circleMarker([this.clusterTestData[i].latitude, this.clusterTestData[i].longitude], circleOptions);
         let dvText = L.marker([this.clusterTestData[i].latitude, this.clusterTestData[i].longitude], { icon: myIcon });
