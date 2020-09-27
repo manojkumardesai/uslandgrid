@@ -11,6 +11,7 @@ import { InfoWindowComponent } from './info-window/info-window.component';
 import "leaflet-mouse-position";
 import "leaflet.markercluster";
 import * as esri from "esri-leaflet";
+import { idLocale } from 'ngx-bootstrap/chronos';
 declare var $: any
 
 export interface DialogData {
@@ -137,18 +138,28 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   @HostListener('change') onChange(e: any) {
     if (this.base_layer.checked) {
-      this.esriBaseLayer = esri.basemapLayer('Gray');
-      this.miniMap.addLayer(this.esriBaseLayer);
+      this.miniMap.addLayer(this.esriBaseLayer)
     } else {
-      this.esriBaseLayer = esri.basemapLayer('Gray');
-      this.miniMap.removeLayer(this.esriBaseLayer);
+      if (this.miniMap.hasLayer(this.esriBaseLayer)) {
+        this.miniMap.removeLayer(this.esriBaseLayer)
+        this.miniMap.clearLayers(this.esriBaseLayer)
+      }
     }
+    // if (this.base_layer.checked) {
+    //   this.esriBaseLayer = esri.basemapLayer('Gray');
+    //   this.miniMap.addLayer(this.esriBaseLayer);
+    // } else {
+    //   this.esriBaseLayer = esri.basemapLayer('Gray');
+    //   this.miniMap.removeLayer(this.esriBaseLayer);
+    // }
     if (this.satelight_layer.checked) {
       this.esriImageryLayer = esri.basemapLayer('Imagery');
       this.miniMap.addLayer(this.esriImageryLayer);
     } else {
-      this.esriImageryLayer = esri.basemapLayer('Imagery');
-      this.miniMap.removeLayer(this.esriImageryLayer);
+      if (this.miniMap.hasLayer(this.esriImageryLayer)) {
+        this.miniMap.removeLayer(this.esriImageryLayer)
+        this.miniMap.clearLayers(this.esriImageryLayer)
+      }
     }
     if (this.culture_layer.checked) {
       this.cultureLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/culture_webmap/wms?', {
@@ -227,7 +238,12 @@ export class MapComponent implements AfterViewInit, OnInit {
     //Control the cluster visibility based on zoom level
     this.map.on("zoomend", () => {
       let zoom = this.map.getZoom();
-      this.clusterData();
+      if (zoom <= 11) {
+        this.clusterData();
+      } else {
+        this.map.removeLayer(this.circleGroup);
+        this.circleGroup.clearLayers();
+      }
       // if (zoom > 11) {
       //   this.map.removeLayer(this.clusterLayer);
       // } else {
@@ -525,21 +541,85 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.circleGroup.clearLayers();
       }
       this.clusterTestData = val;
-      var circleOptions = {
-        color: 'rgba(110,204,57,.6)',
-        fillColor: 'rgba(110,204,57,.6)',
-        fillOpacity: 1,
-        radius: 20,
-      }
-
       for (let i = 0; i < this.clusterTestData.length; i++) {
+        var circleOptions = {
+          color: 'rgba(110,204,57,.6)',
+          fillColor: 'rgba(110,204,57,.6)',
+          fillOpacity: 1,
+          radius: this.generateRadius(this.clusterTestData[i].count),
+        }
         var circle = L.circleMarker([this.clusterTestData[i].latitude, this.clusterTestData[i].longitude], circleOptions);
         let dvText = L.marker([this.clusterTestData[i].latitude, this.clusterTestData[i].longitude], { icon: myIcon });
         circle.addTo(this.circleGroup);
         dvText.addTo(this.circleGroup);
         this.map.addLayer(this.circleGroup);
         document.getElementsByClassName('my-div-icon')[i].innerHTML = this.clusterTestData[i].count;
+        document.getElementsByClassName('my-div-icon')[i]['style'].marginLeft = this.generateLeftMargin(this.clusterTestData[i].count);
+        document.getElementsByClassName('my-div-icon')[i]['style'].marginTop = this.generatetopMargin(this.clusterTestData[i].count);
       }
     });
+  }
+
+  generateRadius(num) {
+    if (num.toString().length == 1) {
+      return 8;
+    }
+    if (num.toString().length == 2) {
+      return 11;
+    }
+    if (num.toString().length == 3) {
+      return 15;
+    }
+    if (num.toString().length == 4) {
+      return 20;
+    }
+    if (num.toString().length == 5) {
+      return 23;
+    }
+    if (num.toString().length == 6) {
+      return 26
+    }
+  }
+
+  generateLeftMargin(num) {
+    if (num.toString().length == 1) {
+      return '-5px'
+    }
+    if (num.toString().length == 2) {
+      return '-6px'
+    }
+    if (num.toString().length == 3) {
+      return '-9px'
+    }
+    if (num.toString().length == 4) {
+      return '-13px'
+    }
+    if (num.toString().length == 5) {
+      return '-15px'
+    }
+    if (num.toString().length == 6) {
+      return '-20px'
+    }
+  }
+
+  generatetopMargin(num) {
+    if (num.toString().length == 1) {
+      return '-8px'
+    }
+    if (num.toString().length == 2) {
+      return '-8px'
+    }
+    if (num.toString().length == 3) {
+      return '-8px'
+    }
+    if (num.toString().length == 4) {
+      return '-8px'
+    }
+    if (num.toString().length == 5) {
+      return '-7px'
+    }
+    if (num.toString().length == 6) {
+      return '-7'
+    }
   }
 }
