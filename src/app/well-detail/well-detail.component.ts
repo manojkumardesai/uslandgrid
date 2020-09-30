@@ -29,7 +29,8 @@ export class WellDetailComponent implements OnInit {
   public doughNutChartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    // We use these empty structures as placeholders for dynamic theming.
+    // We use these empty structures as placeholders for dynamic theming. 
+	//This is a comment
     plugins: {
       datalabels: {
         anchor: 'end',
