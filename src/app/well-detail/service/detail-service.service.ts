@@ -34,4 +34,23 @@ export class DetailService {
   fetchChartData(): Observable<any> {
     return this.http.get(this.baseUrl + `chart/county`);
   }
+  // prasanna
+  fetchPtWellDetails(wellId): Observable<any> {
+    return this.http.get(this.baseUrl + `well/pt?wellId=${wellId}`);
+  }
+  fetchOilProductionChartData(wellId): Observable<any> {
+    return this.http.get(this.baseUrl + `chart/oilproduction?wellId=${wellId}`);
+  }
+  fetchGasProductionChartData(wellId): Observable<any> {
+    return this.http.get(this.baseUrl + `chart/gasproduction?wellId=${wellId}`);
+  }
+  fetchOilProductionZoneChartData(): Observable<any> {
+    return this.http.get(this.baseUrl + `chart/oilproductionzone`);
+  }
+  fetchGasProductionZoneChartData(): Observable<any> {
+    return this.http.get(this.baseUrl + `chart/gasproductionzone`);
+  }
+  fetchOperatorChartData(wellId): Observable<any> {
+    return this.http.get(this.baseUrl + `chart/operator?wellId=${wellId}`);
+  }
 }
