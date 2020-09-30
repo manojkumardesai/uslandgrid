@@ -11,6 +11,7 @@ import { InfoWindowComponent } from './info-window/info-window.component';
 import "leaflet-mouse-position";
 import "leaflet.markercluster";
 import * as esri from "esri-leaflet";
+import "leaflet-draw";
 import { idLocale } from 'ngx-bootstrap/chronos';
 declare var $: any
 
@@ -55,6 +56,33 @@ export class MapComponent implements AfterViewInit, OnInit {
   clusterSubcribe: any;
   circleGroup = L.featureGroup();
   clusterGroup = L.layerGroup();
+  editableLayers = new L.FeatureGroup();
+
+  drawPluginOptions = {
+    position: 'bottomright',
+    draw: {
+      polygon: {
+        allowIntersection: false, // Restricts shapes to simple polygons
+        drawError: {
+          color: '#e1e100', // Color the shape will turn when intersects
+          message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+        },
+        shapeOptions: {
+          color: '#97009c'
+        }
+      },
+      // disable toolbar item by setting it to false
+      polyline: false,
+      circle: false, // Turns off this drawing tool
+      rectangle: true,
+      marker: false,
+    },
+    edit: {
+      featureGroup: this.editableLayers, //REQUIRED!!
+      remove: false
+    }
+  };
+  drawControl = new L.Control.Draw(this.drawPluginOptions);
   constructor(public apiService: ApiService,
     public dialog: MatDialog) { }
 
@@ -145,13 +173,6 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.miniMap.clearLayers(this.esriBaseLayer)
       }
     }
-    // if (this.base_layer.checked) {
-    //   this.esriBaseLayer = esri.basemapLayer('Gray');
-    //   this.miniMap.addLayer(this.esriBaseLayer);
-    // } else {
-    //   this.esriBaseLayer = esri.basemapLayer('Gray');
-    //   this.miniMap.removeLayer(this.esriBaseLayer);
-    // }
     if (this.satelight_layer.checked) {
       this.esriImageryLayer = esri.basemapLayer('Imagery');
       this.miniMap.addLayer(this.esriImageryLayer);
@@ -257,6 +278,19 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.addPlssLayer();
     this.addWellsLayer();
     this.layerControl();
+
+    this.map.addControl(this.drawControl);
+    this.map.addLayer(this.editableLayers);
+    this.map.on('draw:created', function (e) {
+      var type = e.layerType,
+        layer = e.layer;
+
+      if (type === 'marker') {
+        layer.bindPopup('A popup!');
+      }
+
+      this.editableLayers.addLayer(layer);
+    });
     //this.addClusterLayer();
     // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
