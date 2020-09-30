@@ -1,15 +1,30 @@
 .detailPage {
-    margin-top: 10%;
-    display: flex;
-    justify-content: center;
+    margin-top: 20px;
+    justify-content: center; 
 }
-
-.chartStyle {
-    height: 300px;
-    width: 300px;
-    margin-left: 5%;
+.chartStyle2 {
+    height: 400px;
+    width: 70%; 
+    text-align: center;
 }
-
+.chartStyle3 {
+  height: 400px;
+  // width: 20%;  
+  text-align: center;
+}
+.line{
+  border:1px solid gray;
+  padding:0;
+}
+.tablehead1 td{
+  padding-right:5px;
+}
+.chartStyle1 {
+  height: 400px; 
+  width:100%;
+  text-align: center;
+  margin-bottom: 0;
+}
 .main {
   position: absolute;
   margin-top: 12%;
@@ -94,6 +109,156 @@
   .actionFirst:hover, .actionSecond:hover {
     transform: scale(1);
     fill:#fff;
-    
   }
-  
+   .center {
+    display: inline-block;
+    margin-left: 15%;
+    margin-right:auto;
+    width:70%;
+    justify-content: center;
+  }
+   .tablehead{
+    width:100%;
+    margin-top:10px;
+    margin-bottom:10px; 
+}
+.tablehead1{
+  width:100%;
+  margin-top:10px;
+  margin-bottom:10px; 
+}
+   .header{
+    background-color:#002080;
+     font-family:Arial, Helvetica, sans-serif;
+     height:60px;
+     color:#ffffff;
+     font-size: 100%;
+}
+   .header-left {
+    padding-left: 10px;
+    text-align:left;
+  }
+  .header-right {
+    text-align: right;
+    padding-right:10px
+  }
+  .logo {
+    height: 40px;
+    vertical-align: middle;
+}
+.pointerClass {
+  cursor: pointer;
+}
+  .row1{
+    padding-top:10px;
+    text-align:left;
+    text-decoration: underline;
+    padding-left: 0px;
+    }
+    .row1:last-child{
+    text-align:right;
+    padding-right:0px;
+    text-decoration:underline;
+    }
+    .tdClass{
+        width:300px; 
+      }
+   .tableRows{
+    white-space: nowrap;
+      border: 1px solid #758B9E;
+      border-collapse:collapse;
+      padding:10px;
+      text-align:left; 
+  }
+  .colorRows{
+    background-color:#FA8072;
+    color:white;
+  }
+ 
+  .oilTdClass{
+    width:300px;
+    padding-top:20px; 
+    padding-left: 10px;
+    padding-right:0px;
+  }
+  .oilData{
+    border:1px solid gray;
+    text-align: center;
+    white-space: nowrap;
+  }
+ .oilColorData{
+  background-color: #33a02c;
+  padding:5px;
+  color:#ffffff;
+ }
+ .oilHeight{
+   height:80px;
+ }
+.tableColor{
+  background-color:#014B73;
+  color:#ffffff;
+}
+.scouttableColor{
+  background-color:#014B73;
+  border:1px solid gray;
+  color:#ffffff;
+  font-weight: bold;
+  padding:5px;
+}
+.layerTableColor{
+  background-color:#BEBEBE;
+}
+.scoutTable{
+  margin-bottom: 33px;
+}
+.scoutData{
+ text-align: center;
+ width:350px;
+ border:1px solid gray;
+ padding:5px;
+}
+.productionTable{
+  width:90%;
+ padding-left: 10px;
+}
+.layerText{
+  text-align:center;
+}
+.layerTable{
+  text-align: left;
+  padding:5px;
+}
+.tableAdjust{
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+#buttonoil{
+  background-color:#33a02c;
+  position:static;
+  float:right;
+  border-radius: 60%;
+
+}
+#buttongas{
+  background-color:#F93C3D;
+  position:static;
+  float:right;
+  border-radius: 60%;
+}
+#buttonoilzone{
+  background-color:#33a02c;
+  position:static;
+  border-radius: 60%;
+  float:left;
+}
+#buttongaszone{
+  background-color:#F93C3D;
+  position:static;
+  border-radius: 60%;
+  // float:left;
+}
+#operator{
+  background-color:#e600ac;
+  border-radius: 60%;
+  float:right;
+}
