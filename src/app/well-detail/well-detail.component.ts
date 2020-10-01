@@ -25,15 +25,16 @@ export class WellDetailComponent implements OnInit {
   public wellDetailsPT = [];
   public isLoggedIn = false;
   public oilLow: number;
-
+  // private _apiservice: ApiService;
+  
   constructor(public detailService: DetailService,
     public route: ActivatedRoute, public loginService: LoginService) { }
 
   ngOnInit(): void {
     this.wellId = this.route.snapshot.paramMap.get("id");
-    this.loginService.user.subscribe((data) => {
-      this.isLoggedIn = data && data.loggedIn ? data.loggedIn : false;
-    });
+    let user = JSON.parse(sessionStorage.getItem('userInfo'));
+    this.isLoggedIn = user && Object.keys(user).length ? true : false; 
+   
     if (this.wellId) {
       this.fetchWellDetail(this.wellId);
       this.fetchMcWellDetail(this.wellId);
@@ -47,6 +48,7 @@ export class WellDetailComponent implements OnInit {
       this.fetchOilProductionZoneDataForChart();
       // this.fetchOperatorDataForChart(this.wellId);
     }
+  
   }
 
   // for api number in the url
@@ -54,7 +56,7 @@ export class WellDetailComponent implements OnInit {
     let sub = this.wellId.substring(2, 10);
     return sub;
   }
-  //OIl 
+  // //OIl 
   oilValue() {
     this.oilLow = 50;
     document.getElementById("demohigh").style.backgroundColor = "#33a02c";
@@ -78,7 +80,7 @@ export class WellDetailComponent implements OnInit {
     document.getElementById("firstmonth").innerText = String(990);
     document.getElementById("lastmonth").innerText = String(1200);
   }
-  //Gas
+   //Gas
   gasValue() {
     document.getElementById("demohigh").style.backgroundColor = "#F93C3D";
     document.getElementById("demolow").style.backgroundColor = "#F93C3D";
@@ -434,7 +436,7 @@ export class WellDetailComponent implements OnInit {
             display: true,
             scaleLabel: {
               display: true,
-              labelString: 'Gas Production (BBL/Year)'
+              labelString: 'Gas Production (MCF/Year)'
             }
           }]
         },
