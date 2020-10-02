@@ -11,6 +11,7 @@ import { InfoWindowComponent } from './info-window/info-window.component';
 import "leaflet-mouse-position";
 import "leaflet.markercluster";
 import * as esri from "esri-leaflet";
+import "leaflet-draw";
 import { idLocale } from 'ngx-bootstrap/chronos';
 declare var $: any
 
@@ -55,6 +56,48 @@ export class MapComponent implements AfterViewInit, OnInit {
   clusterSubcribe: any;
   circleGroup = L.featureGroup();
   clusterGroup = L.layerGroup();
+  editableLayers = new L.featureGroup();
+
+  drawPluginOptions = {
+    position: 'bottomright',
+    draw: {
+      polygon: {
+        allowIntersection: false, // Restricts shapes to simple polygons
+        drawError: {
+          color: '#e1e100', // Color the shape will turn when intersects
+          message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+        },
+        shapeOptions: {
+          color: '#305496'
+        }
+      },
+      polyline: false,
+      circle: false,
+      rectangle: {
+        showArea: false,
+        shapeOptions: {
+          clickable: false,
+          color: "#305496",
+          fill: true,
+          fillColor: null,
+          fillOpacity: 0.5,
+          opacity: 1,
+          stroke: true,
+          weight: 4,
+        }
+      },
+      marker: false,
+      circlemarker: false
+    },
+    edit: {
+      featureGroup: this.editableLayers,
+      edit: false,
+      remove: true
+    }
+  };
+
+  drawControl = new L.Control.Draw(this.drawPluginOptions);
+
   constructor(public apiService: ApiService,
     public dialog: MatDialog) { }
 
@@ -145,13 +188,6 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.miniMap.clearLayers(this.esriBaseLayer)
       }
     }
-    // if (this.base_layer.checked) {
-    //   this.esriBaseLayer = esri.basemapLayer('Gray');
-    //   this.miniMap.addLayer(this.esriBaseLayer);
-    // } else {
-    //   this.esriBaseLayer = esri.basemapLayer('Gray');
-    //   this.miniMap.removeLayer(this.esriBaseLayer);
-    // }
     if (this.satelight_layer.checked) {
       this.esriImageryLayer = esri.basemapLayer('Imagery');
       this.miniMap.addLayer(this.esriImageryLayer);
@@ -257,6 +293,23 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.addPlssLayer();
     this.addWellsLayer();
     this.layerControl();
+
+    this.map.addControl(this.drawControl);
+    this.map.addLayer(this.editableLayers);
+    var tempMap = document.getElementById("map");
+    tempMap.addEventListener('touchstart', L.DomEvent.preventDefault, { passive: false });
+    this.map.on('draw:created', (e) => {
+      if (this.editableLayers) {
+        this.editableLayers.clearLayers();
+      }
+      var layer = e.layer;
+      this.filterEmitForShapes(layer)
+      this.editableLayers.addLayer(layer);
+    });
+
+    this.map.on('draw:deleted', (e) => {
+      this.filterEmit(this.isMapExtentApplied);
+    })
     //this.addClusterLayer();
     // Pass url and options to below function in the mentioned comment and uncomment it
     //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
@@ -468,6 +521,35 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.mapExtent = [];
     }
   }
+
+  filterEmitForShapes(event) {
+    if (event) {
+      this.isMapExtentApplied = true;
+      const extent = event;
+      const points = [{
+        lat: extent._bounds.getNorthWest().lat,
+        lon: extent._bounds.getNorthWest().lng
+      }, {
+        lat: extent._bounds._northEast.lat,
+        lon: extent._bounds._northEast.lng
+      }, {
+        lat: extent._bounds.getSouthEast().lat,
+        lon: extent._bounds.getSouthEast().lng
+      }, {
+        lat: extent._bounds._southWest.lat,
+        lon: extent._bounds._southWest.lng
+      }, {
+        lat: extent._bounds.getNorthWest().lat,
+        lon: extent._bounds.getNorthWest().lng
+      }];
+      this.mapExtent = points; // Sends new points to child component
+    } else {
+      this.isMapExtentApplied = false;
+      this.mapExtent = [];
+    }
+
+  }
+
   zoomToEmit(event) {
     this.goToLocation(event[0].latitude, event[0].longitude);
   }

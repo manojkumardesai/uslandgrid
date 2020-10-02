@@ -26,6 +26,7 @@
     "esri-leaflet": "^2.4.0",
     "file-saver": "^2.0.2",
     "leaflet": "1.5.1",
+    "leaflet-draw": "^1.0.4",
     "leaflet-mouse-position": "^1.2.0",
     "leaflet.markercluster": "^1.4.1",
     "lodash": "^4.17.15",

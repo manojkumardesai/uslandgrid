@@ -31,7 +31,8 @@
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "src/styles.scss",
-              "src/theme.scss"
+              "src/theme.scss",
+              "./node_modules/leaflet-draw/dist/leaflet.draw.css"
             ],
             "scripts": [
               "./node_modules/chart.js/dist/Chart.bundle.min.js",
