@@ -45,6 +45,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   public mapExtent = [];
   public clusterTestData; any = [];
   name: string;
+  formats = [];
+  reportType = '';
   myControl = new FormControl();
   options: any[] = [];
   base_layer: any;
@@ -57,18 +59,25 @@ export class MapComponent implements AfterViewInit, OnInit {
   circleGroup = L.featureGroup();
   clusterGroup = L.layerGroup();
   editableLayers = new L.featureGroup();
+  drawingPoints: any = [];
+  isShapeDrawn: boolean = false;
+  infoPointLayers = L.featureGroup();
 
   drawPluginOptions = {
     position: 'bottomright',
     draw: {
       polygon: {
-        allowIntersection: false, // Restricts shapes to simple polygons
+        allowIntersection: false,
         drawError: {
-          color: '#e1e100', // Color the shape will turn when intersects
-          message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+          color: '#e1e100',
+          message: '<strong>Oh snap!<strong> you can\'t draw that!'
         },
         shapeOptions: {
-          color: '#305496'
+          color: '#305496',
+          fill: null,
+          fillColor: null,
+          fillOpacity: 0.5,
+          opacity: 1,
         }
       },
       polyline: false,
@@ -78,7 +87,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         shapeOptions: {
           clickable: false,
           color: "#305496",
-          fill: true,
+          fill: null,
           fillColor: null,
           fillOpacity: 0.5,
           opacity: 1,
@@ -97,6 +106,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   };
 
   drawControl = new L.Control.Draw(this.drawPluginOptions);
+
+  exportLayer = L.control({ position: 'bottomright' });
 
   constructor(public apiService: ApiService,
     public dialog: MatDialog) { }
@@ -136,6 +147,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         })
       );
     this.fetchClusterData();
+    this.getAllocatedFileTypes();
   }
 
   fetchClusterData() {
@@ -274,6 +286,9 @@ export class MapComponent implements AfterViewInit, OnInit {
     //Control the cluster visibility based on zoom level
     this.map.on("zoomend", () => {
       let zoom = this.map.getZoom();
+      if (this.editableLayers) {
+        this.editableLayers.clearLayers();
+      }
       if (zoom <= 11) {
         this.clusterData();
       } else {
@@ -293,14 +308,16 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.addPlssLayer();
     this.addWellsLayer();
     this.layerControl();
-
+    this.addExport();
     this.map.addControl(this.drawControl);
     this.map.addLayer(this.editableLayers);
-    var tempMap = document.getElementById("map");
-    tempMap.addEventListener('touchstart', L.DomEvent.preventDefault, { passive: false });
+
     this.map.on('draw:created', (e) => {
       if (this.editableLayers) {
         this.editableLayers.clearLayers();
+      }
+      if (this.infoPointLayers) {
+        this.infoPointLayers.clearLayers();
       }
       var layer = e.layer;
       this.filterEmitForShapes(layer)
@@ -309,6 +326,16 @@ export class MapComponent implements AfterViewInit, OnInit {
 
     this.map.on('draw:deleted', (e) => {
       this.filterEmit(this.isMapExtentApplied);
+      if (this.infoPointLayers) {
+        this.infoPointLayers.clearLayers();
+      }
+
+    });
+    this.map.on('draw:drawstart', (e) => {
+      this.isShapeDrawn = true;
+    });
+    this.map.on('draw:drawstop', (e) => {
+      this.isShapeDrawn = false;
     })
     //this.addClusterLayer();
     // Pass url and options to below function in the mentioned comment and uncomment it
@@ -474,7 +501,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map.setView(new L.LatLng(lat, lng), 5);
   }
   showInfoPoint(ev) {
-    if (this.map.getZoom() > 11) {
+    if (this.map.getZoom() > 11 && !this.isShapeDrawn) {
       this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
         if (data.length) {
           if (this.infoWindowDialog) {
@@ -526,23 +553,16 @@ export class MapComponent implements AfterViewInit, OnInit {
     if (event) {
       this.isMapExtentApplied = true;
       const extent = event;
-      const points = [{
-        lat: extent._bounds.getNorthWest().lat,
-        lon: extent._bounds.getNorthWest().lng
-      }, {
-        lat: extent._bounds._northEast.lat,
-        lon: extent._bounds._northEast.lng
-      }, {
-        lat: extent._bounds.getSouthEast().lat,
-        lon: extent._bounds.getSouthEast().lng
-      }, {
-        lat: extent._bounds._southWest.lat,
-        lon: extent._bounds._southWest.lng
-      }, {
-        lat: extent._bounds.getNorthWest().lat,
-        lon: extent._bounds.getNorthWest().lng
-      }];
+      const points = [];
+      extent._latlngs[0].forEach(point => {
+        points.push({
+          lat: point.lat,
+          lon: point.lng
+        });
+      });
+      points.push(points[0]);
       this.mapExtent = points; // Sends new points to child component
+      this.drawInfoPoints(this.mapExtent);
     } else {
       this.isMapExtentApplied = false;
       this.mapExtent = [];
@@ -703,5 +723,56 @@ export class MapComponent implements AfterViewInit, OnInit {
     if (num.toString().length == 6) {
       return '-7'
     }
+  }
+
+  drawInfoPoints(data) {
+    let zoom = this.map.getZoom();
+    if (zoom > 11) {
+      this.apiService.infoPoint({ limit: 10, offset: 0, points: data }).subscribe((coords: []) => {
+
+        coords['wellDtos'].forEach(coord => {
+          let circle = L.circle([coord['latitude'], coord['longitude']], {
+            color: '#0ff',
+            fillColor: '#0ff',
+            fillOpacity: 0.2,
+            radius: 200
+          });
+          this.infoPointLayers.addLayer(circle);
+
+        })
+        this.map.addLayer(this.infoPointLayers);
+      });
+    }
+  }
+
+  addExport() {
+    this.editableLayers.onAdd = () => {
+      var div = L.DomUtil.create('div', 'info legend');
+      div.innerHTML = '<select><option>1</option><option>2</option><option>3</option></select>';
+      div.firstChild.onmousedown = div.firstChild.ondblclick = L.DomEvent.stopPropagation;
+      return div;
+    };
+    this.editableLayers.addTo(this.map);
+  }
+
+  getAllocatedFileTypes() {
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    let id = userInfo.userId;
+    this.apiService.userDetails(id).subscribe(user => {
+      this.formats = user['userPermissionDto']['reportTypes'];
+    });
+
+  }
+
+  stopCloseDropdown($event) {
+    $event.stopPropagation();
+  }
+
+
+  exportReport() {
+    const payload = {};
+    payload['reportType'] = this.reportType;
+    payload['mapxExtent'] = this.mapExtent;
+    console.log(payload);
   }
 }

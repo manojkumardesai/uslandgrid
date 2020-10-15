@@ -150,4 +150,10 @@ export class ApiService {
     return this.http.post(this.baseUrl + 'well/clusterpoint', data)
   }
 
+  infoPoint(data) {
+    return this.http.post(this.baseUrl + 'wells', data)
+  }
+
+
+
 }

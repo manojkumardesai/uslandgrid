@@ -59,3 +59,36 @@
     (openAdvancedFilterEvent)="openAdvancedFilterEvent($event)"
     ></app-wells-records>
 </div>
+<div class="icons-test" style="
+    position: absolute;
+    background: #f8f9fa;
+    height: 51px;
+    height: 46px;
+    width: 32.5px;
+    z-index: 9999;
+    right: 11px;
+    bottom: 299px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.3);
+">
+    <div class="export" style="font-size: 14px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;">A
+    </div>
+    <div class="export" class="dropdown dropleft" style="font-size: 13px;
+    color: #000;
+    cursor: pointer;"><i  data-toggle="dropdown" class="fa fa-share"></i>
+    <div class="dropdown-menu ">
+        <a class="dropdown-item"  (click)="stopCloseDropdown($event)">
+            <select name="cars" class="custom-select choose-format"  [(ngModel)]="reportType">
+                <option value="null">Choose Format</option>
+                <option *ngFor="let file of this.formats" [value]="file" >{{file}}</option>
+            </select>
+        </a>
+        <a href="" class="dropdown-item" (click)="stopCloseDropdown($event)">
+        <button type="button" class="btn btn-secondary">Export</button>
+        </a>
+      </div>
+    </div>
+</div>
+
