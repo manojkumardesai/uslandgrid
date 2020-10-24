@@ -19,6 +19,7 @@ export class ApiService {
   savedFormData: any;
 
   public checkStateOfFilter = new Subject<any>();
+  public townshipSubject = new Subject<any>();
 
   public clusterTestData = [];
   headers = new HttpHeaders().set('Content-Type', 'application/json').set('Access-Control-Allow-Origin', '*')
@@ -148,6 +149,15 @@ export class ApiService {
 
   cluster(data) {
     return this.http.post(this.baseUrl + 'well/clusterpoint', data)
+  }
+
+  infoPoint(data) {
+    return this.http.post(this.baseUrl + 'wells', data)
+  }
+
+
+  emitTownshipData(val) {
+    this.townshipSubject.next(val);
   }
 
 }

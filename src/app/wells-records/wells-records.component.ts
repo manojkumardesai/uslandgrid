@@ -42,6 +42,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   @Output() clearSelection = new EventEmitter();
   @Output() refresh = new EventEmitter();
   @Output() selectedRowEmit = new EventEmitter();
+  @Input() mapTownShipExtent: any;
   // @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
@@ -52,6 +53,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   payLoadWithParams: any = {};
   selectedTab = 0;
   titleForReset = 'Applied filters will be reset.';
+  subscription: any = [];
+  townShipData: any;
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
     public columnConstants: ColumnConstantsService) { }
@@ -60,6 +63,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.isLoading = true;
     const currentItem: SimpleChange = changes.payLoadFromFilter;
     const mapExtentValue: SimpleChange = changes.mapExtent;
+    const townshipExtent: SimpleChange = changes.mapTownShipExtent;
     if (changes.openAdvancedFilter && changes.openAdvancedFilter.currentValue) {
       this.filterAdvanced();
     }
@@ -82,6 +86,15 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         limit: 5,
         points: this.mapExtent
       };
+
+    }
+    if (townshipExtent && townshipExtent.currentValue && Object.keys(townshipExtent.currentValue).length) {
+      payLoad = {
+        offset: 0,
+        limit: 5,
+        plssFilterDto: townshipExtent.currentValue
+      };
+      delete payLoad.points;
     }
     if (!this.payLoadWithParams[this.selectedTab]) {
       this.payLoadWithParams[0] = {};
@@ -100,6 +113,14 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       Object.assign(this.payLoadWithParams[4], payLoad);
       Object.assign(this.payLoadWithParams[5], payLoad);
       Object.assign(this.payLoadWithParams[6], payLoad);
+
+      for (let i = 0; i < Object.keys(this.payLoadWithParams).length; i++) {
+        if (townshipExtent && townshipExtent.currentValue && Object.keys(townshipExtent.currentValue).length) {
+          delete this.payLoadWithParams[i].points;
+        } else {
+          delete this.payLoadWithParams[i].plssFilterDto;
+        }
+      }
     }
     if (Object.keys(this.payLoadWithParams[this.selectedTab]).length) {
       this.onTabChange();
