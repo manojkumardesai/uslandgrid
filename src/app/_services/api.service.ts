@@ -19,6 +19,7 @@ export class ApiService {
   savedFormData: any;
 
   public checkStateOfFilter = new Subject<any>();
+  public townshipSubject = new Subject<any>();
 
   public clusterTestData = [];
   headers = new HttpHeaders().set('Content-Type', 'application/json').set('Access-Control-Allow-Origin', '*')
@@ -155,5 +156,8 @@ export class ApiService {
   }
 
 
+  emitTownshipData(val) {
+    this.townshipSubject.next(val);
+  }
 
 }

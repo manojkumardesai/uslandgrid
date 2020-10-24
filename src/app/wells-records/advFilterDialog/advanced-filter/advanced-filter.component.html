@@ -432,8 +432,7 @@
       </div>
       <button class="filter-btn-clear" 
       *ngIf="loginService.isloggedin()"
-      style="margin-left: 12px;"
-      title="{{titleMsg}}" (click)="generateReport()"
+      style="margin-left: 12px;" (click)="generateReport()"
       [ngClass]="{'export': !loginService.isloggedin}"
       [disabled]="invalidForm || !loginService.isloggedin() || !reportType || reportType == 'null'">
       <mat-spinner *ngIf="generatingReport"></mat-spinner>Export</button>

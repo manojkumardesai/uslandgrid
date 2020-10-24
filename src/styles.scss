@@ -36,5 +36,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .leaflet-draw-toolbar-top {
     position: relative !important;
-    top: -30px !important;
+    top: -41px !important;
+  }
+
+.leaflet-draw-section {
+    position: relative;
+    top: 163px !important;
   }
