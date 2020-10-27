@@ -120,14 +120,14 @@
     background: transparent;
     height: 51px;
     height: 46px;
-    width: 34px;
+    width: 32.5px;
     z-index: 9999;
-    left: 10px;
+    left: 10.5px;
     top: 318px;
     .export-township-icon {
-      border-left: 2px solid rgba(0, 0, 0, 0.4);
-    border-right: 2px solid rgba(0, 0, 0, 0.4);
-    border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+      border-left: 1px solid rgba(0, 0, 0, 0.4);
+    border-right: 1px solid rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     border-top: 1px solid rgba(0, 0, 0, 0.4);
       .btn-township {
         border: 0;
@@ -141,9 +141,9 @@
       }
     }
     .export-report-icon {
-      border-left: 2px solid rgba(0, 0, 0, 0.4);
-    border-right: 2px solid rgba(0, 0, 0, 0.4);
-    border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+      border-left: 1px solid rgba(0, 0, 0, 0.4);
+    border-right: 1px solid rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
       .btn-export {
         border: 0;
         background-color: white; 

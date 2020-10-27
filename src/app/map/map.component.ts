@@ -400,7 +400,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   addWellsLayer() {
     this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
-      layers: 'wh_final',
+      layers: 'OKWells',
       format: 'image/png8',
       transparent: true,
       styles: '',
@@ -411,7 +411,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   addWellsLayer_1() {
     this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
-      layers: 'wh_final',
+      layers: 'OKWells',
       format: 'image/png8',
       transparent: true,
       styles: '',
