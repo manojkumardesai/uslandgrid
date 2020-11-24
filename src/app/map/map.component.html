@@ -18,13 +18,13 @@
         filter_alt
     </span>
     <!-- <hr style="margin-top: 1px;margin-bottom:  1px;"/> -->
-    <span class="material-icons leftIcon" style="font-size: 22px;" (click)="homeLocation()" title="Default extent">
+    <!-- <span class="material-icons leftIcon" style="font-size: 22px;" (click)="homeLocation()" title="Default extent">
         home
     </span>
     <hr style="margin-top: 1px;margin-bottom:  1px;"/>
     <span class="material-icons leftIcon" style="font-size: 22px;" (click)="currentLocation()" title="Show my location">
         location_searching
-    </span>
+    </span> -->
 </div>
 <div class='search'>
     <mat-card class='searchCard'>
@@ -61,18 +61,26 @@
     ></app-wells-records>
 </div>
 <div class="export-wrapper">
-    <div class="dropdown dropright twonshipStyles export-township-icon">
+    <div class="dropdown dropright twonshipStyles export-township-icon" title="Township">
         <button type="button" data-toggle="dropdown" class="btn-township">
             <i class="fa fa-pie-chart"></i>
         </button>
         <div class="dropdown-menu">
-            <a class="dropdown-item" style="font-size: 12px; cursor: pointer;" (click)="stopCloseDropdown($event); generateTownShip('township')"> Township </a>
-            <a class="dropdown-item" style="font-size: 12px; cursor: pointer;" (click)="stopCloseDropdown($event); generateTownShip('section')"> Section  </a>
-            <a class="dropdown-item" style="font-size: 12px; cursor: pointer;" (click)="stopCloseDropdown($event); generateTownShip('quarter')"> Quarter </a>
-            <a class="dropdown-item" style="font-size: 12px; cursor: pointer;" (click)="stopCloseDropdown($event); generateTownShip('quaterQuater')"> QuarterQuater </a>
+            <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'township')"> 
+                <input type="checkbox" class="mr-1" name="township" id="township" [checked]="activeTownship"> Township
+            </a>
+            <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'section')">  
+                <input type="checkbox" class="mr-1" name="section" id="section" [checked]="activeSection"> Section
+            </a>
+            <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'quarter')"> 
+                <input type="checkbox" class="mr-1" name="quarter" id="quarter" [checked]="activeQuarter"> Quarter
+            </a>
+            <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'quaterQuater')">  
+                <input type="checkbox" class="mr-1" name="quarterQuarter" id="quarterQuarter" [checked]="activeQuarterQuarter"> QuarterQuater
+            </a>
         </div>
     </div>
-    <div class="dropdown dropleft twonshipStyles export-report-icon">
+    <div class="dropdown dropleft twonshipStyles export-report-icon" title="{{this.userService.isloggedin() ? 'Export' : 'Please login'}}">
         <button type="button" data-toggle="dropdown" class="btn-export" [disabled]="isReadyToExprt()">
             <i class="fa fa-share"></i>
         </button>

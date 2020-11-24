@@ -41,5 +41,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .leaflet-draw-section {
     position: relative;
-    top: 163px !important;
+    top: 83px !important;
+  }
+
+  .leaflet-bar {
+      border-radius: 0 !important;
   }

@@ -152,12 +152,18 @@ export class ApiService {
   }
 
   infoPoint(data) {
-    return this.http.post(this.baseUrl + 'wells', data)
+    return this.http.post(this.baseUrl + 'wells/highlight', data)
   }
 
 
   emitTownshipData(val) {
     this.townshipSubject.next(val);
+  }
+
+  exportCreteria(payload) {
+    const payloadData = Object.assign({}, payload);
+    delete payloadData.reportType;
+    return this.http.post(this.baseUrl + 'report/pointcounty/permission', payloadData);
   }
 
 }

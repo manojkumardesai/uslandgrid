@@ -63,6 +63,7 @@ export class LoginComponent implements OnInit {
       this.loginService.publishLoginResponseTrue();
       let returnUrl = this.activeRoute.snapshot.queryParamMap.get('returnUrl');
       this.router.navigate([returnUrl || '/home']);
+
     } else {
       this.loginService.publishLoginResponseFalse();
       this.error = 'Invalid username/password';

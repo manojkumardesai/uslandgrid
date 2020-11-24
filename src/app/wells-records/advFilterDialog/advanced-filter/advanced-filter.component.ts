@@ -847,7 +847,6 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
     let userinfo = JSON.parse(sessionStorage.getItem('userInfo'))
     if (userinfo['role'] !== 'ADMIN' && !payloadCounties.every(item => allotedCounties.includes(item))) {
       $('#authDialog').toggle();
-      // this.filterForm.reset();
       return;
     }
     this.generatingReport = true;
@@ -857,7 +856,6 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
       saveAs(blobCont);
       this.generatingReport = false;
       this.dialogRef.close();
-      // this.filterForm.reset();
     });
   }
 
