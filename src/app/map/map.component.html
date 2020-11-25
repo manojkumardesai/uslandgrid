@@ -1,3 +1,6 @@
+<div class="loader-container" *ngIf="(apiService.isVisible() | async) || apiService.globalLoader">
+    <div class="loader"></div>
+</div>
 <div class="map-container">
     <div class="map-frame">
         <div id="map"></div>

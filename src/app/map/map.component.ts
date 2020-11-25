@@ -25,7 +25,7 @@ export interface DialogData {
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  styleUrls: ['./map.component.scss'],
 })
 
 export class MapComponent implements AfterViewInit, OnInit {
@@ -156,7 +156,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           return this._filter(name);
         })
       );
-    this.clusterData();
+    this.fetchClusterData();
     this.getAllocatedFileTypes();
   }
 
@@ -167,6 +167,20 @@ export class MapComponent implements AfterViewInit, OnInit {
         return option
       }))
     )
+  }
+
+  fetchClusterData() {
+    this.apiService.globalLoader = true;
+    const cluster1 = this.apiService.fetchClusters(0, 100000);
+    const cluster2 = this.apiService.fetchClusters(100001, 100000);
+    const cluster3 = this.apiService.fetchClusters(200001, 100000);
+    const cluster4 = this.apiService.fetchClusters(300001, 100000);
+    const cluster5 = this.apiService.fetchClusters(400001, 100000);
+    const mergedCall = forkJoin(cluster1, cluster2, cluster3, cluster4, cluster5);
+    mergedCall.subscribe((clusterData: any) => {
+      this.clusterTestData = clusterData.flat(1);
+      this.addClusterLayer();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -266,22 +280,14 @@ export class MapComponent implements AfterViewInit, OnInit {
     });
 
     //Control the cluster visibility based on zoom level
-    this.map.on("viewreset", () => {
+    this.map.on("zoomend", () => {
       let zoom = this.map.getZoom();
-      if (zoom <= 11) {
-        this.clusterData();
+      if (zoom > 11) {
+        this.map.removeLayer(this.clusterLayer);
       } else {
-        this.circleGroup.clearLayers();
-        this.map.removeLayer(this.circleGroup);
-      }
-    });
-    this.map.on("moveend", () => {
-      let zoom = this.map.getZoom();
-      if (zoom <= 11) {
-        this.clusterData();
-      } else {
-        this.circleGroup.clearLayers();
-        this.map.removeLayer(this.circleGroup);
+        if (!this.map.hasLayer(this.clusterLayer)) {
+          this.map.addLayer(this.clusterLayer);
+        }
       }
     });
 
@@ -294,6 +300,13 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map.addLayer(this.editableLayers);
 
     this.map.on('draw:created', (e) => {
+      this.activeTownship = false;
+      this.activeSection = false;
+      this.activeQuarter = false;
+      this.activeQuarterQuarter = false;
+      if (this.mapTownShipExtent && Object.keys(this.mapTownShipExtent).length) {
+        this.mapTownShipExtent = {};
+      }
       if (this.editableLayers) {
         this.editableLayers.clearLayers();
       }
@@ -391,6 +404,46 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.miniMap.addLayer(this.wellsLayer);
   }
 
+  addClusterLayer() {
+    //Adding Cluster layer
+    this.clusterLayer = L.markerClusterGroup({
+      //disableClusteringAtZoom: 8,
+      showCoverageOnHover: false,
+      /*iconCreateFunction: function (cluster) {
+        return L.divIcon({
+          iconSize: null
+        });
+      }*/
+
+    });
+
+    //clustermarker
+    let clusterMarkerOptions = {
+      radius: 3,
+      fillColor: "#ab0972",
+      color: "#df098",
+      weight: 1,
+      opacity: 0.2,
+      fillOpacity: 0.5
+    };
+
+    var mapIcon = L.icon({
+      iconUrl: '../assets/dot.png',
+      iconSize: [30, 30]
+    });
+
+
+    for (var i = 0; i < this.clusterTestData.length; i++) {
+      var a = this.clusterTestData[i];
+      var title = a[2];
+      var marker = L.marker(new L.LatLng(a[0], a[1]), { icon: mapIcon });
+      //marker.bindPopup(title);
+      this.clusterLayer.addLayer(marker);
+    }
+
+    this.map.addLayer(this.clusterLayer);
+    this.apiService.globalLoader = false;
+  }
 
   layerControl() {
     let baseLayerMaps = {};
@@ -448,6 +501,28 @@ export class MapComponent implements AfterViewInit, OnInit {
         latitude: ev.latlng.lat
       }
       this.mapTownShipExtent = payload;
+      this.apiService.globalLoader = true;
+      this.apiService.infoPoint({ plssFilterDto: payload }).subscribe((coords: []) => {
+        const circleOptions = {
+          color: '#0ff',
+          fillColor: '#0ff',
+          fillOpacity: 0.4,
+          radius: 8,
+          weight: 2
+        }
+        if (this.infoPointLayers) {
+          this.infoPointLayers.clearLayers();
+        }
+        if (this.editableLayers) {
+          this.editableLayers.clearLayers();
+        }
+        coords['wellDtos'].forEach(coord => {
+          let circle = L.circleMarker([coord['latitude'], coord['longitude']], circleOptions);
+          this.infoPointLayers.addLayer(circle);
+        })
+        this.map.addLayer(this.infoPointLayers);
+        this.apiService.globalLoader = false;
+      });
     }
     else if (this.map.getZoom() > 11 && !this.isShapeDrawn) {
       this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
@@ -681,24 +756,6 @@ export class MapComponent implements AfterViewInit, OnInit {
     if (+num.toString() > 100000) {
       return 26;
     }
-    // if (num.toString().length == 1) {
-    //   return 8;
-    // }
-    // if (num.toString().length == 2) {
-    //   return 11;
-    // }
-    // if (num.toString().length == 3) {
-    //   return 15;
-    // }
-    // if (num.toString().length == 4) {
-    //   return 20;
-    // }
-    // if (num.toString().length == 5) {
-    //   return 23;
-    // }
-    // if (num.toString().length == 6) {
-    //   return 26
-    // }
   }
 
   generateLeftMargin(num) {
@@ -750,11 +807,11 @@ export class MapComponent implements AfterViewInit, OnInit {
       color: '#0ff',
       fillColor: '#0ff',
       fillOpacity: 0.4,
-      radius: 7,
+      radius: 8,
       weight: 2
     }
-    this.apiService.infoPoint({ limit: '', offset: 0, points: data }).subscribe((coords: []) => {
-      if (coords['wellDtos'] && coords['wellDtos'].length > 10000) {
+    this.apiService.highlighCreteria({ points: data }).subscribe((res: any) => {
+      if (res['count'] > 10000) {
         const dialogRef = this.dialog.open(WarningWindowComponent, {
           data: {
             mesg: 'Your Area of Interest has more than 10000 records. Please choose a smaller area.'
@@ -764,17 +821,21 @@ export class MapComponent implements AfterViewInit, OnInit {
           if (this.editableLayers) {
             this.editableLayers.clearLayers();
           }
-        })
+          this.mapExtent = [];
+        });
       } else {
-        coords['wellDtos'].forEach(coord => {
-          let circle = L.circleMarker([coord['latitude'], coord['longitude']], circleOptions);
-          this.infoPointLayers.addLayer(circle);
-
-        })
-        this.map.addLayer(this.infoPointLayers);
+        this.apiService.globalLoader = true;
+        this.apiService.infoPoint({ limit: '', offset: 0, points: data }).subscribe((coords: []) => {
+          coords['wellDtos'].forEach(coord => {
+            let circle = L.circleMarker([coord['latitude'], coord['longitude']], circleOptions);
+            this.infoPointLayers.addLayer(circle);
+          })
+          this.map.addLayer(this.infoPointLayers);
+          this.apiService.globalLoader = false;
+        });
       }
-
     });
+
     // }
   }
 
@@ -868,6 +929,9 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.isTownshipIsActive = true;
     if (!this.activeSection && !this.activeTownship && !this.activeQuarter && !this.activeQuarterQuarter) {
       this.mapTownShipExtent = {};
+      if (this.infoPointLayers) {
+        this.infoPointLayers.clearLayers();
+      }
       if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
         const mapPoint = this.getShapeExtent();
         this.mapExtent = mapPoint;

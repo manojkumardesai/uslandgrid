@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, from, Subject } from 'rxjs';
+import { Observable, from, Subject, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { share } from 'rxjs/operators';
 
 
 @Injectable({
@@ -17,11 +18,27 @@ export class ApiService {
   appllyAllCondtions: boolean = true;
   appllyAnyCondtion: boolean = false;
   savedFormData: any;
+  public globalLoader = false;
 
   public checkStateOfFilter = new Subject<any>();
   public townshipSubject = new Subject<any>();
 
   public clusterTestData = [];
+
+  private visible$ = new BehaviorSubject<boolean>(false);
+
+  show() {
+    this.visible$.next(true);
+  }
+
+  hide() {
+    this.visible$.next(false);
+  }
+
+  isVisible(): Observable<boolean> {
+    return this.visible$.asObservable().pipe(share());
+  }
+
   headers = new HttpHeaders().set('Content-Type', 'application/json').set('Access-Control-Allow-Origin', '*')
     .set('Cache-Control', ' no-cache').set('Accept', '*/*').set('Accept-Encoding', 'gzip, deflate, br');
   constructor(private http: HttpClient) { }
@@ -155,6 +172,9 @@ export class ApiService {
     return this.http.post(this.baseUrl + 'wells/highlight', data)
   }
 
+  highlighCreteria(data) {
+    return this.http.post(this.baseUrl + 'well/areacount', data);
+  }
 
   emitTownshipData(val) {
     this.townshipSubject.next(val);
