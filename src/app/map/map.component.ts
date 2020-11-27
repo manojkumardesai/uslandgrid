@@ -432,7 +432,6 @@ export class MapComponent implements AfterViewInit, OnInit {
       iconSize: [30, 30]
     });
 
-
     for (var i = 0; i < this.clusterTestData.length; i++) {
       var a = this.clusterTestData[i];
       var title = a[2];
@@ -878,7 +877,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.apiService.exportCreteria(payload).subscribe((res: any) => {
       if (res.permission) {
         this.apiService.generateReport(payload).subscribe(res => {
-          const extension = this.reportType == 'shp' ? 'zip' : this.reportType;
+          const extension = this.reportType == 'shp' || this.reportType === 'csv' ? 'zip' : this.reportType;
           const blobCont = new File([res], "Report." + extension, { type: extension });
           saveAs(blobCont);
           this.isShapeExporting = false;

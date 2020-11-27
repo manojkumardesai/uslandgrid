@@ -851,7 +851,7 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
     }
     this.generatingReport = true;
     this.apiService.generateReport(payLoad).subscribe((data) => {
-      const extension = this.reportType.toLowerCase() == 'shp' ? 'zip' : this.reportType.toLowerCase();
+      const extension = this.reportType.toLowerCase() == 'shp' || this.reportType.toLowerCase() === 'csv' ? 'zip' : this.reportType.toLowerCase();
       const blobCont = new File([data], "Report." + extension, { type: extension });
       saveAs(blobCont);
       this.generatingReport = false;
