@@ -20,9 +20,11 @@ export class ApiService {
   savedFormData: any;
   public globalLoader = false;
 
+
   public checkStateOfFilter = new Subject<any>();
   public townshipSubject = new Subject<any>();
-
+  public isFilterApplied = false;
+  public reserFilterSubject = new Subject<any>();
   public clusterTestData = [];
 
   private visible$ = new BehaviorSubject<boolean>(false);
@@ -186,4 +188,7 @@ export class ApiService {
     return this.http.post(this.baseUrl + 'report/pointcounty/permission', payloadData);
   }
 
+  resetFilterSubject(val) {
+    this.reserFilterSubject.next(val);
+  }
 }

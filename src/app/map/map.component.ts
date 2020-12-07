@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit, HostListener } from '@angular/core';
+import { Component, AfterViewInit, OnInit, HostListener, Host } from '@angular/core';
 import * as L from 'leaflet';
 import { BetterWMS } from '../utils/betterWms.util';
 import { FormControl } from '@angular/forms';
@@ -75,6 +75,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     draw: {
       polygon: {
         allowIntersection: false,
+        repeatMode: false,
         drawError: {
           color: '#e1e100',
           message: '<strong>Oh snap!<strong> you can\'t draw that!'
@@ -91,6 +92,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       circle: false,
       rectangle: {
         showArea: false,
+        repeatMode: false,
         shapeOptions: {
           clickable: false,
           color: "#305496",
@@ -123,14 +125,33 @@ export class MapComponent implements AfterViewInit, OnInit {
     public userService: LoginService) { }
 
   openFilterDialog($event): void {
-    this.openAdvancedFilter = true;
-    // const dialogRef = this.dialog.open(FilterDialog, {
-    //   width: '350px',
-    //   maxWidth: 350,
-    //   backdropClass: 'cdk-overlay-transparent-backdrop',
-    //   hasBackdrop: true,
-    //   data: this.payLoadFromFilter
-    // });
+    if ((this.editableLayers && Object.keys(this.editableLayers._layers).length) ||
+      (this.activeTownship || this.activeSection || this.activeQuarter || this.activeQuarterQuarter)) {
+      const dialogRef = this.dialog.open(WarningWindowComponent, {
+        data: {
+          mesg: 'Do you want to clear previous selection?',
+          confirm: true,
+        }
+      });
+      dialogRef.afterClosed().subscribe(val => {
+        if (val === 'true') {
+          if (this.editableLayers) {
+            this.editableLayers.clearLayers();
+          }
+          if (this.infoPointLayers) {
+            this.infoPointLayers.clearLayers();
+          }
+          this.activeTownship = false;
+          this.activeSection = false;
+          this.activeQuarter = false;
+          this.activeQuarterQuarter = false;
+          this.mapTownShipExtent = {};
+          this.openAdvancedFilter = true;
+        }
+      });
+    } else {
+      this.openAdvancedFilter = true;
+    }
 
     // dialogRef.afterClosed().subscribe(result => {
     //   const wellsCriteria = result ? JSON.parse(JSON.stringify(result)).wellsCriteria : {};
@@ -325,6 +346,18 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.mapExtent = [];
     });
     this.map.on('draw:drawstart', (e) => {
+      if (this.apiService.isFilterApplied) {
+        const dialogRef = this.dialog.open(WarningWindowComponent, {
+          data: {
+            mesg: 'Your Previous selection will be cleared.',
+            btnText: 'OK'
+          }
+        });
+        dialogRef.afterClosed().subscribe(val => {
+          this.apiService.resetFilterSubject(true);
+          this.apiService.isFilterApplied = false;
+        });
+      }
       this.isShapeDrawn = true;
     });
     this.map.on('draw:drawstop', (e) => {
@@ -521,7 +554,10 @@ export class MapComponent implements AfterViewInit, OnInit {
         })
         this.map.addLayer(this.infoPointLayers);
         this.apiService.globalLoader = false;
-      });
+      },
+        (err) => {
+          this.apiService.hide();
+        });
     }
     else if (this.map.getZoom() > 11 && !this.isShapeDrawn) {
       this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
@@ -615,7 +651,9 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   markWell($event) {
     if (!$event) {
-      this.circleMarker.remove();
+      if (this.circleMarker) {
+        this.circleMarker.remove();
+      }
     } else {
       let { latitude, longitude } = $event;
       // this.goToLocation(latitude, longitude);
@@ -843,7 +881,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     if (userInfo && Object.keys(userInfo)) {
       let id = userInfo.userId;
       this.apiService.userDetails(id).subscribe(user => {
-        this.formats = user['userPermissionDto']['reportTypes'];
+        this.formats = user['userPermissionDto']['reportTypes'].filter(file => file.length);
       });
     }
 
@@ -900,45 +938,62 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   generateTownShip(event, type) {
     event.stopPropagation();
-    if (type === 'township') {
-      this.activeTownship = !this.activeTownship;
-      this.activeSection = false;
-      this.activeQuarter = false;
-      this.activeQuarterQuarter = false;
-    }
-    if (type === 'section') {
-      this.activeSection = !this.activeSection;
-      this.activeTownship = false;
-      this.activeQuarter = false;
-      this.activeQuarterQuarter = false;
-    }
-    if (type === 'quarter') {
-      this.activeTownship = false;
-      this.activeSection = false;
-      this.activeQuarter = !this.activeQuarter;
-      this.activeQuarterQuarter = false;
-    }
-    if (type === 'quaterQuater') {
-      this.activeTownship = false;
-      this.activeSection = false;
-      this.activeQuarter = false;
-      this.activeQuarterQuarter = !this.activeQuarterQuarter;
-    }
-    this.townshipType = type;
-    this.isTownshipIsActive = true;
-    if (!this.activeSection && !this.activeTownship && !this.activeQuarter && !this.activeQuarterQuarter) {
-      this.mapTownShipExtent = {};
-      if (this.infoPointLayers) {
-        this.infoPointLayers.clearLayers();
+    if (this.apiService.isFilterApplied) {
+      const dialogRef = this.dialog.open(WarningWindowComponent, {
+        data: {
+          mesg: 'Do you want to clear previous selection?',
+          confirm: true,
+        }
+      });
+      dialogRef.afterClosed().subscribe(val => {
+        if (val === 'true') {
+          this.apiService.resetFilterSubject(true);
+          this.apiService.isFilterApplied = false;
+          this.generateTownShip(event, type);
+        }
+      });
+    } else {
+      if (type === 'township') {
+        this.activeTownship = !this.activeTownship;
+        this.activeSection = false;
+        this.activeQuarter = false;
+        this.activeQuarterQuarter = false;
       }
-      if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
-        const mapPoint = this.getShapeExtent();
-        this.mapExtent = mapPoint;
-      } else {
-        this.mapExtent = [];
+      if (type === 'section') {
+        this.activeSection = !this.activeSection;
+        this.activeTownship = false;
+        this.activeQuarter = false;
+        this.activeQuarterQuarter = false;
       }
+      if (type === 'quarter') {
+        this.activeTownship = false;
+        this.activeSection = false;
+        this.activeQuarter = !this.activeQuarter;
+        this.activeQuarterQuarter = false;
+      }
+      if (type === 'quaterQuater') {
+        this.activeTownship = false;
+        this.activeSection = false;
+        this.activeQuarter = false;
+        this.activeQuarterQuarter = !this.activeQuarterQuarter;
+      }
+      this.townshipType = type;
+      this.isTownshipIsActive = true;
+      if (!this.activeSection && !this.activeTownship && !this.activeQuarter && !this.activeQuarterQuarter) {
+        this.mapTownShipExtent = {};
+        if (this.infoPointLayers) {
+          this.infoPointLayers.clearLayers();
+        }
+        if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
+          const mapPoint = this.getShapeExtent();
+          this.mapExtent = mapPoint;
+        } else {
+          this.mapExtent = [];
+        }
 
+      }
     }
+
   }
 
 

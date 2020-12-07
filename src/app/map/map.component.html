@@ -87,16 +87,18 @@
         <button type="button" data-toggle="dropdown" class="btn-export" [disabled]="isReadyToExprt()">
             <i class="fa fa-share"></i>
         </button>
-    <div class="dropdown-menu" style="width: 315px;">
-        <a class="dropdown-item" (click)="stopCloseDropdown($event)">
-            <div class="row align-items-center">
-                <div class="col-auto">
-                    <select name="formats" class="custom-select choose-format" [(ngModel)]="reportType">
-                        <option value="null">Choose Format</option>
+    <div class="dropdown-menu py-0" style="width: 198px; margin-top: -9px !important">
+        <a class="dropdown-item px-2" (click)="stopCloseDropdown($event)">
+            <div class="d-flex align-items-center">
+                <div class="col-auto px-0 pr-1">
+                    <select name="formats" class="custom-select choose-format"
+                    style="font-size: 12px; height: 27px;"
+                     [(ngModel)]="reportType">
+                        <option disabled>Choose Format</option>
                         <option *ngFor="let file of this.formats" [value]="file">{{file}}</option>
                     </select>
                 </div>
-                <div class="col-auto">
+                <div class="col-auto px-0">
                     <button type="button" class="export-btn" [disabled] = "reportType == 'null' || reportType == '' || isShapeExporting" (click)="exportReport()">
                     <i class="fa fa-circle-o-notch fa-spin" *ngIf="isShapeExporting" style="font-size:18px"></i>Export</button>
                 </div>

@@ -47,3 +47,26 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .leaflet-bar {
       border-radius: 0 !important;
   }
+  
+@keyframes slideDown {
+    0% { }
+    100%{
+        transform: translateX(0%);
+    }
+}
+    
+.filter-panel.cdk-overlay-pane {
+    transform: translateX(-250%);
+    animation: slideDown 0.5s forwards 0s ease-in;
+    .mat-dialog-container {
+        padding: 10px;
+        overflow-x: hidden;
+    }
+}
+ 
+.filter-panel-backdrop + .cdk-global-overlay-wrapper {
+    justify-content: normal !important;
+    left: 42px !important;
+    margin-top: 146px;
+    height: auto;
+}

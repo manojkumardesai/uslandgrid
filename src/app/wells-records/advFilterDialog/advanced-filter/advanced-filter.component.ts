@@ -82,7 +82,8 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
   isLandGridLoaded: boolean = false;
   isProductionLoaded: boolean = false;
   isDateLoaded: boolean = false;
-  subscriptions: any = []
+  subscriptions: any = [];
+  fieldSubscribe: any;
 
   constructor(public dialogRef: MatDialogRef<AdvancedFilterComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -198,6 +199,10 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
         err => console.error(err)
       )
     )
+
+    this.subscriptions.push(
+      this.apiService.reserFilterSubject.subscribe(val => this.clearFilters())
+    );
   }
 
   ngAfterViewInit() {
@@ -500,6 +505,7 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
     let payloadWithValues = {};
     payloadWithValues['operator'] = this.apiService.appllyAllCondtions ? 'and' : 'or';
     payloadWithValues['exp'] = this.payLoad.filter(obj => obj.min || obj.max || obj.value && obj.value.length);
+    this.apiService.isFilterApplied = true;
     this.dialogRef.close(payloadWithValues);
   }
 
@@ -507,42 +513,48 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
     this.filterForm.reset();
     this.apiService.savedFormData = this.filterForm.value;
     this.dialogRef.close();
+    this.apiService.isFilterApplied = false;
   }
 
   searchString(keys, table, group) {
     let key = keys.replace(/\s+/g, '_')
     let searchValue = this.filterForm.get([group, key]).value;
-    if (group == 'well' && searchValue.length) {
-      if (this.apiService.wells[key].indexOf(searchValue.toUpperCase()) == - 1) {
-        this.apiService.fetchSingleColValues(keys, table, searchValue).subscribe((res) => {
-          this.apiService.wells[key] = res['uniqueValue'];
-        },
-          (err) => console.log(err))
+    if (group == 'well') {
+      if (this.fieldSubscribe) {
+        this.fieldSubscribe.unsubscribe();
       }
+      this.fieldSubscribe = this.apiService.fetchSingleColValues(keys, table, searchValue).subscribe((res) => {
+        this.apiService.wells[key] = res['uniqueValue'];
+      },
+        (err) => console.log(err))
+
     }
-    if (group == 'landGrid' && searchValue.length) {
-      if (this.apiService.landGrids[key].indexOf(searchValue.toUpperCase()) == - 1) {
-        this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
-          this.apiService.landGrids[key] = res['uniqueValue'];
-        },
-          (err) => console.log(err))
+    if (group == 'landGrid') {
+      if (this.fieldSubscribe) {
+        this.fieldSubscribe.unsubscribe();
       }
+      this.fieldSubscribe = this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
+        this.apiService.landGrids[key] = res['uniqueValue'];
+      },
+        (err) => console.log(err))
     }
-    if (group == 'production' && searchValue.length) {
-      if (this.apiService.productions[key].indexOf(searchValue.toUpperCase()) == - 1) {
-        this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
-          this.apiService.productions[key] = res['uniqueValue'];
-        },
-          (err) => console.log(err))
+    if (group == 'production') {
+      if (this.fieldSubscribe) {
+        this.fieldSubscribe.unsubscribe();
       }
+      this.fieldSubscribe = this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
+        this.apiService.productions[key] = res['uniqueValue'];
+      },
+        (err) => console.log(err))
     }
-    if (group == 'date' && searchValue.length) {
-      if (this.apiService.dates[key].indexOf(searchValue.toUpperCase()) == - 1) {
-        this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
-          this.apiService.dates[key] = res['uniqueValue'];
-        },
-          (err) => console.log(err))
+    if (group == 'date') {
+      if (this.fieldSubscribe) {
+        this.fieldSubscribe.unsubscribe();
       }
+      this.fieldSubscribe = this.apiService.fetchSingleColValues(key, table, searchValue).subscribe((res) => {
+        this.apiService.dates[key] = res['uniqueValue'];
+      },
+        (err) => console.log(err))
     }
   }
 

@@ -7,17 +7,18 @@ export class ColumnConstantsService {
   public WELL_RECORD_COLUMNS = [
     'select',
     'wellId',
-    'wellName',
     'operator',
+    'wellName',
     'wellNumber',
     'status',
-    'latitude',
-    'longitude',
+    'Classification',
+    'Datum Elevation',
+    'datumType',
+    'Ground Elevation',
+    'TD',
+    'Formation at TD',
     'spudDate',
     'completionDate',
-    'county',
-    'datumType',
-    'tvd',
     'reports'
   ];
   public CP_COLUMNS = [
@@ -29,71 +30,45 @@ export class ColumnConstantsService {
     "Top Depth",
     "Base Depth",
     "Top Formation",
-    "Base Formation"
+    "Base Formation",
+    "Remarks"
   ];
   public FT_COLUMNS = [
     "Well ID",
+    "Observation Number",
     "Formation",
     "Top MD",
+    "Base MD",
     "Top TVD",
     "Remarks",
-    "FormationCode",
-    "temp1",
-    "Base MD",
     "Source"
+
   ];
   public MC_COLUMNS = [
-    "Record ID (MC)",
     "Well ID",
     "Casing ID",
-    "Data Source",
     "Casing Size",
-    "Inside Diameter",
+    "Casing Type",
     "Top Depth",
     "Base Depth",
     "Top Formation",
     "Base Formation",
-    "Casing Type",
     "Nominal Weight",
-    "Grade",
-    "Thread Type",
-    "Manufacturer",
-    "Multistage Depth",
-    "Cement Type",
-    "Cement Amount",
-    "Cement Weight",
-    "Hole Size",
-    "Top of Cement",
-    "Slurry Volume",
-    "Connect Code",
-    "Install Date",
-    "Leak Off Test",
-    "Pressure Test",
-    "Create Date",
-    "Create User ID",
-    "Update User ID",
-    "Update date",
-    "Remarks",
-    "Feet",
-    "PSI",
-    "SAX"
+    "Grade"
   ];
   public PF_COLUMNS = [
     "Well ID",
-    "Date",
+    "Completion Observation Number",
+    "Perforation Observation Number",
     "Top Depth",
     "Base Depth",
     "Top Formation",
-    "Type",
-    "Density",
-    "Diameter",
-    "Phase",
-    "Angle",
-    "Count",
-    "Current Status"
+    "Date",
+    "Remarks",
   ];
   public SURVEY_COLUMNS = [
     "Well ID",
+    "Survey Point Number",
     "MD",
     "TVD",
     "Inclination",
@@ -101,34 +76,19 @@ export class ColumnConstantsService {
     "NS_OffSet",
     "ES_OffSet",
     "Latitude",
-    "Longitude"
+    "Longitude",
   ];
   public IP_COLUMNS = [
     "Well ID",
-    "Row Number",
     "Test Number",
     "Top Depth",
     "Base Depth",
     "Top Formation",
-    "Base Formation",
     "Test Date",
-    "Test Duration",
     "Oil Volume",
-    "Oil Rate",
     "Gas Volume",
-    "Gas Rate",
     "Water Volume",
-    "Water Rate",
-    "Flow Pressure",
-    "Bh Pressure",
     "Choke",
-    "Bh Temperature",
-    "Oil Gravity",
-    "H2S",
-    "CO2",
-    "Remarks",
-    "Gas Depth",
-    "Gas Type"
   ];
 
   constructor() { }

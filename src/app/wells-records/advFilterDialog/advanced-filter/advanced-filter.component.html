@@ -84,7 +84,7 @@
                             <div class="form-group filter-form-group">
                               <label [for]="'wellLabel'+removeSpaceInText(welCol['column'])">Name</label>
                               <input type="text" 
-                              (keypress) ="searchString( welCol['column'], welCol['table'], 'well')"
+                              (keyup) ="searchString( welCol['column'], welCol['table'], 'well')"
                               [formControlName]="removeSpaceInText(welCol['column'])"
                               [attr.list]="'well_list_'+removeSpaceInText(welCol['column'])" 
                               [id]="'wellLabel'+removeSpaceInText(welCol['column'])" class="form-control" >
@@ -177,7 +177,7 @@
                               <div class="form-group filter-form-group">
                                 <label [for]="'landGridLabel'+removeSpaceInText(landGrid['column'])">Name</label>
                                 <input type="text" 
-                                (keypress) ="searchString( landGrid['column'], landGrid['table'], 'landGrid')"
+                                (keyup) ="searchString( landGrid['column'], landGrid['table'], 'landGrid')"
                                 [formControlName]="removeSpaceInText(landGrid['column'])"
                                 [attr.list]="'landGrid_list_'+removeSpaceInText(landGrid['column'])" 
                                 [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])" class="form-control" >
@@ -269,7 +269,7 @@
                               <div class="form-group filter-form-group">
                                 <label [for]="'productionLabel'+removeSpaceInText(production['column'])">Name</label>
                                 <input type="text" 
-                                (keypress) ="searchString( production['column'], production['table'], 'production')"
+                                (keyup) ="searchString( production['column'], production['table'], 'production')"
                                 [formControlName]="removeSpaceInText(production['column'])"
                                 [attr.list]="'production_list_'+removeSpaceInText(production['column'])" 
                                 [id]="'productionLabel'+removeSpaceInText(production['column'])" class="form-control" >
@@ -362,7 +362,7 @@
                               <div class="form-group filter-form-group">
                                 <label [for]="'dateLabel'+removeSpaceInText(date['column'])">Name</label>
                                 <input type="text" 
-                                (keypress) ="searchString( date['column'], date['table'], 'date')"
+                                (keyup) ="searchString( date['column'], date['table'], 'date')"
                                 [formControlName]="removeSpaceInText(date['column'])"
                                 [attr.list]="'date_list_'+removeSpaceInText(date['column'])" 
                                 [id]="'dateLabel'+removeSpaceInText(date['column'])" class="form-control" >

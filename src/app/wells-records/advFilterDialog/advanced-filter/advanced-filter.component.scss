@@ -176,40 +176,7 @@
   }
 }
 
-::ng-deep .mat-dialog-container {
-  padding: 10px;
-  width: 540px;
-  left: -320px;
-  border-radius: 0px;
-  overflow-x: hidden;
-}
-
-
-// ::ng-deep .mat-dialog-container::before {
  
-//   position: absolute;
-//   height: 0px;
-//   width: 0px;
-//   display: block;
-//   content: "";
-//   top: -4px;
-//   left: -17px;
-//   border-left: 20px solid transparent;
-//   border-right: 20px solid transparent;
-//   border-bottom: 20px solid #424242;
-//   transform: rotate(52deg);
-// }
-
-
-::ng-deep .cdk-global-overlay-wrapper {
-  justify-content: normal !important;
-  // align-items: center !important;
-  left: 42px !important;
-  margin-top: 146px;
-  height: auto;
-  // top: -214px !important;
-}
-  
 .filter-card {
   .card {
     border: 1px solid #424242;
@@ -302,9 +269,6 @@ button.filter-button[aria-expanded="true"]{
     background-color: gray;
 }
 
-::ng-deep .cdk-overlay-pane {
-  width: 600px;
-}
 
 .filter-body {
   height: auto;
@@ -413,12 +377,5 @@ button.filter-button[aria-expanded="true"]{
   border-radius: 0px !important;
 }
 
-::ng-deep .mat-dialog { transition: none; }
+// ::ng-deep .mat-dialog { transition: none; }
 
-::ng-deep .cdk-overlay-pane{
-  transform: translateX(-250%);
-  animation: slideDown 0.5s forwards 0s ease-in;
-}
-::ng-deep .cdk-overlay-container > * {
-  transition: none;
-}
