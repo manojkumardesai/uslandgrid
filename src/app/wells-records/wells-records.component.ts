@@ -134,6 +134,19 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.payLoadWithParams[4] = {};
     this.payLoadWithParams[5] = {};
     this.payLoadWithParams[6] = {};
+    this.subscription.push(
+      this.apiService.reserFilterSubject.subscribe(val => {
+        delete this.payLoadWithParams[0]['filters'];
+        delete this.payLoadWithParams[1]['filters'];
+        delete this.payLoadWithParams[2]['filters'];
+        delete this.payLoadWithParams[3]['filters'];
+        delete this.payLoadWithParams[4]['filters'];
+        delete this.payLoadWithParams[5]['filters'];
+        delete this.payLoadWithParams[6]['filters'];
+        this.openAdvancedFilterEvent.emit(false);
+        this.onTabChange();
+      })
+    );
   }
 
   ngAfterViewInit() {
@@ -278,8 +291,13 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
       this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellDtos[0]);
-    });
+      if (data.wellDtos && data.wellDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellDtos[0]);
+      }
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   selectedColumn(column) {
@@ -298,11 +316,12 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   filterAdvanced($event?) {
     const dialogRef = this.dialog.open(AdvancedFilterComponent, {
-      width: '750px',
+      width: '600px',
       // maxWidth: 350,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
+      backdropClass: 'filter-panel-backdrop',
       hasBackdrop: true,
       autoFocus: false,
+      panelClass: 'filter-panel',
       data: this.payLoadWithParams[this.selectedTab].filters ? this.payLoadWithParams[this.selectedTab].filters : ''
     });
 
@@ -364,8 +383,13 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
       this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellCpDtos[0]);
-    });
+      if (data.wellCpDtos && data.wellCpDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellCpDtos[0]);
+      }
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   fetchFtWellDetail(offset = 0, limit = 5) {
@@ -386,8 +410,13 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
       this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellFtDtos[0]);
-    });
+      if (data.wellFtDtos && data.wellFtDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellFtDtos[0]);
+      }
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   fetchMcWellDetail(offset = 0, limit = 5) {
@@ -408,8 +437,13 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
       this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellMcDtos[0]);
-    });
+      if (data.wellMcDtos && data.wellMcDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellMcDtos[0]);
+      }
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   fetchPfWellDetail(offset = 0, limit = 5) {
@@ -430,8 +464,14 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
       this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellPfDtos[0]);
-    });
+      if (data.wellPfDtos && data.wellPfDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellPfDtos[0]);
+      }
+
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   fetchSurveyWellDetail(offset = 0, limit = 5) {
@@ -452,8 +492,13 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
       this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellSurveyDtos[0]);
-    });
+      if (data.wellSurveyDtos && data.wellSurveyDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellSurveyDtos[0]);
+      }
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   fetchIpWellDetail(offset = 0, limit = 5) {
@@ -474,8 +519,14 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
       // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
       this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellIpVolumeDtos[0]);
-    });
+      if (data.wellIpVolumeDtos && data.wellIpVolumeDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellIpVolumeDtos[0]);
+      }
+
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   populateColumns(dataForTable) {

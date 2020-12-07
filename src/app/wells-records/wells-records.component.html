@@ -8,10 +8,10 @@
                     <mat-tab label="Well Records">
                       <div class='options'>
                         <div class='actionButtons'>
-                          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                          <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="More Fields" matTooltipPosition="after">
                             <mat-icon>more_vert</mat-icon>
                           </button>
-                          <mat-menu yPosition="above" #menu="matMenu">
+                          <mat-menu yPosition="above" #menu="matMenu" class="custome-mat-menu" >
                             <button mat-menu-item *ngFor="let columnToDisplay of availableColumns[selectedTab]">
                               <mat-checkbox 
                               (click) = "$event.stopPropagation()"
@@ -44,7 +44,7 @@
                         </div>
                       </div>
                     <div class="wellsTableContainer">
-                      <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar>
+                      <!-- <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar> -->
                       <table class='wellsRecordTable' mat-table [dataSource]="dataSource[selectedTab]" matSort>
                         <!-- Check Box Code-->
                         <ng-container matColumnDef="select">
@@ -93,7 +93,7 @@
                     <mat-tab label="Completion">
                       <div class='options'>
                         <div class='actionButtons'>
-                          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                          <button mat-icon-button [matMenuTriggerFor]="menu"  matTooltip="More Fields" matTooltipPosition="after">
                             <mat-icon>more_vert</mat-icon>
                           </button>
                           <mat-menu yPosition="above" #menu="matMenu">
@@ -161,7 +161,7 @@
                     <mat-tab label="Casing">
                       <div class='options'>
                         <div class='actionButtons'>
-                          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                          <button mat-icon-button [matMenuTriggerFor]="menu"  matTooltip="More Fields" matTooltipPosition="after">
                             <mat-icon>more_vert</mat-icon>
                           </button>
                           <mat-menu yPosition="above" #menu="matMenu">
@@ -229,7 +229,7 @@
                     <mat-tab label="Formation">
                       <div class='options'>
                         <div class='actionButtons'>
-                          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                          <button mat-icon-button [matMenuTriggerFor]="menu"  matTooltip="More Fields" matTooltipPosition="after">
                             <mat-icon>more_vert</mat-icon>
                           </button>
                           <mat-menu yPosition="above" #menu="matMenu">
@@ -297,7 +297,7 @@
                     <mat-tab label="Perforation">
                       <div class='options'>
                         <div class='actionButtons'>
-                          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                          <button mat-icon-button [matMenuTriggerFor]="menu"  matTooltip="More Fields" matTooltipPosition="after">
                             <mat-icon>more_vert</mat-icon>
                           </button>
                           <mat-menu yPosition="above" #menu="matMenu">
@@ -365,7 +365,7 @@
                     <mat-tab label="Survey">
                       <div class='options'>
                         <div class='actionButtons'>
-                          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                          <button mat-icon-button [matMenuTriggerFor]="menu"  matTooltip="More Fields" matTooltipPosition="after">
                             <mat-icon>more_vert</mat-icon>
                           </button>
                           <mat-menu yPosition="above" #menu="matMenu">
@@ -433,7 +433,7 @@
                     <mat-tab label="Initial Potential">
                       <div class='options'>
                     <div class='actionButtons'>
-                      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                      <button mat-icon-button [matMenuTriggerFor]="menu"  matTooltip="More Fields" matTooltipPosition="after">
                         <mat-icon>more_vert</mat-icon>
                       </button>
                       <mat-menu yPosition="above" #menu="matMenu">

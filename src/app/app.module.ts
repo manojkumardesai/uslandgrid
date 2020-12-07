@@ -28,8 +28,9 @@ import { ResetPasswordComponent } from './user-auth/reset-password/reset-passwor
 import { UserInfoComponent } from './admin/user-info/user-info.component';
 import { httpInterceptorProviders } from './_services/auth/httpInterceptorProviders';
 import { ActivateUser } from './user-auth/activate-user/activate-user.component';
+import { WarningWindowComponent } from './dilogs/warning-window/warning-window.component';
 // import { RouterStateSnapshot } from '@angular/router';
-
+import { UserIdleModule } from 'angular-user-idle';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ActivateUser } from './user-auth/activate-user/activate-user.component'
     AdminComponent,
     ResetPasswordComponent,
     UserInfoComponent,
-    ActivateUser
+    ActivateUser,
+    WarningWindowComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +65,8 @@ import { ActivateUser } from './user-auth/activate-user/activate-user.component'
     FormsModule,
     ReactiveFormsModule,
     NgxMatSelectSearchModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    UserIdleModule.forRoot({ idle: 3600, timeout: 60, ping: 30 })
   ],
   providers: [
     httpInterceptorProviders

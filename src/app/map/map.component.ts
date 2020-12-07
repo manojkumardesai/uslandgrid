@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit, HostListener } from '@angular/core';
+import { Component, AfterViewInit, OnInit, HostListener, Host } from '@angular/core';
 import * as L from 'leaflet';
 import { BetterWMS } from '../utils/betterWms.util';
 import { FormControl } from '@angular/forms';
@@ -13,9 +13,10 @@ import "leaflet.markercluster";
 import * as esri from "esri-leaflet";
 import { saveAs } from 'file-saver';
 import "leaflet-draw";
-import { idLocale } from 'ngx-bootstrap/chronos';
+import { WarningWindowComponent } from '../dilogs/warning-window/warning-window.component';
+import { LoginService } from '../_services/login.service';
 declare var $: any
-
+L.drawLocal.draw.handlers.polygon.tooltip.end = '<b>Click the finish button to close the polygon / Click first point to close this shape.</b>';
 export interface DialogData {
   animal: string;
   name: string;
@@ -24,7 +25,7 @@ export interface DialogData {
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  styleUrls: ['./map.component.scss'],
 })
 
 export class MapComponent implements AfterViewInit, OnInit {
@@ -47,7 +48,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   public mapTownShipExtent: any;
   public clusterTestData; any = [];
   name: string;
-  formats = ["shp", "wb2", "wb4", "csv", "xlsx"];
+  formats = [];
   reportType = '';
   myControl = new FormControl();
   options: any[] = [];
@@ -74,6 +75,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     draw: {
       polygon: {
         allowIntersection: false,
+        repeatMode: false,
         drawError: {
           color: '#e1e100',
           message: '<strong>Oh snap!<strong> you can\'t draw that!'
@@ -90,6 +92,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       circle: false,
       rectangle: {
         showArea: false,
+        repeatMode: false,
         shapeOptions: {
           clickable: false,
           color: "#305496",
@@ -112,19 +115,43 @@ export class MapComponent implements AfterViewInit, OnInit {
   };
 
   drawControl = new L.Control.Draw(this.drawPluginOptions);
+  activeTownship = false;
+  activeSection = false;
+  activeQuarter = false;
+  activeQuarterQuarter = false;
 
   constructor(public apiService: ApiService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    public userService: LoginService) { }
 
   openFilterDialog($event): void {
-    this.openAdvancedFilter = true;
-    // const dialogRef = this.dialog.open(FilterDialog, {
-    //   width: '350px',
-    //   maxWidth: 350,
-    //   backdropClass: 'cdk-overlay-transparent-backdrop',
-    //   hasBackdrop: true,
-    //   data: this.payLoadFromFilter
-    // });
+    if ((this.editableLayers && Object.keys(this.editableLayers._layers).length) ||
+      (this.activeTownship || this.activeSection || this.activeQuarter || this.activeQuarterQuarter)) {
+      const dialogRef = this.dialog.open(WarningWindowComponent, {
+        data: {
+          mesg: 'Do you want to clear previous selection?',
+          confirm: true,
+        }
+      });
+      dialogRef.afterClosed().subscribe(val => {
+        if (val === 'true') {
+          if (this.editableLayers) {
+            this.editableLayers.clearLayers();
+          }
+          if (this.infoPointLayers) {
+            this.infoPointLayers.clearLayers();
+          }
+          this.activeTownship = false;
+          this.activeSection = false;
+          this.activeQuarter = false;
+          this.activeQuarterQuarter = false;
+          this.mapTownShipExtent = {};
+          this.openAdvancedFilter = true;
+        }
+      });
+    } else {
+      this.openAdvancedFilter = true;
+    }
 
     // dialogRef.afterClosed().subscribe(result => {
     //   const wellsCriteria = result ? JSON.parse(JSON.stringify(result)).wellsCriteria : {};
@@ -151,28 +178,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         })
       );
     this.fetchClusterData();
-    // this.getAllocatedFileTypes();
-  }
-
-  fetchClusterData() {
-    // if (this.apiService.clusterTestData.length == 0) {
-    //   const cluster1 = this.apiService.fetchClusters(0, 100000);
-    //   const cluster2 = this.apiService.fetchClusters(100001, 100000);
-    //   const cluster3 = this.apiService.fetchClusters(200001, 100000);
-    //   const cluster4 = this.apiService.fetchClusters(300001, 100000);
-    //   const cluster5 = this.apiService.fetchClusters(400001, 100000);
-    //   const mergedCall = forkJoin(cluster1, cluster2, cluster3, cluster4, cluster5);
-    //   mergedCall.subscribe((clusterData: any) => {
-    //     this.apiService.clusterTestData = clusterData.flat(1);
-    //     this.addClusterLayer();
-    //   });
-    // }
-    // else {
-    //   setTimeout(() => {
-    //     this.addClusterLayer();
-    //   }, 1000);
-    // }
-    this.clusterData();
+    this.getAllocatedFileTypes();
   }
 
   private _filter(value: any): Observable<any[]> {
@@ -182,6 +188,20 @@ export class MapComponent implements AfterViewInit, OnInit {
         return option
       }))
     )
+  }
+
+  fetchClusterData() {
+    this.apiService.globalLoader = true;
+    const cluster1 = this.apiService.fetchClusters(0, 100000);
+    const cluster2 = this.apiService.fetchClusters(100001, 100000);
+    const cluster3 = this.apiService.fetchClusters(200001, 100000);
+    const cluster4 = this.apiService.fetchClusters(300001, 100000);
+    const cluster5 = this.apiService.fetchClusters(400001, 100000);
+    const mergedCall = forkJoin(cluster1, cluster2, cluster3, cluster4, cluster5);
+    mergedCall.subscribe((clusterData: any) => {
+      this.clusterTestData = clusterData.flat(1);
+      this.addClusterLayer();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -283,32 +303,15 @@ export class MapComponent implements AfterViewInit, OnInit {
     //Control the cluster visibility based on zoom level
     this.map.on("zoomend", () => {
       let zoom = this.map.getZoom();
-      if (this.editableLayers) {
-        this.editableLayers.clearLayers();
-      }
-      if (zoom <= 11) {
-        this.clusterData();
-        this.infoPointLayers.clearLayers();
-        if (this.mapTownShipExtent && Object.keys(this.mapTownShipExtent)) {
-          this.mapTownShipExtent = {};
-        }
-        if (this.infoPointInfo && this.infoPointInfo.length) {
-          this.infoPointInfo = [];
-        }
-
+      if (zoom > 11) {
+        this.map.removeLayer(this.clusterLayer);
       } else {
-        this.map.removeLayer(this.circleGroup);
-        this.circleGroup.clearLayers();
-        this.filterEmit(true);
+        if (!this.map.hasLayer(this.clusterLayer)) {
+          this.map.addLayer(this.clusterLayer);
+        }
       }
-      // if (zoom > 11) {
-      //   this.map.removeLayer(this.clusterLayer);
-      // } else {
-      //   if (!this.map.hasLayer(this.clusterLayer)) {
-      //     this.map.addLayer(this.clusterLayer);
-      //   }
-      // };
     });
+
     this.addTileLayer();
     this.addCultureLayer();
     this.addPlssLayer();
@@ -318,6 +321,13 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map.addLayer(this.editableLayers);
 
     this.map.on('draw:created', (e) => {
+      this.activeTownship = false;
+      this.activeSection = false;
+      this.activeQuarter = false;
+      this.activeQuarterQuarter = false;
+      if (this.mapTownShipExtent && Object.keys(this.mapTownShipExtent).length) {
+        this.mapTownShipExtent = {};
+      }
       if (this.editableLayers) {
         this.editableLayers.clearLayers();
       }
@@ -333,9 +343,21 @@ export class MapComponent implements AfterViewInit, OnInit {
       if (this.infoPointLayers) {
         this.infoPointLayers.clearLayers();
       }
-      this.filterEmit(true);
+      this.mapExtent = [];
     });
     this.map.on('draw:drawstart', (e) => {
+      if (this.apiService.isFilterApplied) {
+        const dialogRef = this.dialog.open(WarningWindowComponent, {
+          data: {
+            mesg: 'Your Previous selection will be cleared.',
+            btnText: 'OK'
+          }
+        });
+        dialogRef.afterClosed().subscribe(val => {
+          this.apiService.resetFilterSubject(true);
+          this.apiService.isFilterApplied = false;
+        });
+      }
       this.isShapeDrawn = true;
     });
     this.map.on('draw:drawstop', (e) => {
@@ -344,10 +366,6 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.isShapeDrawn = false;
       }, 1000);
     });
-
-    //this.addClusterLayer();
-    // Pass url and options to below function in the mentioned comment and uncomment it
-    //  L.tileLayer.prototype.betterWms = this.betterWmsFunction(url, options);
   }
 
   initMiniMap(): void {
@@ -395,12 +413,11 @@ export class MapComponent implements AfterViewInit, OnInit {
       styles: '',
       attribution: null
     });
-    //this.map.addLayer(this.plssLayer);
   }
 
   addWellsLayer() {
     this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
-      layers: 'wh_final',
+      layers: 'OKWells',
       format: 'image/png8',
       transparent: true,
       styles: '',
@@ -411,7 +428,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   addWellsLayer_1() {
     this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
-      layers: 'wh_final',
+      layers: 'OKWells',
       format: 'image/png8',
       transparent: true,
       styles: '',
@@ -419,6 +436,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     });
     this.miniMap.addLayer(this.wellsLayer);
   }
+
   addClusterLayer() {
     //Adding Cluster layer
     this.clusterLayer = L.markerClusterGroup({
@@ -447,16 +465,16 @@ export class MapComponent implements AfterViewInit, OnInit {
       iconSize: [30, 30]
     });
 
-
     for (var i = 0; i < this.clusterTestData.length; i++) {
       var a = this.clusterTestData[i];
-      var title = a.count;
-      var marker = L.marker(new L.LatLng(+a.latitude.toFixed(2), +a.longitude.toFixed(2)), { icon: mapIcon });
+      var title = a[2];
+      var marker = L.marker(new L.LatLng(a[0], a[1]), { icon: mapIcon });
       //marker.bindPopup(title);
       this.clusterLayer.addLayer(marker);
     }
 
     this.map.addLayer(this.clusterLayer);
+    this.apiService.globalLoader = false;
   }
 
   layerControl() {
@@ -508,18 +526,40 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.filterEmit(true);
   }
   showInfoPoint(ev) {
-    if (this.isTownshipIsActive) {
+    if (this.activeSection || this.activeTownship || this.activeQuarter || this.activeQuarterQuarter) {
       let payload = {
         type: this.townshipType,
         longitude: ev.latlng.lng,
         latitude: ev.latlng.lat
       }
       this.mapTownShipExtent = payload;
-      setTimeout(() => {
-        this.isTownshipIsActive = false;
-      }, 1000);
+      this.apiService.globalLoader = true;
+      this.apiService.infoPoint({ plssFilterDto: payload }).subscribe((coords: []) => {
+        const circleOptions = {
+          color: '#0ff',
+          fillColor: '#0ff',
+          fillOpacity: 0.4,
+          radius: 8,
+          weight: 2
+        }
+        if (this.infoPointLayers) {
+          this.infoPointLayers.clearLayers();
+        }
+        if (this.editableLayers) {
+          this.editableLayers.clearLayers();
+        }
+        coords['wellDtos'].forEach(coord => {
+          let circle = L.circleMarker([coord['latitude'], coord['longitude']], circleOptions);
+          this.infoPointLayers.addLayer(circle);
+        })
+        this.map.addLayer(this.infoPointLayers);
+        this.apiService.globalLoader = false;
+      },
+        (err) => {
+          this.apiService.hide();
+        });
     }
-    if (this.map.getZoom() > 11 && !this.isShapeDrawn && !this.isTownshipIsActive) {
+    else if (this.map.getZoom() > 11 && !this.isShapeDrawn) {
       this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
         if (data.length) {
           if (this.infoWindowDialog) {
@@ -547,7 +587,11 @@ export class MapComponent implements AfterViewInit, OnInit {
   filterEmit(event) {
     if (event) {
       this.isMapExtentApplied = true;
-      const extent = this.map.getBounds();
+      let extent = this.map.getBounds();
+      if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
+        console.log(this.editableLayers);
+        extent = this.editableLayers.getBounds();
+      }
       const points = [{
         lat: extent.getNorthWest().lat,
         lon: extent.getNorthWest().lng
@@ -576,6 +620,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   filterEmitForShapes(event) {
     if (event) {
       this.isMapExtentApplied = true;
+      this.isTownshipIsActive = false;
       const extent = event;
       const points = [];
       extent._latlngs[0].forEach(point => {
@@ -606,7 +651,9 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   markWell($event) {
     if (!$event) {
-      this.circleMarker.remove();
+      if (this.circleMarker) {
+        this.circleMarker.remove();
+      }
     } else {
       let { latitude, longitude } = $event;
       // this.goToLocation(latitude, longitude);
@@ -625,7 +672,12 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   clusterData() {
     setTimeout(() => {
-      const extent = this.map.getBounds();
+      let clusterPoints = [];
+      let extent = this.map.getBounds();
+      let circleExtent = this.map.getBounds();
+      if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
+        extent = this.editableLayers.getBounds();
+      }
       const points = [{
         lat: extent.getNorthWest().lat,
         lon: extent.getNorthWest().lng
@@ -642,25 +694,49 @@ export class MapComponent implements AfterViewInit, OnInit {
         lat: extent.getNorthWest().lat,
         lon: extent.getNorthWest().lng
       }];
-      this.mapExtent = points;
+
+      if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
+        circleExtent = this.map.getBounds();
+        const mapPoint = [{
+          lat: circleExtent.getNorthWest().lat,
+          lon: circleExtent.getNorthWest().lng
+        }, {
+          lat: circleExtent._northEast.lat,
+          lon: circleExtent._northEast.lng
+        }, {
+          lat: circleExtent.getSouthEast().lat,
+          lon: circleExtent.getSouthEast().lng
+        }, {
+          lat: circleExtent._southWest.lat,
+          lon: circleExtent._southWest.lng
+        }, {
+          lat: circleExtent.getNorthWest().lat,
+          lon: circleExtent.getNorthWest().lng
+        }];
+        clusterPoints = mapPoint;
+        // this.mapExtent = points;
+      } else {
+        clusterPoints = points;
+      }
+
       if (this.clusterSubcribe) {
         this.clusterSubcribe.unsubscribe();
         if (this.circleGroup) {
           this.map.removeLayer(this.circleGroup);
           this.circleGroup.clearLayers();
         }
-        this.drawCircle();
+        this.drawCircle(clusterPoints);
       } else {
-        this.drawCircle();
+        this.drawCircle(clusterPoints);
       }
 
     }, 10);
 
   }
 
-  drawCircle() {
+  drawCircle(clusterPoints) {
     var myIcon = L.divIcon({ className: 'my-div-icon' });
-    this.clusterSubcribe = this.apiService.cluster({ points: this.mapExtent, zoom: this.map.getZoom() }).subscribe(val => {
+    this.clusterSubcribe = this.apiService.cluster({ points: clusterPoints, zoom: this.map.getZoom() }).subscribe(val => {
       if (this.circleGroup) {
         this.map.removeLayer(this.circleGroup);
         this.circleGroup.clearLayers();
@@ -686,23 +762,36 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   generateRadius(num) {
-    if (num.toString().length == 1) {
-      return 8;
+    if (+num.toString() <= 9) {
+      return 10;
     }
-    if (num.toString().length == 2) {
-      return 11;
+
+    if (+num.toString() > 9 && +num.toString() <= 99) {
+      return 12;
     }
-    if (num.toString().length == 3) {
-      return 15;
+    if (+num.toString() > 99 && +num.toString() <= 999) {
+      return 14;
     }
-    if (num.toString().length == 4) {
+    if (+num.toString() > 999 && +num.toString() <= 9999) {
+      return 16;
+    }
+    if (+num.toString() > 9999 && +num.toString() <= 25000) {
+      return 18;
+    }
+    if (+num.toString() > 25000 && +num.toString() <= 50000) {
       return 20;
     }
-    if (num.toString().length == 5) {
-      return 23;
+    if (+num.toString() > 50000 && +num.toString() <= 60000) {
+      return 22;
     }
-    if (num.toString().length == 6) {
-      return 26
+    if (+num.toString() > 60000 && +num.toString() <= 75000) {
+      return 24;
+    }
+    if (+num.toString() > 75000 && +num.toString() <= 100000) {
+      return 24;
+    }
+    if (+num.toString() > 100000) {
+      return 26;
     }
   }
 
@@ -751,20 +840,39 @@ export class MapComponent implements AfterViewInit, OnInit {
   drawInfoPoints(data) {
     // let zoom = this.map.getZoom();
     // if (zoom > 11) {
-    this.apiService.infoPoint({ limit: '', offset: 0, points: data }).subscribe((coords: []) => {
-
-      coords['wellDtos'].forEach(coord => {
-        let circle = L.circle([coord['latitude'], coord['longitude']], {
-          color: '#0ff',
-          fillColor: '#0ff',
-          fillOpacity: 0.2,
-          radius: 200
+    var circleOptions = {
+      color: '#0ff',
+      fillColor: '#0ff',
+      fillOpacity: 0.4,
+      radius: 8,
+      weight: 2
+    }
+    this.apiService.highlighCreteria({ points: data }).subscribe((res: any) => {
+      if (res['count'] > 10000) {
+        const dialogRef = this.dialog.open(WarningWindowComponent, {
+          data: {
+            mesg: 'Your Area of Interest has more than 10000 records. Please choose a smaller area.'
+          }
         });
-        this.infoPointLayers.addLayer(circle);
-
-      })
-      this.map.addLayer(this.infoPointLayers);
+        dialogRef.afterClosed().subscribe(val => {
+          if (this.editableLayers) {
+            this.editableLayers.clearLayers();
+          }
+          this.mapExtent = [];
+        });
+      } else {
+        this.apiService.globalLoader = true;
+        this.apiService.infoPoint({ limit: '', offset: 0, points: data }).subscribe((coords: []) => {
+          coords['wellDtos'].forEach(coord => {
+            let circle = L.circleMarker([coord['latitude'], coord['longitude']], circleOptions);
+            this.infoPointLayers.addLayer(circle);
+          })
+          this.map.addLayer(this.infoPointLayers);
+          this.apiService.globalLoader = false;
+        });
+      }
     });
+
     // }
   }
 
@@ -773,7 +881,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     if (userInfo && Object.keys(userInfo)) {
       let id = userInfo.userId;
       this.apiService.userDetails(id).subscribe(user => {
-        this.formats = user['userPermissionDto']['reportTypes'];
+        this.formats = user['userPermissionDto']['reportTypes'].filter(file => file.length);
       });
     }
 
@@ -784,10 +892,9 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   isReadyToExprt() {
-    // let zoom = this.map ? this.map.getZoom() : 4;
-    // const isUserLoggedIn = JSON.parse(sessionStorage.getItem('userInfo'));
     let isDrawCreated;
-    if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
+    if (((this.editableLayers && Object.keys(this.editableLayers._layers).length) ||
+      (this.mapTownShipExtent && Object.keys(this.mapTownShipExtent).length)) && this.userService.isloggedin()) {
       isDrawCreated = true;
     } else {
       isDrawCreated = false;
@@ -797,19 +904,119 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   exportReport() {
     const payload = {};
+    const points = [];
     this.isShapeExporting = true;
     payload['reportType'] = this.reportType;
-    payload['points'] = this.mapExtent;
-    this.apiService.generateReport(payload).subscribe(res => {
-      const extension = this.reportType == 'shp' ? 'zip' : this.reportType;
-      const blobCont = new File([res], "Report." + extension, { type: extension });
-      saveAs(blobCont);
-      this.isShapeExporting = false;
+    if (this.activeTownship || this.activeSection || this.activeQuarter || this.activeQuarterQuarter) {
+      payload['plssFilterDto'] = this.mapTownShipExtent;
+    } else {
+      payload['points'] = this.mapExtent;
+    }
+    this.apiService.exportCreteria(payload).subscribe((res: any) => {
+      if (res.permission) {
+        this.apiService.generateReport(payload).subscribe(res => {
+          const extension = this.reportType == 'shp' || this.reportType === 'csv' ? 'zip' : this.reportType;
+          const blobCont = new File([res], "Report." + extension, { type: extension });
+          saveAs(blobCont);
+          this.isShapeExporting = false;
+        },
+          (err) => {
+            this.isShapeExporting = false;
+          });
+      } else {
+        this.isShapeExporting = false;
+        const dialogRef = this.dialog.open(WarningWindowComponent, {
+          data: {
+            mesg: 'You are not allowed to export for selected region, Please contact administrator.'
+          }
+        });
+      }
     });
+
+
   }
 
-  generateTownShip(type) {
-    this.townshipType = type;
-    this.isTownshipIsActive = true;
+  generateTownShip(event, type) {
+    event.stopPropagation();
+    if (this.apiService.isFilterApplied) {
+      const dialogRef = this.dialog.open(WarningWindowComponent, {
+        data: {
+          mesg: 'Do you want to clear previous selection?',
+          confirm: true,
+        }
+      });
+      dialogRef.afterClosed().subscribe(val => {
+        if (val === 'true') {
+          this.apiService.resetFilterSubject(true);
+          this.apiService.isFilterApplied = false;
+          this.generateTownShip(event, type);
+        }
+      });
+    } else {
+      if (type === 'township') {
+        this.activeTownship = !this.activeTownship;
+        this.activeSection = false;
+        this.activeQuarter = false;
+        this.activeQuarterQuarter = false;
+      }
+      if (type === 'section') {
+        this.activeSection = !this.activeSection;
+        this.activeTownship = false;
+        this.activeQuarter = false;
+        this.activeQuarterQuarter = false;
+      }
+      if (type === 'quarter') {
+        this.activeTownship = false;
+        this.activeSection = false;
+        this.activeQuarter = !this.activeQuarter;
+        this.activeQuarterQuarter = false;
+      }
+      if (type === 'quaterQuater') {
+        this.activeTownship = false;
+        this.activeSection = false;
+        this.activeQuarter = false;
+        this.activeQuarterQuarter = !this.activeQuarterQuarter;
+      }
+      this.townshipType = type;
+      this.isTownshipIsActive = true;
+      if (!this.activeSection && !this.activeTownship && !this.activeQuarter && !this.activeQuarterQuarter) {
+        this.mapTownShipExtent = {};
+        if (this.infoPointLayers) {
+          this.infoPointLayers.clearLayers();
+        }
+        if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
+          const mapPoint = this.getShapeExtent();
+          this.mapExtent = mapPoint;
+        } else {
+          this.mapExtent = [];
+        }
+
+      }
+    }
+
   }
+
+
+  getShapeExtent() {
+    const circleExtent = this.editableLayers.getBounds();
+    const mapPoint = [{
+      lat: circleExtent.getNorthWest().lat,
+      lon: circleExtent.getNorthWest().lng
+    }, {
+      lat: circleExtent._northEast.lat,
+      lon: circleExtent._northEast.lng
+    }, {
+      lat: circleExtent.getSouthEast().lat,
+      lon: circleExtent.getSouthEast().lng
+    }, {
+      lat: circleExtent._southWest.lat,
+      lon: circleExtent._southWest.lng
+    }, {
+      lat: circleExtent.getNorthWest().lat,
+      lon: circleExtent.getNorthWest().lng
+    }];
+
+    return mapPoint;
+  }
+
 }
