@@ -1,14 +1,15 @@
 <mat-toolbar class='navBar'>
     <div>
-        <img class="logo pointerClass" routerLink = '/home' src="../assets/logo.jpeg">
+        <img class="logo pointerClass" routerLink = '/home' src="../assets/USLandGrid3.png">
     </div>
     <div>
-        <button mat-button  *ngIf='!isLoggedIn' (click)='routeToLogin()'>
+        <button mat-button  routerLink='/admin' class="mx-3" *ngIf="loginService.isAdmin()">Admin Board</button>
+        <button mat-button  *ngIf='!loginService.isloggedin()' routerLink='/user-auth'>
             <span>
                 Login
             </span>
         </button>
-        <button  mat-button *ngIf='isLoggedIn' (click)='logout()'>
+        <button  mat-button *ngIf='loginService.isloggedin()' (click)='logout()'>
             <span>
                 Logout
             </span>
@@ -20,3 +21,23 @@
         </button> -->
     </div>
 </mat-toolbar>
+
+
+
+<!-- The Modal -->
+<div class="modal" id="authDialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal body -->
+        <div class="modal-body">
+          <p style="font-size: 13px;">You are not allowed to generate report against one of selected county. Please contact administrator</p>
+        </div>
+        
+        <div class="modal-footer" style="padding: 0.5 rem 1rem;">
+          <button type="button" class="btn btn-danger" style="background: #1a76ab;" (click)="closeinfoModal()">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>

@@ -14,7 +14,9 @@
     justify-content: space-between;
   }
 
-  ::ng-deep.mat-dialog-container {
+  :host::ng-deep .mat-dialog-container {
     resize: both; 
     overflow: auto;
+    margin-right: 30px !important;
   }
+

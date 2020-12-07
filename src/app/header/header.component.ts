@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MapLegendComponent } from '../map-legend/map-legend.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiService } from '../_services/api.service';
+declare var $: any;
 
 @Component({
   selector: 'app-header',
@@ -13,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class HeaderComponent implements OnInit {
   isLoggedIn = false;
   constructor(public loginService: LoginService, public router: Router,
-    public dialog: MatDialog, public _snackBar: MatSnackBar) { }
+    public dialog: MatDialog, public _snackBar: MatSnackBar, public api_service: ApiService) { }
 
   ngOnInit() {
     this.loginService.user.subscribe((data) => {
@@ -22,7 +24,7 @@ export class HeaderComponent implements OnInit {
   }
 
   routeToLogin() {
-    this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.routerState.snapshot.url } })
+    this.router.navigate(['/user-auth'], { queryParams: { returnUrl: this.router.routerState.snapshot.url } })
   }
 
   openLegends() {
@@ -36,8 +38,12 @@ export class HeaderComponent implements OnInit {
     dialogRef.afterClosed().subscribe(console.log);
   }
 
+
   logout() {
-    this.loginService.publishLoginResponseFalse();
+    sessionStorage.removeItem('userInfo');
+    sessionStorage.removeItem('loginToken');
+    // this.router.navigate(['/home']);
+    window.location.reload(true);
     this.openSnackBar('Logged out successfully', 'Dismiss');
   }
 
@@ -49,4 +55,8 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  closeinfoModal() {
+    $('#authDialog').toggle();
+    this.api_service.closeFilter(true);
+  }
 }

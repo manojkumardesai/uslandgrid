@@ -17,9 +17,31 @@
     margin-bottom: 16px;
 }
 
+.export {
+  margin-left: auto !important;
+  display: inline;
+}
+
 ::ng-deep .mat-menu-content {
     height: auto;
   }
+
+::ng-deep .mat-spinner {
+  float:left; 
+  width: 20px !important; 
+  height: 20px !important; 
+  margin: 5px 10px 0px 0px;
+}
+::ng-deep .mat-progress-spinner svg {
+  position: absolute;
+  transform: rotate(-90deg);
+  top: 0;
+  left: 0;
+  transform-origin: center;
+  overflow: visible;
+  height: 20px !important;
+  width: 20px !important;
+}
 
   .fields {
     display: flex;
@@ -48,4 +70,312 @@
     cursor: grab;
   }
 
+  // new filter styles starts from here
   
+.row-filter {
+  align-items: center;
+  .col-filter {
+    width: 50%;
+  }
+}
+
+.close-filter-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.filter-header-set {
+  display: flex;
+  align-items: center;
+  .filter-menu {
+    height: 25px;
+    width: 25px;
+    line-height: 25px;
+    text-align: center;
+    background-color: rgb(90,91,92);
+    .fa-filter {
+      color: rgba(119, 173, 28, 1);
+    }
+  }
+}
+
+
+::ng-deep .select-query {
+  background-color: #5a5b5c;
+  height: 25px;
+  line-height: 23px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  font-size: 13px;
+  padding-right: 5px;
+  .mat-radio-container {
+    height: 16px;
+    width: 16px;
+    .mat-radio-outer-circle, .mat-radio-inner-circle {
+      height: 16px;
+      width: 16px;
+    }
+  }
+  .mat-radio-outer-circle,
+  .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #1a76ab;
+  } 
+  .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #1a76ab;
+  }
+  label {
+    margin-bottom: 0px;
+  }
+}
+
+.filter-footer {
+  border-top: 1px solid gray;
+  padding-top: 10px;
+  text-align: right;
+  margin-top: -1px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .filter-btn-apply {
+    background-color:  #1a76ab;
+    color: white;
+    border: none;
+    padding: 3px 6px;
+    margin-right: 5px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .filter-btn-clear {
+    background-color: rgb(90,91,92);
+    color: white;
+    border: none;
+    padding: 3px 6px;
+    cursor: pointer;
+    font-size: 13px;
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+  .choose-format {
+    padding: 2.5px 6px;
+    border-radius: 0px;
+    font-size: 12px;
+    background-color: #424242;
+    color: white;
+    border: none;
+    height: auto;
+    margin: 0 6px;
+    border: 1px solid gray;
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+ 
+.filter-card {
+  .card {
+    border: 1px solid #424242;
+    border-bottom: 1px solid gray;
+    margin-bottom: 7px;
+    .card-header {
+      background-color: #424242;
+      padding: 3px 3px 3px 0px;
+      .toggle-icon {
+        .fa-plus {
+          border: 1px solid gray;
+          font-size: 12px;
+          padding: 2px 3px;
+        }
+        .fa-minus {
+          font-size: 12px;
+          padding: 2px 3px;
+          background-color:  #1a76ab;
+        }
+      }
+      .card-header-lable {
+        font-size: 12px;
+        padding-left: 5px;
+      }
+      .total-lable {
+        font-size: 12px;
+        padding-right: 6px;
+        color: gray;
+      }
+      .count-lable {
+        font-size: 12px;
+      }
+
+    }
+    .card-body {
+      background-color: #424242;
+      padding: 3px 3px 3px 0px;
+    }
+  }
+}
+
+.filter-form-control {
+  margin-bottom: 0px;
+  label {
+    margin-bottom: 0px;
+    font-size: 12px;
+  }
+  .form-control {
+    font-size: 12px;
+    border-radius: 0px;
+    height: auto;
+    padding: 3px;
+    color: white;
+    background: #474747;
+    border-color: gray;
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+}
+.filter-button {
+  color: white;
+  font-size: 12px;
+  width: 100%;
+  border-radius: 0px;
+  background: gray;
+  border: 1px solid #424242;
+  text-align: left;
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+button.filter-button[aria-expanded="true"]{
+  background-color:  #1a76ab;
+  color: white;
+}
+
+.spud-date-field {
+  width: 150px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.sub-group-wrapper {
+    border: 1px solid gray;
+    padding: 2px;
+    margin-top: 10px;
+    background-color: gray;
+}
+
+
+.filter-body {
+  height: auto;
+  max-height: 500px;
+  overflow: auto;
+}
+
+.filter-card {
+  border: 0px;
+    border-bottom: 1px solid gray;
+    border-radius: 0px;
+    margin-bottom: 2px;
+  .card-header {
+    border-radius: 0px;
+    padding: 3px 4px;
+    background-color: #424242;
+    cursor: pointer;
+    .subgroup-btn {
+      background-color: gray;
+      width: 100%;
+      border: 0;
+      color: white;
+      font-size: 13px;
+      text-align: left;
+      padding: 3px 4px;
+      &:focus {
+        outline: none;
+        border: 0px;
+      }
+      &[aria-expanded="true"]{
+        background-color: #1a76ab;
+        .fa-plus {
+          display: none;
+        }
+     }
+     &[aria-expanded="false"]{
+       .fa-minus {
+         display: none;
+       }
+     }
+    }
+    
+    a {
+      font-size: 13px;
+    }
+    .fa-plus {
+      padding: 2px 3px;
+      border: 1px solid gray;
+    }
+    .fa-minus {
+      padding: 2px 3px;
+      background-color: #1a76ab;
+    }
+    .total-label {
+      color: gray;
+      font-size: 12px;
+      padding-right: 5px;
+    }
+    .count-label {
+      font-size: 12px;
+    }
+
+  }
+  .card-body {
+    padding: 0px 4px;
+    background-color: #424242;
+
+    .card {
+      border: 0px;
+      .card-header, .card-body {
+        padding: 0px;
+      }
+    }
+  }
+}
+
+.filter-form-group {
+  padding: 3px;
+  margin-bottom: 0px;
+  background-color: gray;
+  label {
+    margin-bottom: 0px;
+    font-size: 13px;
+    color: white;
+  }
+  .form-control {
+    border-radius: 0px;
+    padding: 2px 3px;
+    height: auto;
+    background: #424242;
+    border: 1px solid gray;
+    color: white;
+    font-size: 13px;
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
+  }
+}
+
+::ng-deep .bs-datepicker-container {
+  padding: 0px !important;
+}
+
+::ng-deep .bs-datepicker-head {
+  border-radius: 0px !important;
+}
+
+// ::ng-deep .mat-dialog { transition: none; }
+

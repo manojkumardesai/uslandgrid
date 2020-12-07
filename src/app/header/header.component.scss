@@ -9,9 +9,14 @@ button {
 }
 
 .logo {
-    height: 30px;
+    height: 40px;
+    vertical-align: middle;
 }
 
 .pointerClass {
     cursor: pointer;
+}
+
+.mat-toolbar {
+    background: #424242 !important;
 }

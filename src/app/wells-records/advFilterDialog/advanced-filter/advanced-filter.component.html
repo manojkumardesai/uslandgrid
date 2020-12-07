@@ -1,191 +1,444 @@
 <div>
   <div class="header">
-    <div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
-    <h3 mat-dialog-title>
-      <mat-icon>drag_handle</mat-icon>
-      Filter
-    </h3></div>
-    <div>
-      <button mat-button (click)="onNoClick()">
-        <mat-icon>close</mat-icon>
-      </button>
+    <div style="position: absolute;">
     </div>
   </div>
-  <div class='actionButtons'>
-    <!-- <button mat-button (click)="addExpressionToExp()">
-      <mat-icon color="primary">add</mat-icon> Add Expression
-    </button> -->
-    <button mat-button (click)="addSetToSetForm()">
-      <mat-icon color="primary">add</mat-icon> Add Set
-    </button>
-  </div>
-  <div mat-dialog-content class='auto-width'>
-      <mat-form-field *ngIf="displayGlobalConditions">
-          <mat-label>Select condition</mat-label>
-          <mat-select [(value)]="selectedGlobalCondition">
-            <mat-option *ngFor="let conditions of globalLogicalConditions" [value]="conditions.value">
-              {{conditions.viewValue}}
-            </mat-option>
-          </mat-select>
-      </mat-form-field>
-      <form [formGroup]="advanceFilterForm">
-        <div formArrayName='exp'>
-          <div class ="fields" *ngFor='let exp of expForms.controls; let i=index;' [formGroupName]="i">
-            <mat-form-field>
-              <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
-              formControlName="column">
-              <mat-autocomplete #columnsAutoComplete="matAutocomplete" (optionSelected)="changeExpColumnValue(i)">
-                <mat-option *ngFor="let column of columns" [value]="column.value">
-                  <span>{{column.name}}</span>
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-            <mat-form-field>
-              <input matInput placeholder="Condition" aria-label="Condition" [matAutocomplete]="conditionsAutoComplete"
-              formControlName="condition">
-              <mat-autocomplete #conditionsAutoComplete="matAutocomplete" (optionSelected)="expConditionChange(i)">
-                <mat-option *ngFor="let condition of conditions" [value]="condition.value">
-                  <span>{{condition.name}}</span>
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-            <mat-form-field *ngIf="valueTypeMap[i] == 'Value'">
-              <input matInput placeholder="Enter filter term here" 
-              aria-label="Value" formControlName="value" (change)="updateInput(i)">
-            </mat-form-field>
-            <app-multi-select *ngIf="valueTypeMap[i] == 'Field'"
-            [data]="values[i]" 
-            (changeDropdown)="updateInput(i, $event)"
-            [enableCheckbox]="false">
-            </app-multi-select>
-            <app-multi-select *ngIf="valueTypeMap[i] == 'Unique'"
-            [data]="values[i]" 
-            (changeDropdown)="updateInput(i, $event)"
-            [enableCheckbox]="false">
-            </app-multi-select>
-            <app-multi-select *ngIf="valueTypeMap[i] == 'Multiple'"
-            [optionMultiCtrl]="getValueFieldFormControl(i)" [data]="values[i]" [enableCheckbox]="true">
-            </app-multi-select>
-            <button mat-icon-button [matMenuTriggerFor]="expMenu" aria-label="Example icon-button with a menu">
-              <mat-icon>settings</mat-icon>
-            </button>
-            <mat-menu #expMenu="matMenu">
-              <mat-radio-group class="valuetype-radio-group">
-                <mat-radio-button class="valuetype-radio-button" 
-                mat-menu *ngFor="let value of valueTypes" [value]="value"
-                [checked] = "valueTypeMap[i] == value"
-                (change)="expSettingMenuChange(i, value)" [disabled]="setExpMenuValues(i, value)">
-                  {{value}}
-                </mat-radio-button>
-              </mat-radio-group>
-            </mat-menu>
-            <button mat-icon-button (click)="deleteExpFromExpArray(i)">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <br/>
-            <!-- <mat-checkbox formControlName="caseSensitive">
-              Case Sensitive
-            </mat-checkbox> -->
-            
+
+  
+  <div class="filter-group">
+      <div class="row-filter row">
+      <div class="col-filter col-sm-9">
+        <div class="filter-header-set">
+          <div class="select-query">
+            <mat-radio-group aria-label="Select an option">
+            <mat-radio-button value="1" 
+            (click)="appllyCondtions('all')" 
+            [checked] = 'this.apiService.appllyAllCondtions'
+            style="margin-left: 5px;">Apply all the conditions </mat-radio-button>
+            <mat-radio-button value="2" 
+            (click)="appllyCondtions('any')" 
+            [checked] = 'this.apiService.appllyAnyCondtion'
+            style="margin-left: 15px;"> Apply any of the conditions</mat-radio-button>
+          </mat-radio-group>
           </div>
         </div>
-        <div formArrayName='set'>
-          <div *ngFor='let set of setForms.controls; let i=index;' [formGroupName]="i">
-            <div class='fields'>
-              <mat-form-field>
-                <mat-label>Select condition</mat-label>
-                <mat-select formControlName="setOperator">
-                  <mat-option *ngFor="let conditions of setLogicalConditions" [value]="conditions.value">
-                    {{conditions.viewValue}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <div>
-                <button mat-icon-button (click)="deleteSet(i)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-                <!-- <button mat-button (click)="addExpToSetForm(i)">
-                  <mat-icon color="primary">add</mat-icon> Add Expression
-                </button> -->
-              </div>
+      </div>
+    
+      <div class="col-filter col-sm-3">
+        <div class="close-filter text-right">
+          <button class="close-filter-btn"  (click)="onNoClick()">
+           <!-- <i class="fa fa-times"></i> --><span class="material-icons"
+           style="transform: rotate(180deg);
+           color: #1a76ab;" 
+           title="Close Filter Menu">double_arrow</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="loading" *ngIf="!isWellGridLoaded && !isLandGridLoaded && !isProductionLoaded && !isDateLoaded"><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color: blue"></i> Please Wait</div> -->
+    <form [formGroup] = "filterForm">
+    <div class="filter-wrapper mt-4">
+      <div class="filter-body">
+        <div id="main-accordian" style="overflow-x: hidden;">
+         
+          <div class="card filter-card" formGroupName="well">
+            <div class="card-header" (click)="toggleCollapse('wells')">
+              <a class="collapsed card-link"
+               data-toggle="collapse" 
+               data-target="#wells-collapse" 
+               aria-expanded="false">
+                <div class="d-flex w-100">
+                  <div class="col-sm-6 px-0">
+                  <span class="fa fa-plus"
+                  data-toggle="collapse" data-target="#wells-collapse" 
+                  *ngIf="!isWellsCollapsed"></span> 
+                  <span class="fa fa-minus" 
+                  data-toggle="collapse" data-target="#wells-collapse"
+                  *ngIf="isWellsCollapsed"></span> Wells
+                  </div>
+                  <div class="col-sm-6 px-0 text-right d-none">
+                    <span class="total-label">Total:</span> <span class="count-label">4321</span>
+                  </div>
+                </div>
+                
+              </a>
             </div>
-            <div formArrayName='exp'>
-            <div class="fields" *ngFor="let exp of set.get('exp').controls;let j = index;even as isEven odd as isOdd" [formGroupName]="j">
-              
-                <mat-form-field>
-                  <input matInput placeholder="Column" aria-label="Column" [matAutocomplete]="columnsAutoComplete"
-                  formControlName="column">
-                  <mat-autocomplete #columnsAutoComplete="matAutocomplete" (optionSelected)="changeSetExpColumnValue(i, j, $event)">
-                    <ng-container *ngIf="isEven">
-                      <mat-option *ngFor="let column of columns" [value]="column">
-                        <span>{{column.column}}</span>
-                      </mat-option>
-                    </ng-container>
-                    <ng-container *ngIf="isOdd">
-                      <mat-option *ngFor="let column of prodColumns" [value]="column">
-                        <span>{{column.column}}</span>
-                      </mat-option>
-                    </ng-container>
-                  </mat-autocomplete>
-                </mat-form-field>
-                <mat-form-field>
-                  <input matInput placeholder="Condition" aria-label="Condition" [matAutocomplete]="conditionsAutoComplete"
-                  formControlName="condition">
-                  <mat-autocomplete #conditionsAutoComplete="matAutocomplete" (optionSelected)="setExpConditionChange(i, j)">
-                    <mat-option *ngFor="let condition of conditions" [value]="condition.value">
-                      <span>{{condition.name}}</span>
-                    </mat-option>
-                  </mat-autocomplete>
-                </mat-form-field>
-                <mat-form-field *ngIf="valueTypeMap[i+''+j] == 'Value'">
-                  <input matInput placeholder="Enter filter term here"
-                  (change) = "updateSetInput(i, j)"
-                  aria-label="Value" formControlName="value">
-                </mat-form-field>
-                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Field'"
-                    [data]="values[i+''+j]"
-                    (changeDropdown)="updateSetInput(i, j, $event)"
-                    [enableCheckbox]="false">
-                </app-multi-select>
-                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Unique'"
-                     [data]="values[i+''+j]"
-                    (changeDropdown)="updateSetInput(i, j, $event)"
-                    [enableCheckbox]="false">
-                </app-multi-select>
-                <app-multi-select *ngIf="valueTypeMap[i+''+j] == 'Multiple'"
-                    [optionMultiCtrl]="getValueFieldFormControlForSet(i, j)" [data]="values[i+''+j]" [enableCheckbox]="true">
-                </app-multi-select>
-                <button mat-icon-button [matMenuTriggerFor]="setExpMenu">
-                  <mat-icon>settings</mat-icon>
-                </button>
-                <mat-menu #setExpMenu="matMenu">
-                  <mat-radio-group class="valuetype-radio-group">
-                    <mat-radio-button class="valuetype-radio-button"
-                    mat-menu *ngFor="let value of valueTypes" [value]="value"
-                    [checked] = "valueTypeMap[i+''+j] == value"
-                    (change)="setExpSettingMenuChange(i, j, value)" [disabled]="setMenuValuesOfSet(i, j, value)">
-                      {{value}}
-                    </mat-radio-button>
-                  </mat-radio-group>
-                </mat-menu>
-                <button mat-icon-button *ngIf="set.get('exp').controls.length > 2" (click)="deleteExpFromSet(j, i)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-                <br/>
-                <!-- <mat-checkbox formControlName="caseSensitive">
-                  Case Sensitive
-                </mat-checkbox> -->
+            <div id="wells-collapse" class="collapse" data-parent="#main-accordian">
+              <div class="card-body">
+                <div id="wells-subgroup">
+                  <ng-container *ngIf="this.apiService.grids && this.apiService.grids['well'].length">
+                  <div class="row">
+                    <div class="col-sm-6"  *ngFor="let welCol of this.apiService.grids['well']">
+                      <div class="card">
+                        <div class="card-header">
+                            <button type="button" class="subgroup-btn" data-toggle="collapse" 
+                            [attr.href]="'#well_'+removeSpaceInText(welCol['column'])" aria-expanded="false"
+                            [attr.aria-controls]="'well_'+removeSpaceInText(welCol['column'])">{{welCol.column}}
+                            </button>
+                        </div>
+                        <div [id]="'well_'+removeSpaceInText(welCol['column'])" class="collapse" 
+                        data-parent="#wells-subgroup" 
+                        [attr.aria-labelledby]="'well_'+removeSpaceInText(welCol['column'])">
+                          <div class="card-body"  *ngIf="welCol.type == 'String'">
+                            <div class="form-group filter-form-group">
+                              <label [for]="'wellLabel'+removeSpaceInText(welCol['column'])">Name</label>
+                              <input type="text" 
+                              (keyup) ="searchString( welCol['column'], welCol['table'], 'well')"
+                              [formControlName]="removeSpaceInText(welCol['column'])"
+                              [attr.list]="'well_list_'+removeSpaceInText(welCol['column'])" 
+                              [id]="'wellLabel'+removeSpaceInText(welCol['column'])" class="form-control" >
+                              <datalist [id]="'well_list_'+removeSpaceInText(welCol['column'])">
+                                <ng-container *ngFor="let val of this.apiService.wells[removeSpaceInText(welCol['column'])]">
+                                  <option [value]="val">{{val}}</option>
+                                </ng-container>
+                              </datalist>
+                            </div>
+                          </div>
+                          <div class="card-body d-flex"  *ngIf="welCol.type == 'Integer'" [formGroupName]="removeSpaceInText(welCol['column'])">
+                            <div class="form-group filter-form-group">
+                              <label [for]="'wellLabel'+removeSpaceInText(welCol['column'])+'from'">From</label>
+                              <input type="number" 
+                              formControlName="from"
+                              [id]="'wellLabel'+removeSpaceInText(welCol['column'])+'from'" class="form-control" >
+                            </div>
+                            <div class="form-group filter-form-group">
+                              <label [for]="'wellLabel'+removeSpaceInText(welCol['column'])+'to'">To</label>
+                              <input type="number" 
+                              formControlName="to"
+                              [id]="'wellLabel'+removeSpaceInText(welCol['column'])+'to'" class="form-control" >
+                            </div>
+                          </div>
+                          <div class="card-body d-flex"  *ngIf="welCol.type == 'Date'" [formGroupName]="removeSpaceInText(welCol['column'])">
+                            <div class="form-group filter-form-group">
+                              <label [for]="'wellLabel'+removeSpaceInText(welCol['column'])+'from'">From</label>
+                              <input type="text" 
+                              formControlName="from"
+                              [id]="'wellLabel'+removeSpaceInText(welCol['column'])+'from'" class="form-control" 
+                              placement="right"
+                              [bsConfig]="datePickerConfig"
+                              bsDatepicker>
+                            </div>
+                            <div class="form-group filter-form-group">
+                              <label [for]="'wellLabel'+removeSpaceInText(welCol['column'])+'to'">To</label>
+                              <input type="text" 
+                              formControlName="to"
+                              [id]="'wellLabel'+removeSpaceInText(welCol['column'])+'to'" class="form-control" 
+                              placement="right"
+                              [bsConfig]="datePickerConfig"
+                              bsDatepicker>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                </div>
               </div>
             </div>
           </div>
+          <div class="card filter-card" formGroupName="landGrid">
+            <div class="card-header" (click)="toggleCollapse('landGrid')">
+              <a class="collapsed card-link" 
+              data-toggle="collapse" data-target="#landGrid-collapse">
+                <div class="d-flex w-100">
+                  <div class="col-sm-6 px-0">
+                    <span class="fa fa-plus" 
+                    data-toggle="collapse" data-target="#landGrid-collapse"
+                    *ngIf="!isLandGridCollapsed"></span>
+                    <span class="fa fa-minus"
+                    data-toggle="collapse" data-target="#landGrid-collapse"
+                     *ngIf="isLandGridCollapsed"></span> LandGrid
+                  </div>
+                  <div class="col-sm-6 px-0 text-right d-none">
+                    <span class="total-label">Total:</span> <span class="count-label">4321</span>
+                  </div>
+                </div>
+            </a>
+            </div>
+            <div id="landGrid-collapse" class="collapse" data-parent="#main-accordian">
+              <div class="card-body">
+                <div id="landGrid-subgroup">
+                  <ng-container *ngIf="this.apiService.grids && this.apiService.grids['landGrid'].length">
+                    <div class="row">
+                      <div class="col-sm-6" *ngFor="let landGrid of this.apiService.grids['landGrid']">
+                        <div class="card">
+                          <div class="card-header">
+                              <button type="button" class="subgroup-btn" data-toggle="collapse" 
+                              [attr.href]="'#landGrid_'+removeSpaceInText(landGrid['column'])" aria-expanded="false"
+                              [attr.aria-controls]="'landGrid_'+removeSpaceInText(landGrid['column'])">{{landGrid.column}}
+                              </button>
+                          </div>
+                          <div [id]="'landGrid_'+removeSpaceInText(landGrid['column'])" class="collapse" 
+                          data-parent="#landGrid-subgroup" 
+                          [attr.aria-labelledby]="'landGrid_'+removeSpaceInText(landGrid['column'])">
+                            <div class="card-body"  *ngIf="landGrid.type == 'String'">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'landGridLabel'+removeSpaceInText(landGrid['column'])">Name</label>
+                                <input type="text" 
+                                (keyup) ="searchString( landGrid['column'], landGrid['table'], 'landGrid')"
+                                [formControlName]="removeSpaceInText(landGrid['column'])"
+                                [attr.list]="'landGrid_list_'+removeSpaceInText(landGrid['column'])" 
+                                [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])" class="form-control" >
+                                <datalist [id]="'landGrid_list_'+removeSpaceInText(landGrid['column'])">
+                                  <ng-container *ngFor="let val of this.apiService.landGrids[removeSpaceInText(landGrid['column'])]">
+                                    <option [value]="val">{{val}}</option>
+                                  </ng-container>
+                                </datalist>
+                              </div>
+                            </div>
+                            <div class="card-body d-flex"  *ngIf="landGrid.type == 'Integer'" [formGroupName]="removeSpaceInText(landGrid['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'landgridLabel'+removeSpaceInText(landGrid['column'])+'from'">From</label>
+                                <input type="number" 
+                                formControlName="from"
+                                [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])+'from'" class="form-control" >
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'landgridLabel'+removeSpaceInText(landGrid['column'])+'to'">To</label>
+                                <input type="number" 
+                                formControlName="to"
+                                [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])+'to'" class="form-control" >
+                              </div>
+                            </div>
+                            <div class="card-body d-flex"  *ngIf="landGrid.type == 'Date'" [formGroupName]="removeSpaceInText(landGrid['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'landgridLabel'+removeSpaceInText(landGrid['column'])+'from'">From</label>
+                                <input type="text" 
+                                formControlName="from"
+                                [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])+'from'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="datePickerConfig"
+                                bsDatepicker>
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'landgridLabel'+removeSpaceInText(landGrid['column'])+'to'">To</label>
+                                <input type="text" 
+                                formControlName="to"
+                                [id]="'landGridLabel'+removeSpaceInText(landGrid['column'])+'to'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="datePickerConfig"
+                                bsDatepicker>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card filter-card" formGroupName="production">
+            <div class="card-header" (click)="toggleCollapse('production')">
+              <a class="collapsed card-link" data-toggle="collapse" data-target="#production-collapse">
+                <div class="d-flex w-100">
+                  <div class="col-sm-6 px-0">
+                    <span class="fa fa-plus"
+                    data-toggle="collapse" data-target="#production-collapse" 
+                    *ngIf="!isProductioCollapsed"></span>
+                    <span class="fa fa-minus"
+                    data-toggle="collapse" data-target="#production-collapse" 
+                    *ngIf="isProductioCollapsed"></span> Production
+                  </div>
+                  <div class="col-sm-6 px-0 text-right d-none">
+                    <span class="total-label">Total:</span> <span class="count-label">4321</span>
+                  </div>
+                </div> 
+              </a>
+            </div>
+            <div id="production-collapse" class="collapse" data-parent="#main-accordian">
+              <div class="card-body">
+                <div id="production-subgroup">
+                  <ng-container *ngIf="this.apiService.grids && this.apiService.grids['production'].length">
+                    <div class="row">
+                      <div class="col-sm-6"  *ngFor="let production of this.apiService.grids['production']">
+                        <div class="card">
+                          <div class="card-header">
+                              <button type="button" class="subgroup-btn" data-toggle="collapse" 
+                              [attr.href]="'#production_'+removeSpaceInText(production['column'])" aria-expanded="false"
+                              [attr.aria-controls]="'production_'+removeSpaceInText(production['column'])">{{production.column}}
+                              </button>
+                          </div>
+                          <div [id]="'production_'+removeSpaceInText(production['column'])" class="collapse" 
+                          data-parent="#production-subgroup" 
+                          [attr.aria-labelledby]="'production_'+removeSpaceInText(production['column'])">
+                            <div class="card-body"  *ngIf="production.type == 'String'">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'productionLabel'+removeSpaceInText(production['column'])">Name</label>
+                                <input type="text" 
+                                (keyup) ="searchString( production['column'], production['table'], 'production')"
+                                [formControlName]="removeSpaceInText(production['column'])"
+                                [attr.list]="'production_list_'+removeSpaceInText(production['column'])" 
+                                [id]="'productionLabel'+removeSpaceInText(production['column'])" class="form-control" >
+                                <datalist [id]="'production_list_'+removeSpaceInText(production['column'])">
+                                  <ng-container *ngFor="let val of this.apiService.productions[removeSpaceInText(production['column'])]">
+                                    <option [value]="val">{{val}}</option>
+                                  </ng-container>
+                                </datalist>
+                              </div>
+                            </div>
+                            <div class="card-body d-flex"  *ngIf="production.type == 'Integer'" [formGroupName]="removeSpaceInText(production['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'productionLabel'+removeSpaceInText(production['column'])+'from'">From</label>
+                                <input type="number" 
+                                formControlName="from"
+                                [id]="'productionLabel'+removeSpaceInText(production['column'])+'from'" class="form-control" >
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'productionLabel'+removeSpaceInText(production['column'])+'to'">To</label>
+                                <input type="number" 
+                                formControlName="to"
+                                [id]="'productionLabel'+removeSpaceInText(production['column'])+'to'" class="form-control" >
+                              </div>
+                            </div>
+                            <div class="card-body d-flex"  *ngIf="production.type == 'Date'" [formGroupName]="removeSpaceInText(production['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'productionLabel'+removeSpaceInText(production['column'])+'from'">From</label>
+                                <input type="text" 
+                                formControlName="from"
+                                [id]="'productionLabel'+removeSpaceInText(production['column'])+'from'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="datePickerConfig"
+                                bsDatepicker>
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'productionLabel'+removeSpaceInText(production['column'])+'to'">To</label>
+                                <input type="text" 
+                                formControlName="to"
+                                [id]="'productionLabel'+removeSpaceInText(production['column'])+'to'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="datePickerConfig"
+                                bsDatepicker>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card filter-card border-bottom-0"  formGroupName="date">
+            <div class="card-header" (click)="toggleCollapse('date')">
+              <a class="collapsed card-link" data-toggle="collapse" data-target="#date-collapse">
+                <div class="d-flex w-100">
+                  <div class="col-sm-6 px-0">
+                    <span class="fa fa-plus"
+                    data-toggle="collapse" data-target="#date-collapse" 
+                    *ngIf="!isDateCollapsed"></span>
+                    <span class="fa fa-minus"
+                    data-toggle="collapse" data-target="#date-collapse" 
+                    *ngIf="isDateCollapsed"></span> Date
+                  </div>
+                  <div class="col-sm-6 px-0 text-right d-none">
+                    <span class="total-label">Total:</span> <span class="count-label">4321</span>
+                  </div>
+                </div> 
+                
+              </a>
+            </div>
+            <div id="date-collapse" class="collapse" data-parent="#main-accordian">
+              <div class="card-body">
+                <div id="date-subgroup">
+                  <ng-container *ngIf="this.apiService.grids && this.apiService.grids['date'].length">
+                    <div class="row">
+                      <div class="col-sm-6"  *ngFor="let date of this.apiService.grids['date']">
+                        <div class="card">
+                          <div class="card-header">
+                              <button type="button" class="subgroup-btn" data-toggle="collapse" 
+                              [attr.href]="'#date_'+removeSpaceInText(date['column'])" aria-expanded="false"
+                              [attr.aria-controls]="'date_'+removeSpaceInText(date['column'])">{{date.column}}
+                              </button>
+                          </div>
+                          <div [id]="'date_'+removeSpaceInText(date['column'])" class="collapse" 
+                          data-parent="#date-subgroup" 
+                          [attr.aria-labelledby]="'date_'+removeSpaceInText(date['column'])">
+                            <div class="card-body"  *ngIf="date.type == 'String'">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'dateLabel'+removeSpaceInText(date['column'])">Name</label>
+                                <input type="text" 
+                                (keyup) ="searchString( date['column'], date['table'], 'date')"
+                                [formControlName]="removeSpaceInText(date['column'])"
+                                [attr.list]="'date_list_'+removeSpaceInText(date['column'])" 
+                                [id]="'dateLabel'+removeSpaceInText(date['column'])" class="form-control" >
+                                <datalist [id]="'date_list_'+removeSpaceInText(date['column'])">
+                                  <ng-container *ngFor="let val of this.apiService.dates[removeSpaceInText(date['column'])]">
+                                    <option [value]="val">{{val}}</option>
+                                  </ng-container>
+                                </datalist>
+                              </div>
+                            </div>
+                            <div class="card-body d-flex"  *ngIf="date.type == 'Integer'" [formGroupName]="removeSpaceInText(date['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'dateLabel'+removeSpaceInText(date['column'])+'from'">From</label>
+                                <input type="number" 
+                                formControlName="from"
+                                [id]="'dateLabel'+removeSpaceInText(date['column'])+'from'" class="form-control" >
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'dateLabel'+removeSpaceInText(date['column'])+'to'">To</label>
+                                <input type="number" 
+                                formControlName="to"
+                                [id]="'dateLabel'+removeSpaceInText(date['column'])+'to'" class="form-control" >
+                              </div>
+                            </div>
+                            <div class="card-body d-flex"  *ngIf="date.type == 'Date'" [formGroupName]="removeSpaceInText(date['column'])">
+                              <div class="form-group filter-form-group">
+                                <label [for]="'dateLabel'+removeSpaceInText(date['column'])+'from'">From</label>
+                                <input type="text" 
+                                formControlName="from"
+                                [id]="'dateLabel'+removeSpaceInText(date['column'])+'from'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="datePickerConfig"
+                                bsDatepicker>
+                              </div>
+                              <div class="form-group filter-form-group">
+                                <label [for]="'dateLabel'+removeSpaceInText(date['column'])+'to'">To</label>
+                                <input type="text" 
+                                formControlName="to"
+                                [id]="'dateLabel'+removeSpaceInText(date['column'])+'to'" class="form-control" 
+                                placement="right"
+                                [bsConfig]="datePickerConfig"
+                                bsDatepicker>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </form>
-  </div>
-  <div mat-dialog-actions align="right">
-    <!-- [mat-dialog-close]="data.animal" -->
-    <button mat-button [disabled]="advanceFilterForm.invalid" [mat-dialog-close]="advanceFilterForm.value">Apply</button>
-    <!-- <button mat-button [disabled]="true">Export</button> -->
-    <button mat-button (click)="onNoClick()">Cancel</button>
-    <button mat-button (click)="reset()">Reset</button>
+      </div>
+    
+    </div>
+  </form>
+    <div class="filter-footer">
+      <button class="filter-btn-apply" (click) ="applyfilter()">Apply</button>
+      <button class="filter-btn-clear" (click) = "clearFilters()">Clear All</button>
+      <div *ngIf="loginService.isloggedin()">
+        <select name="cars" class="custom-select choose-format"  [(ngModel)]="reportType">
+          <option value="null">Choose Format</option>
+          <option *ngFor="let file of this.formats" [value]="file" >{{file}}</option>
+        </select>
+      </div>
+      <button class="filter-btn-clear" 
+      *ngIf="loginService.isloggedin()"
+      style="margin-left: 12px;" (click)="generateReport()"
+      [ngClass]="{'export': !loginService.isloggedin}"
+      [disabled]="invalidForm || !loginService.isloggedin() || !reportType || reportType == 'null'">
+      <mat-spinner *ngIf="generatingReport"></mat-spinner>Export</button>
+    </div>
+    
   </div>
 </div>
+
+

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges, SimpleChange, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges, SimpleChange, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -42,13 +42,19 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   @Output() clearSelection = new EventEmitter();
   @Output() refresh = new EventEmitter();
   @Output() selectedRowEmit = new EventEmitter();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @Input() mapTownShipExtent: any;
+  // @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
+  // @ViewChild(MatSort, { static: true }) sort: MatSort;
   selection = new SelectionModel<any>(true, []);
   filterByMapExtentFlag: boolean;
   isLoading: boolean;
   payLoadWithParams: any = {};
   selectedTab = 0;
+  titleForReset = 'Applied filters will be reset.';
+  subscription: any = [];
+  townShipData: any;
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
     public columnConstants: ColumnConstantsService) { }
@@ -57,6 +63,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.isLoading = true;
     const currentItem: SimpleChange = changes.payLoadFromFilter;
     const mapExtentValue: SimpleChange = changes.mapExtent;
+    const townshipExtent: SimpleChange = changes.mapTownShipExtent;
     if (changes.openAdvancedFilter && changes.openAdvancedFilter.currentValue) {
       this.filterAdvanced();
     }
@@ -79,6 +86,15 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
         limit: 5,
         points: this.mapExtent
       };
+
+    }
+    if (townshipExtent && townshipExtent.currentValue && Object.keys(townshipExtent.currentValue).length) {
+      payLoad = {
+        offset: 0,
+        limit: 5,
+        plssFilterDto: townshipExtent.currentValue
+      };
+      delete payLoad.points;
     }
     if (!this.payLoadWithParams[this.selectedTab]) {
       this.payLoadWithParams[0] = {};
@@ -97,6 +113,14 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       Object.assign(this.payLoadWithParams[4], payLoad);
       Object.assign(this.payLoadWithParams[5], payLoad);
       Object.assign(this.payLoadWithParams[6], payLoad);
+
+      for (let i = 0; i < Object.keys(this.payLoadWithParams).length; i++) {
+        if (townshipExtent && townshipExtent.currentValue && Object.keys(townshipExtent.currentValue).length) {
+          delete this.payLoadWithParams[i].points;
+        } else {
+          delete this.payLoadWithParams[i].plssFilterDto;
+        }
+      }
     }
     if (Object.keys(this.payLoadWithParams[this.selectedTab]).length) {
       this.onTabChange();
@@ -110,24 +134,67 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.payLoadWithParams[4] = {};
     this.payLoadWithParams[5] = {};
     this.payLoadWithParams[6] = {};
+    this.subscription.push(
+      this.apiService.reserFilterSubject.subscribe(val => {
+        delete this.payLoadWithParams[0]['filters'];
+        delete this.payLoadWithParams[1]['filters'];
+        delete this.payLoadWithParams[2]['filters'];
+        delete this.payLoadWithParams[3]['filters'];
+        delete this.payLoadWithParams[4]['filters'];
+        delete this.payLoadWithParams[5]['filters'];
+        delete this.payLoadWithParams[6]['filters'];
+        this.openAdvancedFilterEvent.emit(false);
+        this.onTabChange();
+      })
+    );
   }
 
   ngAfterViewInit() {
-    this.paginator.page
+    this.paginator.toArray()[0].page
       .pipe(
-        tap(() => this.onTabChange(this.paginator.pageIndex, this.paginator.pageSize))
+        tap(() => this.onTabChange(this.paginator.toArray()[0].pageIndex, this.paginator.toArray()[0].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[1].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[1].pageIndex, this.paginator.toArray()[1].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[2].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[2].pageIndex, this.paginator.toArray()[2].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[3].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[3].pageIndex, this.paginator.toArray()[3].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[4].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[4].pageIndex, this.paginator.toArray()[4].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[5].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[5].pageIndex, this.paginator.toArray()[5].pageSize))
+      )
+      .subscribe();
+    this.paginator.toArray()[6].page
+      .pipe(
+        tap(() => this.onTabChange(this.paginator.toArray()[6].pageIndex, this.paginator.toArray()[6].pageSize))
       )
       .subscribe();
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource[this.selectedTab].filter = filterValue.trim().toLowerCase();
+  // applyFilter(event: Event) {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource[this.selectedTab].filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource[this.selectedTab].paginator) {
-      this.dataSource[this.selectedTab].paginator.firstPage();
-    }
-  }
+  //   if (this.dataSource[this.selectedTab].paginator) {
+  //     this.dataSource[this.selectedTab].paginator.firstPage();
+  //   }
+  // }
 
   loadWells(offset = 0, limit = 5) {
     this.isLoading = true;
@@ -140,7 +207,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       if (Object.keys(payLoad).length) {
         Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
       }
-      this.fetchData(this.payLoadWithParams[this.selectedTab]);
+      this.fetchData(offset, limit);
     } else {
       const payLoad = {
         offset,
@@ -149,7 +216,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       if (Object.keys(payLoad).length) {
         Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
       }
-      this.fetchData(this.payLoadWithParams[this.selectedTab]);
+      this.fetchData(offset, limit);
     }
   }
 
@@ -190,7 +257,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   refreshEmit() {
     this.refresh.emit('true');
     this.selection.clear();
-    this.fetchData(this.payLoadWithParams[this.selectedTab]);
+    this.deleteKeyFromAllObj('filters');
+    this.onTabChange();
   }
 
   zoomToEmit() {
@@ -207,18 +275,29 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     }
   }
 
-  fetchData(payLoad) {
+  fetchData(offset = 0, limit = 5) {
+    const payLoad = {
+      offset,
+      limit
+    }
+    Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
     this.isLoading = true;
     if (!this.displayedColumns[this.selectedTab]) {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.WELL_RECORD_COLUMNS];
     }
-    this.apiService.fetchWellsData(payLoad).subscribe((data) => {
+    this.apiService.fetchWellsData(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellDtos);
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellDtos[0]);
-    });
+      if (data.wellDtos && data.wellDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellDtos[0]);
+      }
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   selectedColumn(column) {
@@ -235,12 +314,14 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     }
   }
 
-  filterAdvanced() {
+  filterAdvanced($event?) {
     const dialogRef = this.dialog.open(AdvancedFilterComponent, {
-      width: '750px',
+      width: '600px',
       // maxWidth: 350,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
+      backdropClass: 'filter-panel-backdrop',
       hasBackdrop: true,
+      autoFocus: false,
+      panelClass: 'filter-panel',
       data: this.payLoadWithParams[this.selectedTab].filters ? this.payLoadWithParams[this.selectedTab].filters : ''
     });
 
@@ -261,7 +342,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.isLoading = true;
     switch (this.selectedTab) {
       case 0:
-        this.fetchData(this.payLoadWithParams[this.selectedTab]);
+        this.fetchData(offset, limit);
         break;
       case 1:
         this.fetchCpWellDetail(offset, limit);
@@ -300,8 +381,15 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellCpDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
-    });
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
+      if (data.wellCpDtos && data.wellCpDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellCpDtos[0]);
+      }
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   fetchFtWellDetail(offset = 0, limit = 5) {
@@ -316,12 +404,19 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.FT_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchFtWellDetails(payLoad).subscribe((data) => {
+    this.apiService.fetchFtWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellFtDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
-    });
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
+      if (data.wellFtDtos && data.wellFtDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellFtDtos[0]);
+      }
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   fetchMcWellDetail(offset = 0, limit = 5) {
@@ -336,13 +431,19 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.MC_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchMcWellDetails(payLoad).subscribe((data) => {
+    this.apiService.fetchMcWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellMcDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellMcDtos[0]);
-    });
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
+      if (data.wellMcDtos && data.wellMcDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellMcDtos[0]);
+      }
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   fetchPfWellDetail(offset = 0, limit = 5) {
@@ -357,13 +458,20 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.PF_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchPfWellDetails(payLoad).subscribe((data) => {
+    this.apiService.fetchPfWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellPfDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellPfDtos[0]);
-    });
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
+      if (data.wellPfDtos && data.wellPfDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellPfDtos[0]);
+      }
+
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   fetchSurveyWellDetail(offset = 0, limit = 5) {
@@ -378,13 +486,19 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.SURVEY_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchSurveyWellDetails(payLoad).subscribe((data) => {
+    this.apiService.fetchSurveyWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellSurveyDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellSurveyDtos[0]);
-    });
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
+      if (data.wellSurveyDtos && data.wellSurveyDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellSurveyDtos[0]);
+      }
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   fetchIpWellDetail(offset = 0, limit = 5) {
@@ -399,17 +513,34 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.IP_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchIpWellDetails(payLoad).subscribe((data) => {
+    this.apiService.fetchIpWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellIpVolumeDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
-      this.dataSource[this.selectedTab].sort = this.sort;
-      this.availableColumns[this.selectedTab] = Object.keys(data.wellIpVolumeDtos[0]);
-    });
+      // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
+      this.dataSource[this.selectedTab].sort = this.sort.toArray()[this.selectedTab];
+      if (data.wellIpVolumeDtos && data.wellIpVolumeDtos.length) {
+        this.availableColumns[this.selectedTab] = Object.keys(data.wellIpVolumeDtos[0]);
+      }
+
+    },
+      (err) => {
+        this.apiService.hide();
+      });
   }
 
   populateColumns(dataForTable) {
 
+  }
+
+  deleteKeyFromAllObj(valueToDelete) {
+    delete this.payLoadWithParams[0][valueToDelete];
+    delete this.payLoadWithParams[1][valueToDelete];
+    delete this.payLoadWithParams[2][valueToDelete];
+    delete this.payLoadWithParams[3][valueToDelete];
+    delete this.payLoadWithParams[4][valueToDelete];
+    delete this.payLoadWithParams[5][valueToDelete];
+    delete this.payLoadWithParams[6][valueToDelete];
   }
 }
 

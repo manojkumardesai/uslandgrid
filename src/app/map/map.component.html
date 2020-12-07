@@ -1,20 +1,33 @@
+<div class="loader-container" *ngIf="(apiService.isVisible() | async) || apiService.globalLoader">
+    <div class="loader"></div>
+</div>
 <div class="map-container">
     <div class="map-frame">
         <div id="map"></div>
     </div>
 </div>
+<div class="mini-map-container" (click)="goToLocationAlaska(65.1605, -153.3691)">
+    <div class="mini-map-frame">
+        <div id="mini-map">
+        </div>
+    </div>
+</div>
 <div class="left-icons-placeholder">
-    <span class="material-icons leftIcon" (click)="currentLocation()" title="Show my location">
-        location_searching
+    <span class="material-icons leftIcon" style="font-size: 22px; color: black; height: 30px; 
+    display: block; border-bottom: 1px solid #ddd;"
+    [style.color]="openAdvancedFilter ? '#1a76ab': 'black'"
+    [style.background]="openAdvancedFilter ? '#424242' : 'white'"
+    (click)="openFilterDialog($event)" title="Filter">
+        filter_alt
     </span>
-    <hr style="margin-top: 1px;margin-bottom:  1px;"/>
-    <span class="material-icons leftIcon" (click)="homeLocation()" title="Default extent">
+    <!-- <hr style="margin-top: 1px;margin-bottom:  1px;"/> -->
+    <!-- <span class="material-icons leftIcon" style="font-size: 22px;" (click)="homeLocation()" title="Default extent">
         home
     </span>
     <hr style="margin-top: 1px;margin-bottom:  1px;"/>
-    <span class="material-icons leftIcon" (click)="openFilterDialog()" title="Filter">
-        filter_list
-    </span>
+    <span class="material-icons leftIcon" style="font-size: 22px;" (click)="currentLocation()" title="Show my location">
+        location_searching
+    </span> -->
 </div>
 <div class='search'>
     <mat-card class='searchCard'>
@@ -47,5 +60,52 @@
     (selectedRowEmit)="markWell($event)"
     [openAdvancedFilter]="openAdvancedFilter"
     (openAdvancedFilterEvent)="openAdvancedFilterEvent($event)"
+    [mapTownShipExtent]="mapTownShipExtent"
     ></app-wells-records>
 </div>
+<div class="export-wrapper">
+    <div class="dropdown dropright twonshipStyles export-township-icon" title="Township">
+        <button type="button" data-toggle="dropdown" class="btn-township">
+            <i class="fa fa-pie-chart"></i>
+        </button>
+        <div class="dropdown-menu">
+            <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'township')"> 
+                <input type="checkbox" class="mr-1" name="township" id="township" [checked]="activeTownship"> Township
+            </a>
+            <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'section')">  
+                <input type="checkbox" class="mr-1" name="section" id="section" [checked]="activeSection"> Section
+            </a>
+            <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'quarter')"> 
+                <input type="checkbox" class="mr-1" name="quarter" id="quarter" [checked]="activeQuarter"> Quarter
+            </a>
+            <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'quaterQuater')">  
+                <input type="checkbox" class="mr-1" name="quarterQuarter" id="quarterQuarter" [checked]="activeQuarterQuarter"> QuarterQuater
+            </a>
+        </div>
+    </div>
+    <div class="dropdown dropleft twonshipStyles export-report-icon" title="{{this.userService.isloggedin() ? 'Export' : 'Please login'}}">
+        <button type="button" data-toggle="dropdown" class="btn-export" [disabled]="isReadyToExprt()">
+            <i class="fa fa-share"></i>
+        </button>
+    <div class="dropdown-menu py-0" style="width: 198px; margin-top: -9px !important">
+        <a class="dropdown-item px-2" (click)="stopCloseDropdown($event)">
+            <div class="d-flex align-items-center">
+                <div class="col-auto px-0 pr-1">
+                    <select name="formats" class="custom-select choose-format"
+                    style="font-size: 12px; height: 27px;"
+                     [(ngModel)]="reportType">
+                        <option disabled>Choose Format</option>
+                        <option *ngFor="let file of this.formats" [value]="file">{{file}}</option>
+                    </select>
+                </div>
+                <div class="col-auto px-0">
+                    <button type="button" class="export-btn" [disabled] = "reportType == 'null' || reportType == '' || isShapeExporting" (click)="exportReport()">
+                    <i class="fa fa-circle-o-notch fa-spin" *ngIf="isShapeExporting" style="font-size:18px"></i>Export</button>
+                </div>
+            </div>
+        </a>
+    </div>
+    
+    </div>
+</div>
+

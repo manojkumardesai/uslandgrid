@@ -1,177 +1,399 @@
-<div class='detailPage'>
-    <div class='chartStyle'>
-      <h3 style="position: relative;
-      margin-left: -42%;">Well Detail Data</h3>
-        <div class="container-fluid main" *ngIf='wellDetails != null'>
-           
-            <div class="card profile">
-              <div class="card-header profileName">
-                {{ wellDetails.wellName }}
-              </div>
-              <div class="card-body profileBody">
-                <div class="profilePic">
-                  <img class="avatar" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Well%2C_Prague_Satalice.jpg/766px-Well%2C_Prague_Satalice.jpg" alt="Username">
-                </div>
-                <div class="profileInfo">
-                  <p>Id: {{ wellDetails.wellId }}</p>
-                </div>
-                <div class="profileInfo">
-                  <p>Operator: {{ wellDetails.operator }}</p>
-                </div>
-                <div class="profileInfo">
-                  <p>Country: {{ wellDetails.country }}</p>
-                </div>
-                <div class="profileInfo">
-                  <p>Status: {{ wellDetails.status }}</p>
-                </div>
-                <div class="profileInfo">
-                    <p>Spud Date: {{ wellDetails.spudDate }}</p>
-                </div>
-                <div class="profileInfo">
-                  <p>Completion Date: {{ wellDetails.completionDate }}</p>
-                </div>
-              </div>
-              <div class="card-footer actions">
-                <div class="actionFirst">
-                    <mat-chip-list aria-label="Fish selection">
-                        <mat-chip>{{ wellDetails.latitude | number:'.1-6' }} </mat-chip>
-                    </mat-chip-list> Latitude
-                </div>
-                <div class="actionSecond">
-                    <mat-chip-list aria-label="Fish selection">
-                        <mat-chip>{{ wellDetails.longitude | number:'.1-6' }}</mat-chip>
-                    </mat-chip-list> Longitude
-                </div>
-                <div class="actionSecond">
-                    <mat-chip-list aria-label="Fish selection">
-                        <mat-chip>{{ wellDetails.wellNumber }}</mat-chip>
-                    </mat-chip-list> Number
-                </div>
-              </div>
-            </div>
-          </div>
+<table class="center">
+  <!-- logos -->
+  <table class="tablehead">
+    <tr>
+      <td class="header header-left">
+        API:{{ wellDetails.wellId }} </td>
+      <td class="header header-right"><img class="logo pointerClass" routerLink='/home' src="../assets/USLandGrid3.png">
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td class="row1"><a href='#/user-auth/login'>Login</a></td>
+    </tr>
+    <tr>
+      <td *ngIf='wellDetails != null' class="row1"><a target="_blank"
+          href="http://imaging.occeweb.com/imaging/OGWellRecords.aspx?api={{substr()}}"><img src='/assets/scout.png'
+            style="height:20px;">&nbsp;click here for scout ticket</a></td>
+      <td class="row1"><a href="#"><img src='/assets/email.png' style="height:20px;">&nbsp;Report data issue</a></td>
+    </tr>
+  </table>
+  <!-- well header -->
+  <table class="tablehead1" style="height:450px">
+    <tr>
+      <td class="tdClass">
+        <ng-container *ngIf='wellDetails != null'>
+          <table class="tableRows">
+            <tr class="tableRows">
+              <td class="colorRows tableRows">Well ID</td>
+              <td class="tableRows">{{ wellDetails.wellId }}</td>
+            </tr>
+            <tr class="tableRows">
+              <td class="colorRows tableRows">Well Name</td>
+              <td class="tableRows">{{ wellDetails.wellName }}</td>
+            </tr>
+            <tr class="tableRows">
+              <td class="colorRows tableRows">Operator Name</td>
+              <td class="tableRows">{{ wellDetails.operator }}</td>
+            </tr>
+            <tr class="tableRows">
+              <td class="colorRows tableRows">Well Number</td>
+              <td class="tableRows"> {{  wellDetails.wellNumber  }} </td>
+            </tr>
+            <tr class="tableRows">
+              <td class="colorRows tableRows">Status</td>
+              <td class="tableRows"> {{ wellDetails.status }} </td>
+            </tr>
+            <tr class="tableRows">
+              <td class="colorRows tableRows">Geocoordinates</td>
+              <td class="tableRows">
+                {{ wellDetails.latitude | number:'.1-8'  }},{{ wellDetails.longitude | number:'.1-8'  }}</td>
+            </tr>
+            <tr class="tableRows">
+              <td class="colorRows tableRows">Spud Date</td>
+              <td class="tableRows">{{ wellDetails.spudDate }}</td>
+            </tr>
+            <tr class="tableRows">
+              <td class="colorRows tableRows">Completion Date</td>
+              <td class="tableRows">{{ wellDetails.completionDate }}</td>
+            </tr>
+            <tr class="tableRows">
+              <td class="colorRows tableRows">County</td>
+              <td class="tableRows">{{ wellDetails.county }}</td>
+            </tr>
+            <tr class="tableRows">
+              <td class="colorRows tableRows">Datum Type</td>
+              <td class="tableRows">{{ wellDetails.datumType }}</td>
+            </tr>
+            <tr class="tableRows">
+              <td class="colorRows tableRows">TVD</td>
+              <td class="tableRows">{{ wellDetails.tvd }}</td>
+            </tr>
+          </table>
+        </ng-container>
+      </td>
+      <!-- Line chart -->
+      <td class="line">
+        <div class='chartStyle1' *ngIf="lineChartData"> 
+          <span>
+            <button mat-raised-button id="buttongas"
+            (click)="gasProduction()">Gas</button>
+            <button mat-raised-button id="buttonoil"
+            (click)="oilProduction()">Oil</button>&nbsp;&nbsp;
+          </span>
+          <h5>{{linetitle}}</h5>
+          <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+            [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"
+            [plugins]="lineChartPlugins">
+          </canvas>
+        </div> 
+      </td>
+    </tr>
+  </table>
+  <!-- Barchart and Donut chart -->
+  <table class="tablehead line" style="height:600px">
+    <span class="tab">
+      <button mat-raised-button id="buttonoilzone"
+      (click)="oilProductionzone()">Oil</button>&nbsp;&nbsp;
+    <button mat-raised-button  id="buttongaszone"
+      (click)="gasProductionzone()">Gas</button>&nbsp;&nbsp;
+      <button mat-raised-button id="operator"
+    (click)="operator()">Operator</button>
+    </span>
+    <tr>
+      <td>
+        <div class='chartStyle2' *ngIf="barChartData">
+          <h4>{{title}}</h4>
+          <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+            [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType"></canvas>
+        </div> 
+      </td>
+      <td>
+        <div class='chartStyle3' *ngIf="doughNutChartData">
+          <h4>{{operatortitle}}</h4>
+          <canvas baseChart [datasets]="doughNutChartData" [options]="doughNutChartOptions" [labels]="doughNutChartLabels"
+          [legend]="doughNutChartLegend" [chartType]="doughNutChartType" style="width:350px;height:500px"></canvas>
+        </div>
+      </td>
+      </tr>
+  </table>
+  <!-- Oil and Gas Data -->
+  <table class="tablehead" *ngIf='isLoggedIn'>
+    <tr>
+      <button mat-raised-button color="accent" style="background-color:#33a02c;position:relative"
+        (click)="oilValue()">Oil</button>&nbsp;&nbsp;
+      <button mat-raised-button color="accent" style="background-color:#F93C3D;position:absolute"
+        (click)="gasValue()">Gas</button>
+    </tr>
+    <tr>
+      <td class="oilTdClass" style="padding-left:0px;">
+        <table class="table table-bordered">
+          <thead>
+            <th class="oilColorData oilData" id="demohigh">High</th>
+            <th class="oilColorData oilData" id="demolow">Low</th>
+          </thead>
+          <tbody>
+            <td class="oilData  oilHeight" id="high">50</td>
+            <td class="oilData  oilHeight" id="low">5</td>
+          </tbody>
+        </table>
+      </td>
+      <td class="oilTdClass">
+        <table class="table table-bordered">
+          <thead>
+            <th class="oilColorData oilData" id="demoavgmonth">Avg.Monthly</th>
+            <th class="oilColorData oilData" id="demoavgyear">Avg.Yearly</th>
+          </thead>
+          <tbody>
+            <td class="oilData oilHeight" id="avgmonth">200</td>
+            <td class="oilData oilHeight" id="avgyear">1000</td>
+          </tbody>
+        </table>
+      </td>
+      <td class="oilTdClass">
+        <table class="table table-bordered">
+          <thead>
+            <th class="oilColorData oilData" id="demominmonth">MinMonthly</th>
+            <th class="oilColorData oilData" id="demomaxmonth">MaxMonthly</th>
+          </thead>
+          <tbody>
+            <td class="oilData oilHeight" id="minmonth">17</td>
+            <td class="oilData oilHeight" id="maxmonth">190</td>
+          </tbody>
+        </table>
+      </td>
+      <td class="oilTdClass">
+        <table class="table table-bordered">
+          <thead>
+            <th class="oilColorData oilData" id="demominyear">MinYearly</th>
+            <th class="oilColorData oilData" id="demomaxyear">MaxYearly</th>
+          </thead>
+          <tbody>
+            <td class="oilData oilHeight oilHeight" id="minyear">990</td>
+            <td class="oilData oilHeight oilHeight" id="maxyear">1200</td>
+          </tbody>
+        </table>
+      </td>
+      <td class="oilTdClass">
+        <table class="table table-bordered">
+          <thead>
+            <th class="oilColorData oilData" id="demofirstmonth">FirstMonth</th>
+            <th class="oilColorData oilData" id="demolastmonth">LastMonth</th>
+          </thead>
+          <tbody>
+            <td class="oilData oilHeight oilHeight" id="firstmonth">990</td>
+            <td class="oilData oilHeight oilHeight" id="lastmonth">1200</td>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Scout data  -->
+
+  <table class='tablehead' *ngIf='isLoggedIn'> 
+    <td colspan='2' style="width:40%">
+      <table class="table table-bordered scoutTable">
+        <thead>
+          <th colspan='2' class="scouttableColor">
+            Scout Data
+          </th>
+        </thead>
+        <tbody>
+          <tr>
+            <td class='scoutData'>Formation</td>
+            <td class='scoutData'></td>
+          </tr>
+          <tr>
+            <td class='scoutData'>ProductionZone</td>
+            <td class='scoutData'></td>
+          </tr>
+          <tr>
+            <td class='scoutData'>CompletionDate</td>
+            <td class='scoutData'></td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- Perforation -->
+      <table class="table table-bordered">
+        <thead>
+          <th colspan='2' class="scouttableColor">
+            Perforation
+          </th>
+        </thead>
+        <tbody>
+          <tr>
+            <td class='scoutData'>Perforation Top Depth</td>
+            <td class='scoutData'></td>
+          </tr>
+          <tr>
+            <td class='scoutData'>Perforation Base Depth</td>
+            <td class='scoutData'></td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+    <!-- ProductionSummary -->
+    <td class='productionTable'>
+      <table class="table table-bordered">
+        <thead>
+          <th colspan='2' class="scouttableColor">
+            Production Summary
+          </th>
+        </thead>
+        <tbody>
+          <tr>
+            <td class='scoutData'>PrimaryProduct</td>
+            <td class='scoutData'></td>
+          </tr>
+          <tr>
+            <td class='scoutData'>MaximumProduction Date</td>
+            <td class='scoutData'></td>
+          </tr>
+          <tr>
+            <td class='scoutData'>FirstYear Production</td>
+            <td class='scoutData'></td>
+          </tr>
+          <tr>
+            <td class='scoutData'>LastYear Production</td>
+            <td class='scoutData'></td>
+          </tr>
+          <tr>
+            <td class='scoutData'>First Six Months Production</td>
+            <td class='scoutData'></td>
+          </tr>
+          <tr>
+            <td class='scoutData'>Last Six Months Production</td>
+            <td class='scoutData'></td>
+          </tr>
+          <tr>
+            <td class='scoutData'>CumulativeProduction</td>
+            <td class='scoutData'></td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+  </table>
+
+
+  <!-- Casing Data -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust">
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsMC.length'>
+        <tr class="tableColor">
+          <th colspan='34' class='layerTable'>Casing Data</th>
+        </tr>
+        <th *ngFor="let value of MCheaders" class='layerText layerTableColor'>
+          {{ value }}
+        </th>
+        <tr *ngFor="let value of wellDetailsMC" class='layerText'>
+          <td *ngFor="let val of value">{{ val.value }}</td>
+        </tr>
+      </table>
     </div>
-    <div class='chartStyle' *ngIf="barChartData">
-      <h3>County Wise Wells Count</h3>
-        <canvas baseChart
-            [datasets]="barChartData"
-            [labels]="barChartLabels"
-            [options]="barChartOptions"
-            [legend]="barChartLegend"
-            [chartType]="barChartType"></canvas>
+  </ng-container>
+
+
+  <!-- Initial Potential -->
+  <ng-container *ngIf='isLoggedIn' >
+    <div class="tableAdjust">
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsIP.length'>
+        <tr class="tableColor">
+          <th colspan='25' class='layerTable'>Initial Potential</th>
+        </tr>
+        <th *ngFor="let value of IPheaders" class='layerText layerTableColor'>
+          {{ value }}
+        </th>
+        <tr *ngFor="let value of wellDetailsIP" class='layerText'>
+          <td *ngFor="let val of value">{{ val.value }}</td>
+        </tr>
+      </table>
     </div>
-    <div class='chartStyle' *ngIf="doughNutChartData">
-      <h3>Wells Count</h3>
-        <canvas baseChart
-            [data]="doughNutChartData"
-            [options]="doughNutChartOptions"
-            [labels]="barChartLabels"
-            [chartType]="doughNutChartType"></canvas>
+  </ng-container>
+
+  <!-- Completion -->
+  <ng-container *ngIf='isLoggedIn' >
+    <div class="tableAdjust">
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsCP.length'>
+        <tr class="tableColor">
+          <th colspan='10' class='layerTable'>Completion</th>
+        </tr>
+        <th *ngFor="let value of CPheaders" class='layerText layerTableColor'>
+          {{ value }}
+        </th>
+        <tr *ngFor="let value of wellDetailsCP" class='layerText'>
+          <td *ngFor="let val of value">{{ val.value }}</td>
+        </tr>
+      </table>
     </div>
-</div>
-<div style="margin-top:12%" *ngIf='isLoggedIn'>
-  <mat-accordion *ngIf='wellDetailsMC.length'>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          MC
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <ul>
-        <li *ngFor="let value of wellDetailsMC">
-          
-              {{ value.key | uppercase }} : {{ value.value }}
+  </ng-container>
 
-        </li>
-      </ul>
-      
-    </mat-expansion-panel>
-  </mat-accordion>
-  <mat-accordion *ngIf='wellDetailsCP.length'>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          CP
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <ul>
-        <li *ngFor="let value of wellDetailsCP">
-          <ul>
-            <li *ngFor="let val of value">
-              {{ val.key | uppercase  }} : {{ val.value }}
-            </li>
-          </ul>
-        </li>
-      </ul>
-      
-    </mat-expansion-panel>
-  </mat-accordion>
-  <mat-accordion *ngIf='wellDetailsFT.length'>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          FT
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <ul>
+  <!-- Formation -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust">
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsFT.length'>
+        <tr class="tableColor">
+          <th colspan='25' class='layerTable'>Formation</th>
+        </tr>
+        <th *ngFor="let value of FTheaders" class='layerText layerTableColor'>
+          {{ value}}
+        </th>
+        <tr *ngFor="let value of wellDetailsFT" class='layerText'>
+          <td *ngFor="let val of value">{{ val.value }}</td>
+        </tr>
+      </table>
+    </div>
+  </ng-container>
 
-            <li *ngFor="let val of wellDetailsFT">
-              {{ val.key | uppercase  }} : {{ val.value }}
-            </li>
+  <!-- Perforation -->
+  <ng-container  *ngIf='isLoggedIn'>
+    <div class="tableAdjust">
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsPF.length'>
+        <tr class="tableColor">
+          <th colspan='25' class='layerTable'>Perforation</th>
+        </tr>
+        <th *ngFor="let value of PFheaders" class='layerText layerTableColor'>
+          {{ value }}
+        </th>
+        <tr *ngFor="let value of wellDetailsPF" class='layerText'>
+          <td *ngFor="let val of value">{{ val.value }}</td>
+        </tr>
+      </table>
+    </div>
+  </ng-container>
 
-      </ul>
-      
-    </mat-expansion-panel>
-  </mat-accordion>
-  <mat-accordion *ngIf='wellDetailsPF.length'>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          PF
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+  <!-- Survey   -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust">
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsSurvey.length'>
+        <tr class="tableColor">
+          <th colspan='25' class='layerTable'>Directional Survey</th>
+        </tr>
+        <th *ngFor="let value of STheaders" class='layerText layerTableColor'>
+          {{ value }}
+        </th>
+        <tr *ngFor="let value of wellDetailsSurvey" class='layerText'>
+          <td *ngFor="let val of value">{{ val.value }}</td>
+        </tr>
+      </table>
+    </div>
+  </ng-container>
 
-          <ul>
-            <li *ngFor="let val of wellDetailsPF">
-              {{ val.key | uppercase  }} : {{ val.value }}
-            </li>
-          </ul>
-       
-      
-    </mat-expansion-panel>
-  </mat-accordion>
-  <mat-accordion *ngIf='wellDetailsSurvey.length'>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Survey
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <ul>
+  <!-- Production  -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust">
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsPT.length'>
+        <tr class="tableColor">
+          <th colspan='25' class='layerTable'>Production</th>
+        </tr>
+        <th *ngFor="let value of PTheaders" class='layerText layerTableColor'>
+          {{ value }}
+        </th>
+        <tr *ngFor="let value of wellDetailsPT" class='layerText'>
+          <td *ngFor="let val of value">{{ val.value }}</td>
+        </tr>
+      </table>
+    </div>
+  </ng-container>
+</table>
 
-            <li *ngFor="let val of wellDetailsSurvey">
-              {{ val.key | uppercase  }} : {{ val.value }}
-            </li>
-          </ul>
-
-      
-    </mat-expansion-panel>
-  </mat-accordion>
-  <mat-accordion *ngIf='wellDetailsIP.length'>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          IP Volume
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-
-          <ul>
-            <li *ngFor="let val of wellDetailsIP">
-              {{ val.key | uppercase  }} : {{ val.value }}
-            </li>
-          </ul>
-
-      
-    </mat-expansion-panel>
-  </mat-accordion>
-</div>

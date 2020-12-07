@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from, Subject, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { share } from 'rxjs/operators';
 
 
 @Injectable({
@@ -9,7 +10,39 @@ import { environment } from 'src/environments/environment';
 })
 export class ApiService {
   baseUrl = environment.baseUrl;
+  grids: any;
+  wells: any = {};
+  landGrids: any = {};
+  productions: any = {};
+  dates: any = {};
+  appllyAllCondtions: boolean = true;
+  appllyAnyCondtion: boolean = false;
+  savedFormData: any;
+  public globalLoader = false;
 
+
+  public checkStateOfFilter = new Subject<any>();
+  public townshipSubject = new Subject<any>();
+  public isFilterApplied = false;
+  public reserFilterSubject = new Subject<any>();
+  public clusterTestData = [];
+
+  private visible$ = new BehaviorSubject<boolean>(false);
+
+  show() {
+    this.visible$.next(true);
+  }
+
+  hide() {
+    this.visible$.next(false);
+  }
+
+  isVisible(): Observable<boolean> {
+    return this.visible$.asObservable().pipe(share());
+  }
+
+  headers = new HttpHeaders().set('Content-Type', 'application/json').set('Access-Control-Allow-Origin', '*')
+    .set('Cache-Control', ' no-cache').set('Accept', '*/*').set('Accept-Encoding', 'gzip, deflate, br');
   constructor(private http: HttpClient) { }
 
   fetchWellsByPayLoad(payLoad, offset, limit): Observable<any> {
@@ -57,5 +90,105 @@ export class ApiService {
   }
   fetchIpWellDetails(payload): Observable<any> {
     return this.http.post(this.baseUrl + `welllist/ipvolume`, payload);
+  }
+  fetchColumns(): Observable<any> {
+    return this.http.get(this.baseUrl + `group/column`);
+  }
+
+  fetchColValues(column, table): Observable<any> {
+    return this.http.get(this.baseUrl + `unique/${column}?table=${table}&offset=0&limit=20`);
+  }
+  fetchSingleColValues(column, table, key): Observable<any> {
+    return this.http.get(this.baseUrl + `unique/${column}?table=${table}&offset=0&limit=20&searchKey=${key}`);
+  }
+
+  fetchWell(filterDetails) {
+    let payload = {};
+    payload['reportType'] = 'shp';
+    payload['filters'] = {};
+    payload['filters']['operator'] = 'and';
+    payload['filters']['exp'] = filterDetails;
+    return this.http.post(this.baseUrl + `report/well`, payload)
+  }
+
+  createUser(payload) {
+    return this.http.post(this.baseUrl + `user/create`, payload);
+  }
+
+  getListOfUser() {
+    return this.http.get(this.baseUrl + `user/v1/list`);
+  }
+
+  search(searchKey) {
+    return this.http.get(this.baseUrl + `user/v1/list?offset=0&limit=20&searchKey=${searchKey}`)
+  }
+
+  login(info): Observable<any> {
+
+    return this.http.post(this.baseUrl + `user/login`, info, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST',
+        'Cache-Control': 'no-cache'
+      }
+    });
+  }
+
+  forgotPassword(info): Observable<any> {
+    return this.http.post(this.baseUrl + 'user/forgetpwd', info, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'PUT',
+        'Cache-Control': 'no-cache'
+      }
+    });
+  }
+
+  changePassword(payload): Observable<any> {
+    return this.http.post(this.baseUrl + `user/changepwd`, payload);
+  }
+
+  activateUser(token) {
+    return this.http.post(this.baseUrl + `user/activateuser`, token);
+  }
+
+  userDetails(id): Observable<any> {
+    return this.http.get(this.baseUrl + `user/${id}`)
+  }
+
+  updateUser(payload) {
+    return this.http.post(this.baseUrl + 'user/update', payload);
+  }
+
+  closeFilter(val: any) {
+    this.checkStateOfFilter.next(val);
+  }
+
+  cluster(data) {
+    return this.http.post(this.baseUrl + 'well/clusterpoint', data)
+  }
+
+  infoPoint(data) {
+    return this.http.post(this.baseUrl + 'wells/highlight', data)
+  }
+
+  highlighCreteria(data) {
+    return this.http.post(this.baseUrl + 'well/areacount', data);
+  }
+
+  emitTownshipData(val) {
+    this.townshipSubject.next(val);
+  }
+
+  exportCreteria(payload) {
+    const payloadData = Object.assign({}, payload);
+    delete payloadData.reportType;
+    return this.http.post(this.baseUrl + 'report/pointcounty/permission', payloadData);
+  }
+
+  resetFilterSubject(val) {
+    this.reserFilterSubject.next(val);
   }
 }
