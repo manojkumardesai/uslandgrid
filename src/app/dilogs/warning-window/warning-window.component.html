@@ -1,0 +1,10 @@
+<mat-dialog-content class="mat-typography">
+    {{data.mesg}}
+</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="data.confirm">
+    <button mat-button mat-dialog-close mat-dialog-close="true" cdkFocusInitial>Yes</button>
+    <button mat-button mat-dialog-close>No</button>
+</mat-dialog-actions>
+<mat-dialog-actions align="end" *ngIf="!data.confirm">
+    <button mat-button mat-dialog-close>{{data.btnText ? data.btnText : 'Close'}}</button>
+</mat-dialog-actions>
