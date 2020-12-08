@@ -107,19 +107,16 @@ export class WellDetailComponent implements OnInit {
   //Fields for all layers
   CPheaders = ["Well ID", "Observation Number", "Completion Type", "Date", "Completed Formation",
     "Top Depth", "Base Depth", "Top Formation", "Base Formation", "Remarks"];
-  MCheaders = ["Record ID (MC)", "Well ID", "Casing ID", "Data Source", "Casing Size", "Inside Diameter",
-    "Top Depth", "Base Depth", "Top Formation", "Base Formation", "Casing Type", "Nominal Weight",
-    "Grade", "Thread Type", "Manufacturer", "Multistage Depth", "Cement Type", "Cement Amount", "Cement Weight",
-    "Hole Size", "Top Of Cement", "Slurry Volume", "Connect Code", "Install Date", "Leak Off Test", "Pressure Test",
-    "Create Date", "Create User Id", "Update User Id", "Update Date", "Remarks", "Feet", "PSI", "SAX"];
-  IPheaders = ["Well ID", "Row Number", "Test Number", "Top Depth", "Base Depth", "Top Formation", "Base Formation",
-    "Test Date", "Test Duration", "Oil Volume", "Oil Rate", "Gas Volume", "Gas Rate", "Water Volume", "Water Rate",
-    "Flow Pressure", "BH Pressure", "Choke", "BH Temperature", "Oil Gravity", "H2S", "CO2", "Remarks", "Gas Depth",
-    "Gas Type"];
-  PFheaders = ["Well ID", "Date", "Top Depth", "Base Depth", "Top Formation", "Base Formation", "Activity Type", "Type", "Density", "Diameter",
-    "Phase", "Angle", "Count", "Current Status", "Remarks", "Source", "Completion Observation Number", "Perforation Observation Number"];
-  STheaders = ["Well ID", "MD", "TVD", "Inclination", "Azimuth", "NS_OffSet", "ES_OffSet", "Latitude", "Longitude"];
-  FTheaders = ["Well ID", "Formation", "Top MD", "Top TVD", "Remarks", "FormationCode", "Temp1", "Base MD", "Source"];
+  MCheaders = ["Well ID", "Casing ID", "Casing Size","Casing Type", "Top Depth", "Base Depth", "Top Formation", "Base Formation",  "Nominal Weight",
+    "Grade","Inside Diameter","Cement Type", "Cement Amount", "Cement Weight", "Hole Size","Top Of Cement","Remarks", "Thread Type", "Manufacturer", "Multistage Depth", 
+     "Slurry Volume", "Connect Code", "Install Date", "Leak Off Test", "Pressure Test","Create Date", "Create User Id", "Update User Id", "Update Date",  "Feet", "PSI", "SAX", "Data Source","Record ID (MC)"];
+  IPheaders = ["Well ID", "Test Number", "Top Depth", "Base Depth", "Top Formation","Test Date","Oil Volume", "Gas Volume",
+  "Water Volume","Choke", "Test Duration", "Base Formation","Oil Rate", "Gas Rate",  "Water Rate",
+    "Flow Pressure", "BH Pressure",  "BH Temperature", "Oil Gravity", "H2S", "CO2", "Remarks", "Gas Depth", "Gas Type", "Row Number"];
+  PFheaders = ["Well ID","Completion Observation Number", "Perforation Observation Number", "Top Depth", "Base Depth", "Top Formation","Date", "Remarks",  "Base Formation", "Type", "Density", "Diameter",
+    "Phase", "Angle", "Count", "Current Status", "Source"];
+  STheaders = ["Well ID","Survey Point Number", "MD", "TVD", "Inclination", "Azimuth", "NS_OffSet", "ES_OffSet", "Latitude", "Longitude"];
+  FTheaders = ["Well ID","Observation Number", "Formation", "Top MD","Base MD", "Top TVD", "Remarks","Source","Base TVD","Show","Net Thickness","Porosity","Faulted","Eroded","Dip Azimuth","Dip","Confidence","Qualifier","Gap Thickness","FormationCode", "Temp1"];
   PTheaders = ["Well ID", "Date", "Zone", "Activity Type", "Oil", "Gas", "Water", "CO2", "Injection", "Nitrogen", "NGL", "Sulphur",
     "Allocation Factor", "Days On"];
 
@@ -256,7 +253,7 @@ export class WellDetailComponent implements OnInit {
             value: innerData[res]
           }
         });
-      });
+      });//console.log("CP:",this.wellDetailsCP);
     });
   }
 
@@ -269,7 +266,7 @@ export class WellDetailComponent implements OnInit {
             value: innerData[res]
           }
         });
-      });
+      });//console.log("FT:",this.wellDetailsFT);
     });
   }
 
@@ -282,7 +279,7 @@ export class WellDetailComponent implements OnInit {
             value: innerData[res]
           }
         });
-      });
+      });//console.log("MC:",this.wellDetailsMC);
     });
   }
 
@@ -295,7 +292,7 @@ export class WellDetailComponent implements OnInit {
             value: innerData[res]
           }
         });
-      });
+      });//console.log("PF:",this.wellDetailsPF);
     });
   }
 
@@ -308,7 +305,7 @@ export class WellDetailComponent implements OnInit {
             value: innerData[res]
           }
         });
-      });
+      });//console.log("ST:",this.wellDetailsSurvey);
     });
   }
 
@@ -321,7 +318,7 @@ export class WellDetailComponent implements OnInit {
             value: innerData[res]
           }
         });
-      });
+      });//console.log("IP:",this.wellDetailsIP);
     });
   }
 
@@ -334,7 +331,7 @@ export class WellDetailComponent implements OnInit {
             value: innerData[res]
           }
         });
-      });
+      }); //console.log("PT:",this.wellDetailsPT);
     });
   }
 
