@@ -53,4 +53,7 @@ export class DetailService {
   fetchOperatorChartData(wellId): Observable<any> {
     return this.http.get(this.baseUrl + `chart/operator?wellId=${wellId}`);
   }
+  fetchWhWellDetails(wellId): Observable<any> {
+    return this.http.get(this.baseUrl + `well/wh?wellId=${wellId}`);
+  }
 }
