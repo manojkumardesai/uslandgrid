@@ -9,7 +9,7 @@
 }
 .chartStyle3 {
   height: 400px;
-  // width: 20%;  
+  width: 500px;  
   text-align: center;
 }
 .line{
@@ -119,7 +119,7 @@
   }
    .tablehead{
     width:100%;
-    margin-top:10px;
+    // margin-top:10px;
     margin-bottom:10px; 
 }
 .tablehead1{
@@ -207,6 +207,7 @@
 }
 .layerTableColor{
   background-color:#BEBEBE;
+ 
 }
 .scoutTable{
   margin-bottom: 33px;
@@ -223,15 +224,82 @@
 }
 .layerText{
   text-align:center;
+ 
 }
 .layerTable{
   text-align: left;
   padding:5px;
 }
 .tableAdjust{
-  overflow-x: scroll;
+  // overflow-x: auto;
+  // overflow-y: auto;
+  overflow:auto;
+  white-space: nowrap;
+  max-height:300px;
+  // max-width:1500px;
+}
+
+.stbody{
+  display: block;
+  overflow-x: auto;
+  overflow-y:auto;
+  max-height: 300px;
+  width: 100%;
+  white-space:nowrap;
+}
+.sthead{
+  display: table;
+  width: 100%;
+  table-layout: fixed;
   white-space: nowrap;
 }
+.sthead,.stbody tr{
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+// .stbody td{
+//   width:100px;
+// }
+
+.sthead{
+  width: calc( 100% - 0.2% )
+}
+.headerPart{
+  position:sticky;
+  top:0; 
+}
+.headerPart th{
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 999;
+}
+
+
+
+.tabs{
+  color: rgb(32, 55, 100);
+  background-color:#D9D9D9;
+  // width:500px;
+  height:50px;
+ margin:5px;
+  width:100%;
+  border:1px solid rgb(32, 55, 100);
+  font-style: italic;
+}
+
+.tabshead{
+  width:100%;
+}
+// .tabs:hover{
+//   // background-color:yellow;
+//   color:blue;
+// }
+// .tabs:visited{
+//   color:green;
+//   background-color: hotpink;
+//   }
 #buttonoil{
   background-color:#33a02c;
   position:static;
