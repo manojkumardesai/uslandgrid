@@ -69,21 +69,21 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     }
     let payLoad: any = {
       offset: 0,
-      limit: 5,
+      limit: 10,
       points: [],
       wellsCriteria: []
     };
     if (currentItem && Object.keys(currentItem.currentValue).length) {
       payLoad = {
         offset: 0,
-        limit: 5,
+        limit: 10,
         wellsCriteria: this.payLoadFromFilter
       };
     }
     if (mapExtentValue && mapExtentValue.currentValue.length) {
       payLoad = {
         offset: 0,
-        limit: 5,
+        limit: 10,
         points: this.mapExtent
       };
 
@@ -91,7 +91,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     if (townshipExtent && townshipExtent.currentValue && Object.keys(townshipExtent.currentValue).length) {
       payLoad = {
         offset: 0,
-        limit: 5,
+        limit: 10,
         plssFilterDto: townshipExtent.currentValue
       };
       delete payLoad.points;
@@ -196,7 +196,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   //   }
   // }
 
-  loadWells(offset = 0, limit = 5) {
+  loadWells(offset = 0, limit = 10) {
     this.isLoading = true;
     if (Object.keys(this.payLoadFromFilter).length) {
       const payLoad = {
@@ -275,7 +275,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     }
   }
 
-  fetchData(offset = 0, limit = 5) {
+  fetchData(offset = 0, limit = 10) {
     const payLoad = {
       offset,
       limit
@@ -338,7 +338,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     });
   }
 
-  onTabChange(offset = 0, limit = 5) {
+  onTabChange(offset = 0, limit = 10) {
     this.isLoading = true;
     switch (this.selectedTab) {
       case 0:
@@ -365,7 +365,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     }
   }
 
-  fetchCpWellDetail(offset = 0, limit = 5) {
+  fetchCpWellDetail(offset = 0, limit = 10) {
     const payLoad = {
       offset,
       limit
@@ -392,7 +392,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       });
   }
 
-  fetchFtWellDetail(offset = 0, limit = 5) {
+  fetchFtWellDetail(offset = 0, limit = 10) {
     const payLoad = {
       offset,
       limit
@@ -419,7 +419,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       });
   }
 
-  fetchMcWellDetail(offset = 0, limit = 5) {
+  fetchMcWellDetail(offset = 0, limit = 10) {
     const payLoad = {
       offset,
       limit
@@ -446,7 +446,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       });
   }
 
-  fetchPfWellDetail(offset = 0, limit = 5) {
+  fetchPfWellDetail(offset = 0, limit = 10) {
     const payLoad = {
       offset,
       limit
@@ -474,7 +474,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       });
   }
 
-  fetchSurveyWellDetail(offset = 0, limit = 5) {
+  fetchSurveyWellDetail(offset = 0, limit = 10) {
     const payLoad = {
       offset,
       limit
@@ -501,7 +501,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       });
   }
 
-  fetchIpWellDetail(offset = 0, limit = 5) {
+  fetchIpWellDetail(offset = 0, limit = 10) {
     const payLoad = {
       offset,
       limit
