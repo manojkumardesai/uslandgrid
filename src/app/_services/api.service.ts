@@ -24,9 +24,17 @@ export class ApiService {
   public checkStateOfFilter = new Subject<any>();
   public townshipSubject = new Subject<any>();
   public isFilterApplied = false;
-  public reserFilterSubject = new Subject<any>();
-  public clusterTestData = [];
 
+  mapExtentSubject = new Subject<[]>();
+  mapExtentTownshipSubject = new Subject<[]>();
+  openAdvanceFilter = new Subject<boolean>();
+  filteredSubject = new Subject<{}>();
+  filterByMapSubject = new Subject<boolean>();
+
+  resetTableSubject = new Subject<boolean>();
+  clearAdvanceFilter = new Subject<boolean>();
+  zoomToSubject = new Subject<any>();
+  tabpointsSubject = new Subject<boolean>();
   private visible$ = new BehaviorSubject<boolean>(false);
 
   show() {
@@ -178,17 +186,45 @@ export class ApiService {
     return this.http.post(this.baseUrl + 'well/areacount', data);
   }
 
-  emitTownshipData(val) {
-    this.townshipSubject.next(val);
-  }
-
   exportCreteria(payload) {
     const payloadData = Object.assign({}, payload);
     delete payloadData.reportType;
     return this.http.post(this.baseUrl + 'report/pointcounty/permission', payloadData);
   }
 
-  resetFilterSubject(val) {
-    this.reserFilterSubject.next(val);
+  emitMapExtent(val) {
+    this.mapExtentSubject.next(val);
+  }
+
+  emitTownshipExtent(val) {
+    this.mapExtentTownshipSubject.next(val);
+  }
+
+  emitFilterSubject(val) {
+    this.filteredSubject.next(val);
+  }
+
+  loadAdvanceFilter(val) {
+    this.openAdvanceFilter.next(val);
+  }
+
+  loadResetTable(val) {
+    this.resetTableSubject.next(val);
+  }
+
+  loadTableByMapExtent(val) {
+    this.filterByMapSubject.next(val);
+  }
+
+  resetAdvanceFilter(val) {
+    this.clearAdvanceFilter.next(val);
+  }
+
+  loadZoomTo(val) {
+    this.zoomToSubject.next(val);
+  }
+
+  clearTabPoints(val) {
+    this.tabpointsSubject.next(val);
   }
 }

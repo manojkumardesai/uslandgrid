@@ -65,6 +65,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   drawingPoints: any = [];
   isShapeDrawn: boolean = false;
   infoPointLayers = L.featureGroup();
+  tablePointLayers = L.featureGroup();
   isShapeExporting = false;
   isInfoWindowOpened = false;
   infoPointInfo: any;
@@ -119,7 +120,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   activeSection = false;
   activeQuarter = false;
   activeQuarterQuarter = false;
-
+  subscription: any = [];
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
     public userService: LoginService) { }
@@ -145,22 +146,14 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.activeSection = false;
           this.activeQuarter = false;
           this.activeQuarterQuarter = false;
-          this.mapTownShipExtent = {};
-          this.openAdvancedFilter = true;
+          this.apiService.loadResetTable(true);
+          this.apiService.loadAdvanceFilter(true);
         }
       });
     } else {
-      this.openAdvancedFilter = true;
+      this.apiService.loadAdvanceFilter(true);
     }
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   const wellsCriteria = result ? JSON.parse(JSON.stringify(result)).wellsCriteria : {};
-    //   if (Object.keys(wellsCriteria).length && wellsCriteria[0].field) {
-    //     this.payLoadFromFilter = wellsCriteria;
-    //   } else {
-    //     this.payLoadFromFilter = [];
-    //   }
-    // });
   }
 
   openAdvancedFilterEvent(event) {
@@ -179,6 +172,26 @@ export class MapComponent implements AfterViewInit, OnInit {
       );
     this.fetchClusterData();
     this.getAllocatedFileTypes();
+
+    this.subscription.push(
+      this.apiService.filterByMapSubject.subscribe(val => {
+        if (val) {
+          this.apiService.emitMapExtent(this.getMapExtent());
+        }
+      })
+    );
+
+    this.subscription.push(
+      this.apiService.zoomToSubject.subscribe(val => {
+        this.zoomToEmit(val);
+      })
+    );
+
+    this.subscription.push(
+      this.apiService.tabpointsSubject.subscribe(val => {
+        this.tablePointLayers.clearLayers();
+      })
+    );
   }
 
   private _filter(value: any): Observable<any[]> {
@@ -344,6 +357,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.infoPointLayers.clearLayers();
       }
       this.mapExtent = [];
+      this.apiService.emitMapExtent(this.mapExtent);
     });
     this.map.on('draw:drawstart', (e) => {
       if (this.apiService.isFilterApplied) {
@@ -354,7 +368,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           }
         });
         dialogRef.afterClosed().subscribe(val => {
-          this.apiService.resetFilterSubject(true);
+          this.apiService.loadResetTable(true);
           this.apiService.isFilterApplied = false;
         });
       }
@@ -533,12 +547,13 @@ export class MapComponent implements AfterViewInit, OnInit {
         latitude: ev.latlng.lat
       }
       this.mapTownShipExtent = payload;
+      this.apiService.emitTownshipExtent(this.mapTownShipExtent);
       this.apiService.globalLoader = true;
       this.apiService.infoPoint({ plssFilterDto: payload }).subscribe((coords: []) => {
         const circleOptions = {
           color: '#0ff',
           fillColor: '#0ff',
-          fillOpacity: 0.4,
+          fillOpacity: 0.0,
           radius: 8,
           weight: 2
         }
@@ -631,6 +646,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       });
       points.push(points[0]);
       this.mapExtent = points; // Sends new points to child component
+      this.apiService.emitMapExtent(this.mapExtent)
       this.drawInfoPoints(this.mapExtent);
     } else {
       this.isMapExtentApplied = false;
@@ -641,7 +657,28 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   zoomToEmit(event) {
     this.goToLocation(event[0].latitude, event[0].longitude);
+    this.markTableWells(event)
   }
+
+  markTableWells(wells) {
+    const circleOptions = {
+      color: '#ffff00',
+      fillColor: '#ffff00',
+      fillOpacity: 0.0,
+      radius: 8,
+      weight: 2
+    }
+    const coords = wells.map(well => ({ latitude: well['latitude'], longitude: well['longitude'] }));
+    if (this.tablePointLayers) {
+      this.tablePointLayers.clearLayers();
+    }
+    coords.forEach(coord => {
+      let circle = L.circleMarker([coord['latitude'], coord['longitude']], circleOptions);
+      this.tablePointLayers.addLayer(circle);
+    })
+    this.map.addLayer(this.tablePointLayers);
+  }
+
   clear(event) {
     this.markWell(null);
   }
@@ -660,9 +697,11 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.circleMarker = L.circleMarker([latitude, longitude], {
         color: '#0ff',
         fillColor: '#0ff',
-        fillOpacity: 0.2,
+        fillOpacity: 0.0,
         radius: 8
-      }).addTo(this.map);
+      })
+      this.infoPointLayers.addLayer(this.circleMarker);
+      this.map.addLayer(this.infoPointLayers);
     }
   }
 
@@ -838,12 +877,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   drawInfoPoints(data) {
-    // let zoom = this.map.getZoom();
-    // if (zoom > 11) {
     var circleOptions = {
       color: '#0ff',
       fillColor: '#0ff',
-      fillOpacity: 0.4,
+      fillOpacity: 0.0,
       radius: 8,
       weight: 2
     }
@@ -859,6 +896,7 @@ export class MapComponent implements AfterViewInit, OnInit {
             this.editableLayers.clearLayers();
           }
           this.mapExtent = [];
+          this.apiService.emitMapExtent(this.mapExtent);
         });
       } else {
         this.apiService.globalLoader = true;
@@ -872,8 +910,6 @@ export class MapComponent implements AfterViewInit, OnInit {
         });
       }
     });
-
-    // }
   }
 
   getAllocatedFileTypes() {
@@ -947,7 +983,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       });
       dialogRef.afterClosed().subscribe(val => {
         if (val === 'true') {
-          this.apiService.resetFilterSubject(true);
+          this.apiService.loadResetTable(true);
           this.apiService.isFilterApplied = false;
           this.generateTownShip(event, type);
         }
@@ -1015,7 +1051,27 @@ export class MapComponent implements AfterViewInit, OnInit {
       lat: circleExtent.getNorthWest().lat,
       lon: circleExtent.getNorthWest().lng
     }];
+    return mapPoint;
+  }
 
+  getMapExtent() {
+    const circleExtent = this.map.getBounds();
+    const mapPoint = [{
+      lat: circleExtent.getNorthWest().lat,
+      lon: circleExtent.getNorthWest().lng
+    }, {
+      lat: circleExtent._northEast.lat,
+      lon: circleExtent._northEast.lng
+    }, {
+      lat: circleExtent.getSouthEast().lat,
+      lon: circleExtent.getSouthEast().lng
+    }, {
+      lat: circleExtent._southWest.lat,
+      lon: circleExtent._southWest.lng
+    }, {
+      lat: circleExtent.getNorthWest().lat,
+      lon: circleExtent.getNorthWest().lng
+    }];
     return mapPoint;
   }
 

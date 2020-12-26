@@ -194,14 +194,11 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
     }
 
     this.subscriptions.push(
-      this.apiService.checkStateOfFilter.subscribe(
-        res => this.dialogRef.close(),
-        err => console.error(err)
-      )
-    )
-
-    this.subscriptions.push(
-      this.apiService.reserFilterSubject.subscribe(val => this.clearFilters())
+      this.apiService.clearAdvanceFilter.subscribe(val => {
+        if (val) {
+          this.clearFilters();
+        }
+      })
     );
   }
 

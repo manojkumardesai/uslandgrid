@@ -11,6 +11,7 @@ import { ResetPasswordComponent } from './user-auth/reset-password/reset-passwor
 import { UserInfoComponent } from './admin/user-info/user-info.component';
 import { ActivateUser } from './user-auth/activate-user/activate-user.component';
 import { AuthGuard } from './_services/auth/auth.guard';
+import { MainPageComponent } from './main-page/main-page.component';
 
 
 const routes: Routes = [
@@ -21,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    component: MapComponent
+    component: MainPageComponent
   },
   {
     path: 'detail/:id',
