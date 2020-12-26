@@ -33,9 +33,10 @@
     <mat-card class='searchCard'>
         <form class="example-form">
             <mat-form-field class="example-full-width filterSearchWell">
+                <label for="">Search Wells <small>By ID/Name/Operators</small></label>
               <input type="text"
-                     placeholder="Search Wells"
-                     aria-label="Search Wells"
+                     placeholder=""
+                     aria-label=""
                      matInput
                      [formControl]="myControl"
                      [matAutocomplete]="auto">
@@ -69,6 +70,9 @@
             <i class="fa fa-pie-chart"></i>
         </button>
         <div class="dropdown-menu">
+            <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'county')">  
+                <input type="checkbox" class="mr-1" name="quarterQuarter" id="quarterQuarter" [checked]="activeQuarterQuarter"> County
+            </a>
             <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'township')"> 
                 <input type="checkbox" class="mr-1" name="township" id="township" [checked]="activeTownship"> Township
             </a>
@@ -78,9 +82,7 @@
             <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'quarter')"> 
                 <input type="checkbox" class="mr-1" name="quarter" id="quarter" [checked]="activeQuarter"> Quarter
             </a>
-            <!-- <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'quaterQuater')">  
-                <input type="checkbox" class="mr-1" name="quarterQuarter" id="quarterQuarter" [checked]="activeQuarterQuarter"> QuarterQuater
-            </a> -->
+            
         </div>
     </div>
     <div class="dropdown dropleft twonshipStyles export-report-icon" title="{{this.userService.isloggedin() ? 'Export' : 'Please login'}}">

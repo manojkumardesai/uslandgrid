@@ -119,7 +119,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   activeTownship = false;
   activeSection = false;
   activeQuarter = false;
-  activeQuarterQuarter = false;
+  activeCounty = false;
   subscription: any = [];
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
@@ -127,7 +127,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   openFilterDialog($event): void {
     if ((this.editableLayers && Object.keys(this.editableLayers._layers).length) ||
-      (this.activeTownship || this.activeSection || this.activeQuarter || this.activeQuarterQuarter)) {
+      (this.activeTownship || this.activeSection || this.activeQuarter || this.activeCounty)) {
       const dialogRef = this.dialog.open(WarningWindowComponent, {
         data: {
           mesg: 'Do you want to clear previous selection?',
@@ -145,7 +145,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.activeTownship = false;
           this.activeSection = false;
           this.activeQuarter = false;
-          this.activeQuarterQuarter = false;
+          this.activeCounty = false;
           this.apiService.loadResetTable(true);
           this.apiService.loadAdvanceFilter(true);
         }
@@ -337,7 +337,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.activeTownship = false;
       this.activeSection = false;
       this.activeQuarter = false;
-      this.activeQuarterQuarter = false;
+      this.activeCounty = false;
       if (this.mapTownShipExtent && Object.keys(this.mapTownShipExtent).length) {
         this.mapTownShipExtent = {};
       }
@@ -355,6 +355,9 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map.on('draw:deleted', (e) => {
       if (this.infoPointLayers) {
         this.infoPointLayers.clearLayers();
+      }
+      if (this.tablePointLayers) {
+        this.tablePointLayers.clearLayers();
       }
       this.mapExtent = [];
       this.apiService.emitMapExtent(this.mapExtent);
@@ -540,7 +543,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.filterEmit(true);
   }
   showInfoPoint(ev) {
-    if (this.activeSection || this.activeTownship || this.activeQuarter || this.activeQuarterQuarter) {
+    if (this.activeSection || this.activeTownship || this.activeQuarter || this.activeCounty) {
       let payload = {
         type: this.townshipType,
         longitude: ev.latlng.lng,
@@ -943,7 +946,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     const points = [];
     this.isShapeExporting = true;
     payload['reportType'] = this.reportType;
-    if (this.activeTownship || this.activeSection || this.activeQuarter || this.activeQuarterQuarter) {
+    if (this.activeTownship || this.activeSection || this.activeQuarter || this.activeCounty) {
       payload['plssFilterDto'] = this.mapTownShipExtent;
     } else {
       payload['points'] = this.mapExtent;
@@ -993,29 +996,29 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.activeTownship = !this.activeTownship;
         this.activeSection = false;
         this.activeQuarter = false;
-        this.activeQuarterQuarter = false;
+        this.activeCounty = false;
       }
       if (type === 'section') {
         this.activeSection = !this.activeSection;
         this.activeTownship = false;
         this.activeQuarter = false;
-        this.activeQuarterQuarter = false;
+        this.activeCounty = false;
       }
       if (type === 'quarter') {
         this.activeTownship = false;
         this.activeSection = false;
         this.activeQuarter = !this.activeQuarter;
-        this.activeQuarterQuarter = false;
+        this.activeCounty = false;
       }
       if (type === 'quaterQuater') {
         this.activeTownship = false;
         this.activeSection = false;
         this.activeQuarter = false;
-        this.activeQuarterQuarter = !this.activeQuarterQuarter;
+        this.activeCounty = !this.activeCounty;
       }
       this.townshipType = type;
       this.isTownshipIsActive = true;
-      if (!this.activeSection && !this.activeTownship && !this.activeQuarter && !this.activeQuarterQuarter) {
+      if (!this.activeSection && !this.activeTownship && !this.activeQuarter && !this.activeCounty) {
         this.mapTownShipExtent = {};
         if (this.infoPointLayers) {
           this.infoPointLayers.clearLayers();
