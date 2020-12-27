@@ -1019,7 +1019,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.townshipType = type;
       this.isTownshipIsActive = true;
       if (!this.activeSection && !this.activeTownship && !this.activeQuarter && !this.activeCounty) {
-        this.mapTownShipExtent = {};
+        // this.mapTownShipExtent = {};
         if (this.infoPointLayers) {
           this.infoPointLayers.clearLayers();
         }
@@ -1027,7 +1027,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           const mapPoint = this.getShapeExtent();
           this.mapExtent = mapPoint;
         } else {
-          this.mapExtent = [];
+          this.apiService.loadResetTable(true);
         }
 
       }
