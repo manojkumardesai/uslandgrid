@@ -665,11 +665,16 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   markTableWells(wells) {
     const circleOptions = {
-      color: '#ffff00',
-      fillColor: '#ffff00',
+      color: '#0ff',
+      fillColor: '#0ff',
       fillOpacity: 0.0,
       radius: 8,
       weight: 2
+    }
+
+    if (this.infoPointLayers && Object.keys(this.infoPointLayers._layers).length) {
+      circleOptions.color = '#ffff00';
+      circleOptions.fillColor = '#ffff00';
     }
     const coords = wells.map(well => ({ latitude: well['latitude'], longitude: well['longitude'] }));
     if (this.tablePointLayers) {
