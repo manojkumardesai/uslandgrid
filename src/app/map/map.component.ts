@@ -717,9 +717,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         fillColor: '#0ff',
         fillOpacity: 0.0,
         radius: 8
-      })
-      this.infoPointLayers.addLayer(this.circleMarker);
-      this.map.addLayer(this.infoPointLayers);
+      }).addTo(this.map);
     }
   }
 
@@ -1025,7 +1023,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.activeQuarter = !this.activeQuarter;
         this.activeCounty = false;
       }
-      if (type === 'quaterQuater') {
+      if (type === 'county') {
         this.activeTownship = false;
         this.activeSection = false;
         this.activeQuarter = false;
