@@ -192,6 +192,16 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.tablePointLayers.clearLayers();
       })
     );
+
+    this.subscription.push(
+      this.apiService.resizeMapSubject.subscribe(val => {
+        if (val) {
+          setTimeout(() => {
+            this.map.invalidateSize();
+          }, 400);
+        }
+      })
+    );
   }
 
   private _filter(value: any): Observable<any[]> {

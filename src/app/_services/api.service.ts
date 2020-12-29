@@ -35,6 +35,7 @@ export class ApiService {
   clearAdvanceFilter = new Subject<boolean>();
   zoomToSubject = new Subject<any>();
   tabpointsSubject = new Subject<boolean>();
+  resizeMapSubject = new Subject<boolean>();
   private visible$ = new BehaviorSubject<boolean>(false);
 
   show() {
@@ -226,5 +227,9 @@ export class ApiService {
 
   clearTabPoints(val) {
     this.tabpointsSubject.next(val);
+  }
+
+  resizeMap(val) {
+    this.resizeMapSubject.next(val);
   }
 }
