@@ -143,6 +143,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
           points: val
         };
         this.formatPayload(points, 'plssFilterDto');
+        this.formatPayload(points, 'filters');
         this.onTabChange();
       })
     );
@@ -335,6 +336,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       offset,
       limit
     }
+    this.clear();
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
     this.isLoading = true;
     if (!this.displayedColumns[this.selectedTab]) {
@@ -388,6 +390,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.payLoadWithParams[4]['filters'] = result;
       this.payLoadWithParams[5]['filters'] = result;
       this.payLoadWithParams[6]['filters'] = result;
+      this.formatPayload('', 'points');
+      this.formatPayload('', 'plssFilterDto');
       this.openAdvancedFilterEvent.emit(false);
       this.onTabChange();
     });
@@ -395,6 +399,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   onTabChange(offset = 0, limit = 10) {
     this.isLoading = true;
+    this.clear();
     switch (this.selectedTab) {
       case 0:
         this.fetchData(offset, limit);
