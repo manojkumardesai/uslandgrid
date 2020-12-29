@@ -298,6 +298,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   filterEmit() {
     this.apiService.loadTableByMapExtent(true);
+    this.selection.clear();
+    this.apiService.clearTabPoints(true);
   }
 
   clear() {
