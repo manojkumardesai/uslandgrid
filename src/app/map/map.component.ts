@@ -469,12 +469,6 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.clusterLayer = L.markerClusterGroup({
       //disableClusteringAtZoom: 8,
       showCoverageOnHover: false,
-      /*iconCreateFunction: function (cluster) {
-        return L.divIcon({
-          iconSize: null
-        });
-      }*/
-
     });
 
     //clustermarker

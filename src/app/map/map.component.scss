@@ -196,3 +196,18 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.form-caption label {
+  font-size: 10px !important;
+}
+.form-caption .mat-form-field-label {
+  font-size: 10px !important;
+}
+
+:host::ng-deep {
+  .mat-form-field-label-wrapper {
+    .mat-form-field-label {
+      font-size: 14px !important;
+    }
+  }
+}
