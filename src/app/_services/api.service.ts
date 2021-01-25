@@ -36,6 +36,9 @@ export class ApiService {
   zoomToSubject = new Subject<any>();
   tabpointsSubject = new Subject<boolean>();
   resizeMapSubject = new Subject<boolean>();
+
+  // Emit reports pages zone value chart Data
+  zoneChartSubject = new Subject<any>();
   private visible$ = new BehaviorSubject<boolean>(false);
 
   show() {
@@ -231,5 +234,9 @@ export class ApiService {
 
   resizeMap(val) {
     this.resizeMapSubject.next(val);
+  }
+
+  emitZoneChartSubject(values) {
+    this.zoneChartSubject.next(values);
   }
 }

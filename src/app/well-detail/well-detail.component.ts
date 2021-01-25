@@ -57,7 +57,7 @@ export class WellDetailComponent implements OnInit {
  public xaxisHover:any;
  
   constructor(public detailService: DetailService,
-    public route: ActivatedRoute, public loginService: LoginService) { }
+    public route: ActivatedRoute, public loginService: LoginService, public _apiservice: ApiService) { }
  
   ngOnInit(): void {
     this.wellId = this.route.snapshot.paramMap.get("id");
@@ -1485,6 +1485,18 @@ public chartHovered(e: any): void { }
       this.barChartLegend=true;
       this.title='Zone Wise Values';
       this.chartReady = true;
+
+
+      // store the chart values in zoneChartSubject subject, DOnt change this configuration
+      const barChartConfig = {
+        barChartData: this.barChartData,
+        barChartLabels: this.barChartLabels,
+        barChartOptions: this.barChartOptions,
+        barChartColors: this.barChartColors,
+        barChartLegend: this.barChartLegend,
+        barChartType: this.barChartType,
+      };
+      this._apiservice.emitZoneChartSubject(barChartConfig);
     });
   }
 

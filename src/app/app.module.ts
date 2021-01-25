@@ -34,6 +34,7 @@ import { UserIdleModule } from 'angular-user-idle';
 import { GaugeChartModule } from 'angular-gauge-chart';
 import { MainPageComponent } from './main-page/main-page.component';
 import { AngularSplitModule } from 'angular-split';
+import { ReportsGraphComponent } from './reports-graph/reports-graph.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { AngularSplitModule } from 'angular-split';
     UserInfoComponent,
     ActivateUser,
     WarningWindowComponent,
-    MainPageComponent
+    MainPageComponent,
+    ReportsGraphComponent
   ],
   imports: [
     BrowserModule,

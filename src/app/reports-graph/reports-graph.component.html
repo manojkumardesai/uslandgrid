@@ -1,0 +1,9 @@
+<div class="loader-container" *ngIf="!barChartData">
+    <div class="loader"></div>
+</div>
+<div *ngIf="barChartData && barChartData.length" style="padding: 15px; height: 100%;">
+    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
+[options]="barChartOptions" [colors]="barChartColors" [legend]="barChartLegend"
+[chartType]="barChartType"></canvas>
+</div>
+
