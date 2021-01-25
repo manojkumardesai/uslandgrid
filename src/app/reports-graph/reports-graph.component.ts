@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { rejects } from 'assert';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
-import { resolve } from 'dns';
 import { Color, Label } from 'ng2-charts';
 import { DetailService } from '../well-detail/service/detail-service.service';
 import { WellDetailComponent } from '../well-detail/well-detail.component';
