@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
+import { ChartDataSets, ChartOptions, ChartTitleOptions, ChartType } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { DetailService } from '../well-detail/service/detail-service.service';
 import { WellDetailComponent } from '../well-detail/well-detail.component';
@@ -20,6 +20,11 @@ export class ReportsGraphComponent implements OnInit {
   barChartColors: Color[];
   barChartLegend: boolean;
   barChartType: ChartType;
+  chartTititle: ChartTitleOptions = {
+    display: true,
+    text: 'Zone Wise Values',
+    fontSize: 18
+  };
   ZoneValues;
   subscription: any = [];
   constructor(public detailService: DetailService,
@@ -38,6 +43,7 @@ export class ReportsGraphComponent implements OnInit {
           this.barChartColors = val.barChartColors;
           this.barChartLegend = val.barChartLegend;
           this.barChartType = val.barChartType;
+          this.barChartOptions.title = this.chartTititle;
         }
       })
     );
