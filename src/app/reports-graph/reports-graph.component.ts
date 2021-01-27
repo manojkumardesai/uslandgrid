@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChartDataSets, ChartOptions, ChartTitleOptions, ChartType } from 'chart.js';
-import { Color, Label } from 'ng2-charts';
+import { BaseChartDirective, Color, Label } from 'ng2-charts';
 import { DetailService } from '../well-detail/service/detail-service.service';
 import { WellDetailComponent } from '../well-detail/well-detail.component';
 import { ApiService } from '../_services/api.service';
@@ -27,6 +27,7 @@ export class ReportsGraphComponent implements OnInit {
   };
   ZoneValues;
   subscription: any = [];
+  @ViewChild(BaseChartDirective) barChart :  BaseChartDirective;
   constructor(public detailService: DetailService,
     public route: ActivatedRoute, public loginService: LoginService, public apiService: ApiService) { }
 
@@ -44,6 +45,14 @@ export class ReportsGraphComponent implements OnInit {
           this.barChartLegend = val.barChartLegend;
           this.barChartType = val.barChartType;
           this.barChartOptions.title = this.chartTititle;
+        }
+      })
+    );
+
+    this.subscription.push(
+      this.apiService.resizeMapSubject.subscribe(val => {
+        if (val) {
+          this.barChart.chart.resize();
         }
       })
     );
