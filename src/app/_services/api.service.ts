@@ -191,4 +191,8 @@ export class ApiService {
   resetFilterSubject(val) {
     this.reserFilterSubject.next(val);
   }
+
+  wellListIds(payload) {
+    return this.http.post(this.baseUrl + 'wellidlist', payload);
+  }
 }
