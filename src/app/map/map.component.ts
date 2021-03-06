@@ -121,6 +121,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   activeQuarter = false;
   activeCounty = false;
   subscription: any = [];
+  multiSelectPoints = [];
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
     public userService: LoginService) { }
@@ -548,10 +549,21 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
   showInfoPoint(ev) {
     if (this.activeSection || this.activeTownship || this.activeQuarter || this.activeCounty) {
+      
+      if(ev.originalEvent.shiftKey) {
+        this.multiSelectPoints.push({
+          lon: ev.latlng.lng,
+          lat: ev.latlng.lat
+        });
+      } else {
+        this.multiSelectPoints = [{
+          lon: ev.latlng.lng,
+          lat: ev.latlng.lat
+        }];
+      }
       let payload = {
         type: this.townshipType,
-        longitude: ev.latlng.lng,
-        latitude: ev.latlng.lat
+        plssPoints: this.multiSelectPoints
       }
       this.mapTownShipExtent = payload;
       this.apiService.emitTownshipExtent(this.mapTownShipExtent);
@@ -1027,6 +1039,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.isTownshipIsActive = true;
       if (!this.activeSection && !this.activeTownship && !this.activeQuarter && !this.activeCounty) {
         // this.mapTownShipExtent = {};
+        this.multiSelectPoints = [];
         if (this.infoPointLayers) {
           this.infoPointLayers.clearLayers();
         }
