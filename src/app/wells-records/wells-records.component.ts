@@ -8,6 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { AdvancedFilterComponent } from './advFilterDialog/advanced-filter/advanced-filter.component';
 import { ColumnConstantsService } from './column-constants.service';
+import { LoginService } from '../_services/login.service';
 
 export interface UserData {
   id: string;
@@ -57,7 +58,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   townShipData: any;
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
-    public columnConstants: ColumnConstantsService) { }
+    public columnConstants: ColumnConstantsService,
+    public loginService: LoginService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.isLoading = true;
@@ -601,6 +603,20 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     delete this.payLoadWithParams[4][valueToDelete];
     delete this.payLoadWithParams[5][valueToDelete];
     delete this.payLoadWithParams[6][valueToDelete];
+  }
+
+  getAppliedFilters() {
+    if(this.loginService.isloggedin()) {
+      this.apiService.wellListIds(this.payLoadWithParams[0]).subscribe((res: any) => {
+        const filteredData = JSON.stringify(res);
+        localStorage.setItem('filteredWellId', filteredData);
+      });
+    } else {
+      if(localStorage.getItem('filteredWellId')) {
+        localStorage.removeItem('filteredWellId');
+      }
+    }
+   
   }
 }
 

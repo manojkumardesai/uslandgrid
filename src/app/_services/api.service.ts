@@ -239,4 +239,8 @@ export class ApiService {
   emitZoneChartSubject(values) {
     this.zoneChartSubject.next(values);
   }
+
+  wellListIds(payload) {
+    return this.http.post(this.baseUrl + 'wellidlist', payload);
+  }
 }
