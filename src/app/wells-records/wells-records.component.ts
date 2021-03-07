@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges, SimpleChange, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit,  Input,  Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -22,7 +22,7 @@ export interface UserData {
   templateUrl: './wells-records.component.html',
   styleUrls: ['./wells-records.component.scss']
 })
-export class WellsRecordsComponent implements OnInit, OnChanges {
+export class WellsRecordsComponent implements OnInit {
   panelOpenState = false;
   totalAvailableWellsCount = [];
   displayedColumns = [];
@@ -61,73 +61,6 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     public columnConstants: ColumnConstantsService,
     public loginService: LoginService) { }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.isLoading = true;
-    const currentItem: SimpleChange = changes.payLoadFromFilter;
-    const mapExtentValue: SimpleChange = changes.mapExtent;
-    const townshipExtent: SimpleChange = changes.mapTownShipExtent;
-    if (changes.openAdvancedFilter && changes.openAdvancedFilter.currentValue) {
-      this.filterAdvanced();
-    }
-    let payLoad: any = {
-      offset: 0,
-      limit: 10,
-      points: [],
-      wellsCriteria: []
-    };
-    if (currentItem && Object.keys(currentItem.currentValue).length) {
-      payLoad = {
-        offset: 0,
-        limit: 10,
-        wellsCriteria: this.payLoadFromFilter
-      };
-    }
-    if (mapExtentValue && mapExtentValue.currentValue.length) {
-      payLoad = {
-        offset: 0,
-        limit: 10,
-        points: this.mapExtent
-      };
-
-    }
-    if (townshipExtent && townshipExtent.currentValue && Object.keys(townshipExtent.currentValue).length) {
-      payLoad = {
-        offset: 0,
-        limit: 10,
-        plssFilterDto: townshipExtent.currentValue
-      };
-      delete payLoad.points;
-    }
-    if (!this.payLoadWithParams[this.selectedTab]) {
-      this.payLoadWithParams[0] = {};
-      this.payLoadWithParams[1] = {};
-      this.payLoadWithParams[2] = {};
-      this.payLoadWithParams[3] = {};
-      this.payLoadWithParams[4] = {};
-      this.payLoadWithParams[5] = {};
-      this.payLoadWithParams[6] = {};
-    }
-    if (Object.keys(payLoad).length) {
-      Object.assign(this.payLoadWithParams[0], payLoad);
-      Object.assign(this.payLoadWithParams[1], payLoad);
-      Object.assign(this.payLoadWithParams[2], payLoad);
-      Object.assign(this.payLoadWithParams[3], payLoad);
-      Object.assign(this.payLoadWithParams[4], payLoad);
-      Object.assign(this.payLoadWithParams[5], payLoad);
-      Object.assign(this.payLoadWithParams[6], payLoad);
-
-      for (let i = 0; i < Object.keys(this.payLoadWithParams).length; i++) {
-        if (townshipExtent && townshipExtent.currentValue && Object.keys(townshipExtent.currentValue).length) {
-          delete this.payLoadWithParams[i].points;
-        } else {
-          delete this.payLoadWithParams[i].plssFilterDto;
-        }
-      }
-    }
-    if (Object.keys(this.payLoadWithParams[this.selectedTab]).length) {
-      this.onTabChange();
-    }
-  }
   ngOnInit() {
     this.payLoadWithParams[0] = {};
     this.payLoadWithParams[1] = {};
