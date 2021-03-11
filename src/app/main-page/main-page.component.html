@@ -1,0 +1,39 @@
+<div style="height: calc(100% - 50px);">
+    <!-- <as-split 
+      class="split-container"
+      unit="percent" 
+      direction="vertical" (dragEnd)='resetMap($event)'>
+        <as-split-area size="60" style="position: relative;">
+            <app-map></app-map>
+        </as-split-area>
+        <as-split-area size="40" style="background: rgba(0, 0, 0, .76);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;">
+        <h3>charts goes here</h3>
+        </as-split-area>
+        <as-split unit="percent" direction="horizontal">
+            <as-split-area>
+                <app-wells-records></app-wells-records>
+            </as-split-area>
+        </as-split>
+    </as-split> -->
+
+    <as-split unit="percent"  direction="vertical">
+        <as-split-area size="70">
+            <as-split class="split-container" unit="percent" direction="horizontal" (dragEnd)='resetMap($event)'>
+                <as-split-area size="60" style="position: relative;">
+                    <app-map></app-map>
+                </as-split-area>
+                <as-split-area size="40">
+                <app-reports-graph></app-reports-graph>
+                </as-split-area>
+            </as-split>
+        </as-split-area>
+        <as-split-area size="30" style="overflow: hidden;">
+            <app-wells-records></app-wells-records>
+        </as-split-area>
+    </as-split>
+    
+</div>

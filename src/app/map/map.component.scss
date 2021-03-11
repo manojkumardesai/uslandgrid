@@ -1,11 +1,11 @@
 .map-container {
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    margin-top: 50px;
-    height: 70%
+    margin-top: 0px;
+    height: 100%
   }
   
   .map-frame {
@@ -19,13 +19,15 @@
   .left-icons-placeholder {
     border: 1px solid rgba(0, 0, 0, 0.4);
     position: absolute;
-    margin-top: 5%;
-    margin-left: 0.575%;
+    margin-top: 0;
+    // margin-left: 0.575%;
     background-color: white;
     width: 32px;
     height: 30px;
     border-radius: 6%;
     z-index: 1000;
+    top: 96px;
+    left: 11px;
   }
 
   .leftIcon {
@@ -35,7 +37,9 @@
   }
 
   .search {
-    margin-left: 3%;
+    left: 55px;
+    position: absolute;
+    top: 3px;
   }
 
   .filterSearchWell {
@@ -74,7 +78,7 @@
 .mini-map-container {
   position: absolute;
     z-index: 999;
-    bottom: 315px;
+    bottom: 115px;
     left: 15px;
     height: 200px;
     width: 200px;
@@ -116,7 +120,7 @@
   width: 33.5px;
   z-index: 1000;
   left: 10px;
-  top: 237px;
+  top: 187px;
   border: 2px solid rgba(0, 0, 0, 0.2);
   border-top: 1px solid rgba(0, 0, 0, 0.2);
     .export-township-icon {
@@ -161,12 +165,12 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 90%;
+    height: 100%;
     /* align-items: center; */
     background: rgba(0 ,0 ,0, 0.2);
     transition: 0.3s ease-in;
     margin-top: 5;
-    padding-top: 5%;
+    // padding-top: 5%;
     .loader {
       position: absolute;
       left: 50%;
@@ -191,4 +195,19 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.form-caption label {
+  font-size: 10px !important;
+}
+.form-caption .mat-form-field-label {
+  font-size: 10px !important;
+}
+
+:host::ng-deep {
+  .mat-form-field-label-wrapper {
+    .mat-form-field-label {
+      font-size: 14px !important;
+    }
+  }
 }

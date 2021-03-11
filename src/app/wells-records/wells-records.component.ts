@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges, SimpleChange, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit,  Input,  Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -22,7 +22,7 @@ export interface UserData {
   templateUrl: './wells-records.component.html',
   styleUrls: ['./wells-records.component.scss']
 })
-export class WellsRecordsComponent implements OnInit, OnChanges {
+export class WellsRecordsComponent implements OnInit {
   panelOpenState = false;
   totalAvailableWellsCount = [];
   displayedColumns = [];
@@ -61,73 +61,6 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     public columnConstants: ColumnConstantsService,
     public loginService: LoginService) { }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.isLoading = true;
-    const currentItem: SimpleChange = changes.payLoadFromFilter;
-    const mapExtentValue: SimpleChange = changes.mapExtent;
-    const townshipExtent: SimpleChange = changes.mapTownShipExtent;
-    if (changes.openAdvancedFilter && changes.openAdvancedFilter.currentValue) {
-      this.filterAdvanced();
-    }
-    let payLoad: any = {
-      offset: 0,
-      limit: 10,
-      points: [],
-      wellsCriteria: []
-    };
-    if (currentItem && Object.keys(currentItem.currentValue).length) {
-      payLoad = {
-        offset: 0,
-        limit: 10,
-        wellsCriteria: this.payLoadFromFilter
-      };
-    }
-    if (mapExtentValue && mapExtentValue.currentValue.length) {
-      payLoad = {
-        offset: 0,
-        limit: 10,
-        points: this.mapExtent
-      };
-
-    }
-    if (townshipExtent && townshipExtent.currentValue && Object.keys(townshipExtent.currentValue).length) {
-      payLoad = {
-        offset: 0,
-        limit: 10,
-        plssFilterDto: townshipExtent.currentValue
-      };
-      delete payLoad.points;
-    }
-    if (!this.payLoadWithParams[this.selectedTab]) {
-      this.payLoadWithParams[0] = {};
-      this.payLoadWithParams[1] = {};
-      this.payLoadWithParams[2] = {};
-      this.payLoadWithParams[3] = {};
-      this.payLoadWithParams[4] = {};
-      this.payLoadWithParams[5] = {};
-      this.payLoadWithParams[6] = {};
-    }
-    if (Object.keys(payLoad).length) {
-      Object.assign(this.payLoadWithParams[0], payLoad);
-      Object.assign(this.payLoadWithParams[1], payLoad);
-      Object.assign(this.payLoadWithParams[2], payLoad);
-      Object.assign(this.payLoadWithParams[3], payLoad);
-      Object.assign(this.payLoadWithParams[4], payLoad);
-      Object.assign(this.payLoadWithParams[5], payLoad);
-      Object.assign(this.payLoadWithParams[6], payLoad);
-
-      for (let i = 0; i < Object.keys(this.payLoadWithParams).length; i++) {
-        if (townshipExtent && townshipExtent.currentValue && Object.keys(townshipExtent.currentValue).length) {
-          delete this.payLoadWithParams[i].points;
-        } else {
-          delete this.payLoadWithParams[i].plssFilterDto;
-        }
-      }
-    }
-    if (Object.keys(this.payLoadWithParams[this.selectedTab]).length) {
-      this.onTabChange();
-    }
-  }
   ngOnInit() {
     this.payLoadWithParams[0] = {};
     this.payLoadWithParams[1] = {};
@@ -136,19 +69,81 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.payLoadWithParams[4] = {};
     this.payLoadWithParams[5] = {};
     this.payLoadWithParams[6] = {};
+    this.fetchData();
+
+    /* Subscription on map extent changes */
     this.subscription.push(
-      this.apiService.reserFilterSubject.subscribe(val => {
-        delete this.payLoadWithParams[0]['filters'];
-        delete this.payLoadWithParams[1]['filters'];
-        delete this.payLoadWithParams[2]['filters'];
-        delete this.payLoadWithParams[3]['filters'];
-        delete this.payLoadWithParams[4]['filters'];
-        delete this.payLoadWithParams[5]['filters'];
-        delete this.payLoadWithParams[6]['filters'];
-        this.openAdvancedFilterEvent.emit(false);
+      this.apiService.mapExtentSubject.subscribe(val => {
+        const points = {
+          points: val
+        };
+        this.formatPayload(points, 'plssFilterDto');
+        this.formatPayload(points, 'filters');
         this.onTabChange();
       })
     );
+
+    /* Subscription on township changes */
+    this.subscription.push(
+      this.apiService.mapExtentTownshipSubject.subscribe(val => {
+        const plssFilterDto = {
+          plssFilterDto: val
+        };
+        this.formatPayload(plssFilterDto, 'points');
+        this.formatPayload(plssFilterDto, 'filters');
+        this.onTabChange();
+      })
+    );
+
+    /* open advance filter menu */
+    this.subscription.push(
+      this.apiService.openAdvanceFilter.subscribe(val => {
+        if (val) {
+          this.filterAdvanced();
+        }
+      })
+    );
+
+    /* Subscription on filtered values */
+    this.subscription.push(
+      this.apiService.filteredSubject.subscribe(val => {
+        const filters = {
+          filters: val
+        };
+        this.formatPayload(filters);
+        this.onTabChange();
+      })
+    );
+
+    this.subscription.push(
+      this.apiService.resetTableSubject.subscribe(val => {
+        this.formatPayload({}, 'plssFilterDto')
+        this.formatPayload({}, 'points');
+        this.formatPayload({}, 'filters');
+        this.onTabChange();
+      })
+    );
+  }
+
+  formatPayload(payload?, deleteKey?) {
+    Object.assign(this.payLoadWithParams[0], payload);
+    Object.assign(this.payLoadWithParams[1], payload);
+    Object.assign(this.payLoadWithParams[2], payload);
+    Object.assign(this.payLoadWithParams[3], payload);
+    Object.assign(this.payLoadWithParams[4], payload);
+    Object.assign(this.payLoadWithParams[5], payload);
+    Object.assign(this.payLoadWithParams[6], payload);
+    for (let i = 0; i < 7; i++) {
+      if (deleteKey === 'points') {
+        delete this.payLoadWithParams[i][deleteKey];
+      }
+      if (deleteKey === 'plssFilterDto') {
+        delete this.payLoadWithParams[i][deleteKey];
+      }
+      if (deleteKey === 'filters') {
+        delete this.payLoadWithParams[i][deleteKey];
+      }
+    }
   }
 
   ngAfterViewInit() {
@@ -188,15 +183,6 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       )
       .subscribe();
   }
-
-  // applyFilter(event: Event) {
-  //   const filterValue = (event.target as HTMLInputElement).value;
-  //   this.dataSource[this.selectedTab].filter = filterValue.trim().toLowerCase();
-
-  //   if (this.dataSource[this.selectedTab].paginator) {
-  //     this.dataSource[this.selectedTab].paginator.firstPage();
-  //   }
-  // }
 
   loadWells(offset = 0, limit = 10) {
     this.isLoading = true;
@@ -247,12 +233,13 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
   }
 
   filterEmit() {
-    this.filterByMapExtentFlag = !this.filterByMapExtentFlag;
-    this.filterByExtent.emit(this.filterByMapExtentFlag);
+    this.apiService.loadTableByMapExtent(true);
+    this.selection.clear();
+    this.apiService.clearTabPoints(true);
   }
 
   clear() {
-    this.clearSelection.emit('true');
+    this.apiService.clearTabPoints(true);
     this.selection.clear();
   }
 
@@ -261,11 +248,13 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
     this.selection.clear();
     this.deleteKeyFromAllObj('filters');
     this.onTabChange();
+    this.apiService.resetAdvanceFilter(true);
   }
 
   zoomToEmit() {
     if (this.selection.selected.length) {
-      this.zoomTo.emit(this.selection.selected);
+      // this.zoomTo.emit(this.selection.selected);
+      this.apiService.loadZoomTo(this.selection.selected);
     }
   }
 
@@ -282,6 +271,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       offset,
       limit
     }
+    this.clear();
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
     this.isLoading = true;
     if (!this.displayedColumns[this.selectedTab]) {
@@ -335,6 +325,8 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
       this.payLoadWithParams[4]['filters'] = result;
       this.payLoadWithParams[5]['filters'] = result;
       this.payLoadWithParams[6]['filters'] = result;
+      this.formatPayload('', 'points');
+      this.formatPayload('', 'plssFilterDto');
       this.openAdvancedFilterEvent.emit(false);
       this.onTabChange();
     });
@@ -342,6 +334,7 @@ export class WellsRecordsComponent implements OnInit, OnChanges {
 
   onTabChange(offset = 0, limit = 10) {
     this.isLoading = true;
+    this.clear();
     switch (this.selectedTab) {
       case 0:
         this.fetchData(offset, limit);
