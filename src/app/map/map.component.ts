@@ -15,6 +15,7 @@ import { saveAs } from 'file-saver';
 import "leaflet-draw";
 import { WarningWindowComponent } from '../dilogs/warning-window/warning-window.component';
 import { LoginService } from '../_services/login.service';
+import * as wms from 'leaflet.wms';
 declare var $: any
 L.drawLocal.draw.handlers.polygon.tooltip.end = '<b>Click the finish button to close the polygon / Click first point to close this shape.</b>';
 export interface DialogData {
@@ -434,13 +435,27 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   addPlssLayer() {
-    this.plssLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
-      layers: 'landgrid_webmap:LandGrid_WebMap',
-      format: 'image/png8',
-      transparent: true,
-      styles: '',
-      attribution: null
-    });
+    // this.plssLayer = L.WMS.Source('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
+    //   layers: 'landgrid_webmap:LandGrid_WebMap',
+    //   format: 'image/png8',
+    //   transparent: true,
+    //   tiled: false,
+    //   styles: '',
+    //   attribution: null
+    // });
+
+    this.plssLayer = wms.source(
+      "https://maps.uslandgrid.com/geoserver/Wells/wms",
+      {
+        format: "image/png",
+        layers: 'landgrid_webmap:LandGrid_WebMap',
+        transparent: true,
+        attribution: null,
+        info_format: "text/html",
+        tiled: false,
+      }
+    );
+    
   }
 
   addWellsLayer() {
