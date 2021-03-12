@@ -271,14 +271,20 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.miniMap.removeLayer(this.cultureLayer);
     }
     if (this.psll_layer.checked) {
-      this.plssLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
+      /*this.plssLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
         layers: 'landgrid_webmap:LandGrid_WebMap',
         format: 'image/png8',
         transparent: true,
         styles: '',
         attribution: null
       });
-      this.miniMap.addLayer(this.plssLayer);
+      this.miniMap.addLayer(this.plssLayer);*/
+
+      this.plssLayer = wms.source('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
+        format: 'image/png8',
+        transparent: true
+      });
+      this.plssLayer.getLayer("landgrid_webmap:LandGrid_WebMap").addTo(this.miniMap);
     } else {
       this.miniMap.removeLayer(this.plssLayer);
     }
@@ -444,17 +450,11 @@ export class MapComponent implements AfterViewInit, OnInit {
     //   attribution: null
     // });
 
-    this.plssLayer = wms.source(
-      "https://maps.uslandgrid.com/geoserver/Wells/wms",
-      {
-        format: "image/png",
-        layers: 'landgrid_webmap:LandGrid_WebMap',
-        transparent: true,
-        attribution: null,
-        info_format: "text/html",
-        tiled: false,
-      }
-    );
+    this.plssLayer = wms.source('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
+      format: 'image/png8',
+      transparent: true
+    });
+    this.plssLayer.getLayer("landgrid_webmap:LandGrid_WebMap").addTo(this.map);
     
   }
 
