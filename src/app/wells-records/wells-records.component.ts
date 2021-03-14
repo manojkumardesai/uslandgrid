@@ -56,6 +56,7 @@ export class WellsRecordsComponent implements OnInit {
   titleForReset = 'Applied filters will be reset.';
   subscription: any = [];
   townShipData: any;
+  wellsTableSubscriber: any;
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
     public columnConstants: ColumnConstantsService,
@@ -91,7 +92,12 @@ export class WellsRecordsComponent implements OnInit {
         };
         this.formatPayload(plssFilterDto, 'points');
         this.formatPayload(plssFilterDto, 'filters');
-        this.onTabChange();
+        if(this.wellsTableSubscriber) {
+          this.wellsTableSubscriber.unsubscribe();
+          this.onTabChange();
+        } else {
+          this.onTabChange();
+        }
       })
     );
 
@@ -277,7 +283,7 @@ export class WellsRecordsComponent implements OnInit {
     if (!this.displayedColumns[this.selectedTab]) {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.WELL_RECORD_COLUMNS];
     }
-    this.apiService.fetchWellsData(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
+    this.wellsTableSubscriber = this.apiService.fetchWellsData(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellDtos);
       // this.dataSource[this.selectedTab].paginator = this.paginator.toArray()[this.selectedTab];
@@ -372,7 +378,7 @@ export class WellsRecordsComponent implements OnInit {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.CP_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchCpWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
+    this.wellsTableSubscriber = this.apiService.fetchCpWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellCpDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
@@ -399,7 +405,7 @@ export class WellsRecordsComponent implements OnInit {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.FT_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchFtWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
+    this.wellsTableSubscriber = this.apiService.fetchFtWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellFtDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
@@ -426,7 +432,7 @@ export class WellsRecordsComponent implements OnInit {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.MC_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchMcWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
+    this.wellsTableSubscriber = this.apiService.fetchMcWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellMcDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
@@ -453,7 +459,7 @@ export class WellsRecordsComponent implements OnInit {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.PF_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchPfWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
+    this.wellsTableSubscriber = this.apiService.fetchPfWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellPfDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
@@ -481,7 +487,7 @@ export class WellsRecordsComponent implements OnInit {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.SURVEY_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchSurveyWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
+    this.wellsTableSubscriber = this.apiService.fetchSurveyWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellSurveyDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;
@@ -508,7 +514,7 @@ export class WellsRecordsComponent implements OnInit {
       this.displayedColumns[this.selectedTab] = [...this.columnConstants.IP_COLUMNS].slice(0, 10);
     }
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
-    this.apiService.fetchIpWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
+    this.wellsTableSubscriber = this.apiService.fetchIpWellDetails(this.payLoadWithParams[this.selectedTab]).subscribe((data) => {
       this.isLoading = false;
       this.dataSource[this.selectedTab] = new MatTableDataSource(data.wellIpVolumeDtos);
       this.totalAvailableWellsCount[this.selectedTab] = data.count;

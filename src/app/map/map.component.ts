@@ -123,6 +123,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   activeCounty = false;
   subscription: any = [];
   multiSelectPoints = [];
+  infoPointsSubscriber: any;
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
     public userService: LoginService) { }
@@ -192,6 +193,9 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.subscription.push(
       this.apiService.tabpointsSubject.subscribe(val => {
         this.tablePointLayers.clearLayers();
+        this.infoPointInfo = [];
+        this.markWell(null);
+        this.dialog.closeAll();
       })
     );
 
@@ -271,14 +275,6 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.miniMap.removeLayer(this.cultureLayer);
     }
     if (this.psll_layer.checked) {
-      /*this.plssLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
-        layers: 'landgrid_webmap:LandGrid_WebMap',
-        format: 'image/png8',
-        transparent: true,
-        styles: '',
-        attribution: null
-      });
-      this.miniMap.addLayer(this.plssLayer);*/
 
       this.plssLayer = wms.source('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
         format: 'image/png8',
@@ -314,16 +310,27 @@ export class MapComponent implements AfterViewInit, OnInit {
       }
     };
     this.markWell(option);
-    this.showInfoPoint(event);
+    if(this.infoPointsSubscriber) {
+      this.infoPointsSubscriber.unsubscribe();
+      this.showInfoPoint(event);
+    } else {
+      this.showInfoPoint(event);
+    }
   }
 
   private initMap(): void {
     this.map = L.map('map', {
       center: [38.417301, -97.075195],
-      zoom: 5
+      zoom: 5,
+      boxZoom: false
     });
     this.map.on('click', (ev) => {
-      this.showInfoPoint(ev);
+      if(this.infoPointsSubscriber) {
+        this.infoPointsSubscriber.unsubscribe();
+        this.showInfoPoint(ev);
+      } else {
+        this.showInfoPoint(ev);
+      }
     });
     this.map.on('map-container-resize', () => {
       setTimeout(() => {
@@ -585,7 +592,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.mapTownShipExtent = payload;
       this.apiService.emitTownshipExtent(this.mapTownShipExtent);
       this.apiService.globalLoader = true;
-      this.apiService.infoPoint({ plssFilterDto: payload }).subscribe((coords: []) => {
+      this.infoPointsSubscriber = this.apiService.infoPoint({ plssFilterDto: payload }).subscribe((coords: []) => {
         const circleOptions = {
           color: '#0ff',
           fillColor: '#0ff',
@@ -611,7 +618,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         });
     }
     else if (this.map.getZoom() > 11 && !this.isShapeDrawn) {
-      this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
+     this.infoPointsSubscriber = this.apiService.fetchInfoPoint(ev.latlng).subscribe((data: any) => {
         if (data.length) {
           if (this.infoWindowDialog) {
             this.infoWindowDialog.close();
