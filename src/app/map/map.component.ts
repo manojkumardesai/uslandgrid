@@ -441,21 +441,23 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   addPlssLayer() {
-    // this.plssLayer = L.WMS.Source('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
-    //   layers: 'landgrid_webmap:LandGrid_WebMap',
-    //   format: 'image/png8',
-    //   transparent: true,
-    //   tiled: false,
-    //   styles: '',
-    //   attribution: null
-    // });
-
+    /* this.plssLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
+      layers: 'landgrid_webmap:LandGrid_WebMap',
+      format: 'image/png8',
+      transparent: true,
+      tiled: false,
+      styles: '',
+      attribution: null
+    });
+    this.map.addLayer(this.plssLayer); */
+    
     this.plssLayer = wms.source('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
       format: 'image/png8',
-      transparent: true
+      transparent: true,
+      identify: false
     });
     this.plssLayer.getLayer("landgrid_webmap:LandGrid_WebMap").addTo(this.map);
-    
+   
   }
 
   addWellsLayer() {
