@@ -284,7 +284,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     } else {
       this.miniMap.removeLayer(this.plssLayer);
     }
-    if (this.wells_layer.checkbox) {
+    if (this.wells_layer.checked) {
       this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
         layers: 'wh_final',
         format: 'image/png8',
@@ -293,7 +293,11 @@ export class MapComponent implements AfterViewInit, OnInit {
         attribution: null
       });
       this.miniMap.addLayer(this.wellsLayer);
+      if (!this.map.hasLayer(this.clusterLayer)) {
+        this.map.addLayer(this.clusterLayer);
+      }
     } else {
+      this.map.removeLayer(this.clusterLayer);
       this.miniMap.removeLayer(this.wellsLayer);
     }
   }
@@ -345,7 +349,9 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.map.removeLayer(this.clusterLayer);
       } else {
         if (!this.map.hasLayer(this.clusterLayer)) {
-          this.map.addLayer(this.clusterLayer);
+          if(this.wells_layer.checked) {
+            this.map.addLayer(this.clusterLayer);
+          }
         }
       }
     });
