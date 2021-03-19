@@ -278,7 +278,8 @@ export class MapComponent implements AfterViewInit, OnInit {
 
       this.plssLayer = wms.source('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
         format: 'image/png8',
-        transparent: true
+        transparent: true,
+        identify: false
       });
       this.plssLayer.getLayer("landgrid_webmap:LandGrid_WebMap").addTo(this.miniMap);
     } else {
@@ -290,7 +291,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         format: 'image/png8',
         transparent: true,
         styles: '',
-        attribution: null
+        attribution: null,
       });
       this.miniMap.addLayer(this.wellsLayer);
       if (!this.map.hasLayer(this.clusterLayer)) {
@@ -326,7 +327,6 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map = L.map('map', {
       center: [38.417301, -97.075195],
       zoom: 5,
-      boxZoom: false
     });
     this.map.on('click', (ev) => {
       if(this.infoPointsSubscriber) {
@@ -490,7 +490,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       format: 'image/png8',
       transparent: true,
       styles: '',
-      attribution: null
+      attribution: null,
+      identify: false
     });
     this.miniMap.addLayer(this.wellsLayer);
   }
@@ -580,21 +581,64 @@ export class MapComponent implements AfterViewInit, OnInit {
   showInfoPoint(ev) {
     if (this.activeSection || this.activeTownship || this.activeQuarter || this.activeCounty) {
       
-      if(ev.originalEvent.shiftKey) {
+      if(ev.originalEvent.ctrlKey) {
         this.multiSelectPoints.push({
           lon: ev.latlng.lng,
           lat: ev.latlng.lat
         });
+        if (this.activeCounty && this.multiSelectPoints && this.multiSelectPoints.length > 5) {
+          const dialogRef = this.dialog.open(WarningWindowComponent, {
+            data: {
+              mesg: 'Only 5 counties allowed per selection',
+            },
+            disableClose: true
+          });
+          dialogRef.afterClosed().subscribe(val => {
+            this.multiSelectPoints = [];
+          });
+          this.apiService.globalLoader = false;
+          return;
+        };
+        if (this.activeTownship && this.multiSelectPoints && this.multiSelectPoints.length > 10) {
+          const dialogRef = this.dialog.open(WarningWindowComponent, {
+            data: {
+              mesg: 'Only 10 townships allowed per selection',
+            },
+            disableClose: true
+          });
+          dialogRef.afterClosed().subscribe(val => {
+            this.multiSelectPoints = [];
+          });
+          this.apiService.globalLoader = false;
+          return;
+        };
+        if (this.activeQuarter || this.activeSection && this.multiSelectPoints && this.multiSelectPoints.length > 50) {
+          const dialogRef = this.dialog.open(WarningWindowComponent, {
+            data: {
+              mesg: `Only 50 ${this.activeQuarter ? ' quarters ' : ' sections '} allowed per selection`,
+            },
+            disableClose: true
+          });
+          dialogRef.afterClosed().subscribe(val => {
+            this.multiSelectPoints = [];
+          });
+          this.apiService.globalLoader = false;
+          return;
+        };
+        
       } else {
         this.multiSelectPoints = [{
           lon: ev.latlng.lng,
           lat: ev.latlng.lat
         }];
       }
+
       let payload = {
         type: this.townshipType,
         plssPoints: this.multiSelectPoints
       }
+
+      
       this.mapTownShipExtent = payload;
       this.apiService.emitTownshipExtent(this.mapTownShipExtent);
       this.apiService.globalLoader = true;
@@ -644,6 +688,9 @@ export class MapComponent implements AfterViewInit, OnInit {
             this.isInfoWindowOpened = false;
           });
         }
+      },
+      (err) => {
+        this.apiService.hide();
       });
     }
   }
@@ -965,7 +1012,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   getAllocatedFileTypes() {
-    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    let userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (userInfo && Object.keys(userInfo)) {
       let id = userInfo.userId;
       this.apiService.userDetails(id).subscribe(user => {

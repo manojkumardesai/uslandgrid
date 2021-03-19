@@ -190,7 +190,7 @@ export class WellsRecordsComponent implements OnInit {
       .subscribe();
   }
 
-  loadWells(offset = 0, limit = 10) {
+  loadWells(offset = 0, limit = 25) {
     this.isLoading = true;
     if (Object.keys(this.payLoadFromFilter).length) {
       const payLoad = {
@@ -272,7 +272,7 @@ export class WellsRecordsComponent implements OnInit {
     }
   }
 
-  fetchData(offset = 0, limit = 10) {
+  fetchData(offset = 0, limit = 25) {
     const payLoad = {
       offset,
       limit
@@ -338,7 +338,7 @@ export class WellsRecordsComponent implements OnInit {
     });
   }
 
-  onTabChange(offset = 0, limit = 10) {
+  onTabChange(offset = 0, limit = 25) {
     this.isLoading = true;
     this.clear();
     switch (this.selectedTab) {
@@ -366,7 +366,7 @@ export class WellsRecordsComponent implements OnInit {
     }
   }
 
-  fetchCpWellDetail(offset = 0, limit = 10) {
+  fetchCpWellDetail(offset = 0, limit = 25) {
     const payLoad = {
       offset,
       limit
@@ -393,7 +393,7 @@ export class WellsRecordsComponent implements OnInit {
       });
   }
 
-  fetchFtWellDetail(offset = 0, limit = 10) {
+  fetchFtWellDetail(offset = 0, limit = 25) {
     const payLoad = {
       offset,
       limit
@@ -420,7 +420,7 @@ export class WellsRecordsComponent implements OnInit {
       });
   }
 
-  fetchMcWellDetail(offset = 0, limit = 10) {
+  fetchMcWellDetail(offset = 0, limit = 25) {
     const payLoad = {
       offset,
       limit
@@ -447,7 +447,7 @@ export class WellsRecordsComponent implements OnInit {
       });
   }
 
-  fetchPfWellDetail(offset = 0, limit = 10) {
+  fetchPfWellDetail(offset = 0, limit = 25) {
     const payLoad = {
       offset,
       limit
@@ -475,7 +475,7 @@ export class WellsRecordsComponent implements OnInit {
       });
   }
 
-  fetchSurveyWellDetail(offset = 0, limit = 10) {
+  fetchSurveyWellDetail(offset = 0, limit = 25) {
     const payLoad = {
       offset,
       limit
@@ -502,7 +502,7 @@ export class WellsRecordsComponent implements OnInit {
       });
   }
 
-  fetchIpWellDetail(offset = 0, limit = 10) {
+  fetchIpWellDetail(offset = 0, limit = 25) {
     const payLoad = {
       offset,
       limit
