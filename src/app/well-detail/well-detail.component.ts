@@ -61,7 +61,7 @@ export class WellDetailComponent implements OnInit {
  
   ngOnInit(): void {
     this.wellId = this.route.snapshot.paramMap.get("id");
-    let user = JSON.parse(sessionStorage.getItem('userInfo'));
+    let user = JSON.parse(localStorage.getItem('userInfo'));
     this.isLoggedIn = user && Object.keys(user).length ? true : false; 
    
     if (this.wellId) {

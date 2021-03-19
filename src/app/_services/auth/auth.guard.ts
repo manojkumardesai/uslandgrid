@@ -14,8 +14,8 @@ export class AuthGuard implements CanActivate {
         next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
-        if (sessionStorage.getItem('userInfo')) {
-            let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        if (localStorage.getItem('userInfo')) {
+            let userInfo = JSON.parse(localStorage.getItem('userInfo'));
             if (userInfo && userInfo.role == 'ADMIN') {
                 return true;
             } else {

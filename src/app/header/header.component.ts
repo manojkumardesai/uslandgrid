@@ -40,8 +40,8 @@ export class HeaderComponent implements OnInit {
 
 
   logout() {
-    sessionStorage.removeItem('userInfo');
-    sessionStorage.removeItem('loginToken');
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('loginToken');
     // this.router.navigate(['/home']);
     window.location.reload(true);
     this.openSnackBar('Logged out successfully', 'Dismiss');

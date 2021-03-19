@@ -10,11 +10,14 @@ export class MainPageComponent implements OnInit {
 
   constructor(public apiService: ApiService) { }
 
+  tableHeigh = 30;
+
   ngOnInit(): void {
   }
 
   resetMap(event) {
     this.apiService.resizeMap(true);
+    this.tableHeigh = event.sizes[1];
   }
 
 }
