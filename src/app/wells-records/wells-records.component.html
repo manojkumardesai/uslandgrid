@@ -43,7 +43,7 @@
                           <mat-paginator [length]="totalAvailableWellsCount[this.selectedTab]" [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
                         </div>
                       </div>
-                    <div class="wellsTableContainer">
+                    <div class="wellsTableContainer" [style.height]="tableHeight + 'px'">
                       <!-- <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar> -->
                       <table class='wellsRecordTable' mat-table [dataSource]="dataSource[selectedTab]" matSort>
                         <!-- Check Box Code-->
@@ -122,7 +122,7 @@
                           <mat-paginator [length]="totalAvailableWellsCount[this.selectedTab]" [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
                         </div>
                       </div>
-                      <div class="wellsTableContainer">
+                      <div class="wellsTableContainer" [style.height]="tableHeight + 'px'">
                         <!-- <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar> -->
                         <table class='wellsRecordTable' mat-table [dataSource]="dataSource[selectedTab]" matSort>
                           <!-- Check Box Code-->
@@ -190,7 +190,7 @@
                           <mat-paginator [length]="totalAvailableWellsCount[this.selectedTab]" [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
                         </div>
                       </div>
-                      <div class="wellsTableContainer">
+                      <div class="wellsTableContainer" [style.height]="tableHeight + 'px'">
                         <!-- <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar> -->
                         <table class='wellsRecordTable' mat-table [dataSource]="dataSource[selectedTab]" matSort>
                           <!-- Check Box Code-->
@@ -258,7 +258,7 @@
                           <mat-paginator [length]="totalAvailableWellsCount[this.selectedTab]" [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
                         </div>
                       </div>
-                      <div class="wellsTableContainer">
+                      <div class="wellsTableContainer" [style.height]="tableHeight + 'px'">
                         <!-- <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar> -->
                         <table class='wellsRecordTable' mat-table [dataSource]="dataSource[selectedTab]" matSort>
                           <!-- Check Box Code-->
@@ -326,7 +326,7 @@
                           <mat-paginator [length]="totalAvailableWellsCount[this.selectedTab]" [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
                         </div>
                       </div>
-                      <div class="wellsTableContainer">
+                      <div class="wellsTableContainer" [style.height]="tableHeight + 'px'">
                         <!-- <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar> -->
                         <table class='wellsRecordTable' mat-table [dataSource]="dataSource[selectedTab]" matSort>
                           <!-- Check Box Code-->
@@ -394,7 +394,7 @@
                           <mat-paginator [length]="totalAvailableWellsCount[this.selectedTab]" [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
                         </div>
                       </div>
-                      <div class="wellsTableContainer">
+                      <div class="wellsTableContainer" [style.height]="tableHeight + 'px'">
                         <!-- <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar> -->
                         <table class='wellsRecordTable' mat-table [dataSource]="dataSource[selectedTab]" matSort>
                           <!-- Check Box Code-->
@@ -462,7 +462,7 @@
                       <mat-paginator [length]="totalAvailableWellsCount[this.selectedTab]" [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
                     </div>
                   </div>
-                      <div class="wellsTableContainer">
+                      <div class="wellsTableContainer" [style.height]="tableHeight + 'px'">
                         <!-- <mat-progress-bar mode="indeterminate" color='progress' *ngIf="isLoading"></mat-progress-bar> -->
                         <table class='wellsRecordTable' mat-table [dataSource]="dataSource[selectedTab]" matSort>
                           <!-- Check Box Code-->
