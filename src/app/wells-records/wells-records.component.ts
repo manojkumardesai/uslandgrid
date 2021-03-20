@@ -57,6 +57,8 @@ export class WellsRecordsComponent implements OnInit {
   subscription: any = [];
   townShipData: any;
   wellsTableSubscriber: any;
+  tableHeight = 210;
+
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
     public columnConstants: ColumnConstantsService,
@@ -127,6 +129,14 @@ export class WellsRecordsComponent implements OnInit {
         this.formatPayload({}, 'points');
         this.formatPayload({}, 'filters');
         this.onTabChange();
+      })
+    );
+    this.subscription.push(
+      this.apiService.resizeMapSubject.subscribe(val => {
+        if (val) {
+          const element = document.getElementById('acc');
+          this.tableHeight = element.offsetHeight - 61
+        }
       })
     );
   }

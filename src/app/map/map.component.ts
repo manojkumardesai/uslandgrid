@@ -237,71 +237,13 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.initMap();
     this.initMiniMap();
 
-    this.base_layer = $('input[type=checkbox]')[0];
-    this.satelight_layer = $('input[type=checkbox]')[1];
-    this.culture_layer = $('input[type=checkbox]')[2];
-    this.psll_layer = $('input[type=checkbox]')[3];
-    this.wells_layer = $('input[type=checkbox]')[4];
+    this.base_layer = $('.leaflet-control-layers-overlays input:checkbox')[0];
+    this.satelight_layer = $('.leaflet-control-layers-overlays input:checkbox')[1];
+    this.culture_layer = $('.leaflet-control-layers-overlays input:checkbox')[2];
+    this.psll_layer = $('.leaflet-control-layers-overlays input:checkbox')[3];
+    this.wells_layer = $('.leaflet-control-layers-overlays input:checkbox')[4];
   }
 
-  @HostListener('change') onChange(e: any) {
-    if (this.base_layer.checked) {
-      this.miniMap.addLayer(this.esriBaseLayer)
-    } else {
-      if (this.miniMap.hasLayer(this.esriBaseLayer)) {
-        this.miniMap.removeLayer(this.esriBaseLayer)
-        this.miniMap.clearLayers(this.esriBaseLayer)
-      }
-    }
-    if (this.satelight_layer.checked) {
-      this.esriImageryLayer = esri.basemapLayer('Imagery');
-      this.miniMap.addLayer(this.esriImageryLayer);
-    } else {
-      if (this.miniMap.hasLayer(this.esriImageryLayer)) {
-        this.miniMap.removeLayer(this.esriImageryLayer)
-        this.miniMap.clearLayers(this.esriImageryLayer)
-      }
-    }
-    if (this.culture_layer.checked) {
-      this.cultureLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/culture_webmap/wms?', {
-        layers: 'culture_webmap:Culture_Webmap',
-        format: 'image/png8',
-        transparent: true,
-        styles: '',
-        attribution: null
-      });
-      this.miniMap.addLayer(this.cultureLayer);
-    } else {
-      this.miniMap.removeLayer(this.cultureLayer);
-    }
-    if (this.psll_layer.checked) {
-
-      this.plssLayer = wms.source('https://maps.uslandgrid.com/geoserver/landgrid_webmap/wms?', {
-        format: 'image/png8',
-        transparent: true,
-        identify: false
-      });
-      this.plssLayer.getLayer("landgrid_webmap:LandGrid_WebMap").addTo(this.miniMap);
-    } else {
-      this.miniMap.removeLayer(this.plssLayer);
-    }
-    if (this.wells_layer.checked) {
-      this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
-        layers: 'wh_final',
-        format: 'image/png8',
-        transparent: true,
-        styles: '',
-        attribution: null,
-      });
-      this.miniMap.addLayer(this.wellsLayer);
-      if (!this.map.hasLayer(this.clusterLayer)) {
-        this.map.addLayer(this.clusterLayer);
-      }
-    } else {
-      this.map.removeLayer(this.clusterLayer);
-      this.miniMap.removeLayer(this.wellsLayer);
-    }
-  }
   displayFn(well): string {
     return well && well.wellName ? well.wellName : '';
   }
@@ -413,6 +355,68 @@ export class MapComponent implements AfterViewInit, OnInit {
       setTimeout(() => {
         this.isShapeDrawn = false;
       }, 1000);
+    });
+
+    this.map.on('overlayadd', (event) => {
+      if (event.name == 'Base Map') {
+        if(!this.miniMap.hasLayer(this.esriBaseLayer)) {
+          this.miniMap.addLayer(this.esriBaseLayer);
+        }
+    }
+    if (event.name == 'Satellite') {
+      this.esriImageryLayer = esri.basemapLayer('Imagery');
+        if(!this.miniMap.hasLayer(this.esriImageryLayer)) {
+          this.miniMap.addLayer(this.esriImageryLayer);
+        }
+    }
+    if (event.name == 'Culture') {
+        if(!this.miniMap.hasLayer(this.cultureLayer)) {
+          this.miniMap.addLayer(this.cultureLayer);
+        }
+    }
+    if (event.name == 'PLSS') {
+        if(!this.miniMap.hasLayer(this.plssLayer)) {
+          this.miniMap.addLayer(this.plssLayer);
+        }
+    }
+    if (event.name == 'Wells') {
+      if(!this.miniMap.hasLayer(this.wellsLayer)) {
+        this.miniMap.addLayer(this.wellsLayer);
+      }
+      if(!this.map.hasLayer(this.clusterLayer)) {
+        this.map.addLayer(this.clusterLayer);
+      }
+    }
+    });
+    this.map.on('overlayremove', (event) => {
+      if (event.name == 'Base Map') {
+          if(this.miniMap.hasLayer(this.esriBaseLayer)) {
+            this.miniMap.removeLayer(this.esriBaseLayer);
+          }
+      }
+      if (event.name == 'Satellite') {
+          if(this.miniMap.hasLayer(this.esriImageryLayer)) {
+            this.miniMap.removeLayer(this.esriImageryLayer);
+          }
+      }
+      if (event.name == 'Culture') {
+          if(this.miniMap.hasLayer(this.cultureLayer)) {
+            this.miniMap.removeLayer(this.cultureLayer);
+          }
+      }
+      if (event.name == 'PLSS') {
+          if(this.miniMap.hasLayer(this.plssLayer)) {
+            this.miniMap.removeLayer(this.plssLayer);
+          }
+      }
+      if (event.name == 'Wells') {
+        if(this.miniMap.hasLayer(this.wellsLayer)) {
+          this.miniMap.removeLayer(this.wellsLayer);
+        }
+        if(this.map.hasLayer(this.clusterLayer)) {
+          this.map.removeLayer(this.clusterLayer);
+        }
+      }
     });
   }
 
@@ -597,6 +601,7 @@ export class MapComponent implements AfterViewInit, OnInit {
             this.multiSelectPoints = [];
           });
           this.apiService.globalLoader = false;
+          this.apiService.hide();
           return;
         };
         if (this.activeTownship && this.multiSelectPoints && this.multiSelectPoints.length > 10) {
@@ -610,6 +615,7 @@ export class MapComponent implements AfterViewInit, OnInit {
             this.multiSelectPoints = [];
           });
           this.apiService.globalLoader = false;
+          this.apiService.hide();
           return;
         };
         if (this.activeQuarter || this.activeSection && this.multiSelectPoints && this.multiSelectPoints.length > 50) {
@@ -623,6 +629,7 @@ export class MapComponent implements AfterViewInit, OnInit {
             this.multiSelectPoints = [];
           });
           this.apiService.globalLoader = false;
+          this.apiService.hide();
           return;
         };
         
@@ -637,12 +644,10 @@ export class MapComponent implements AfterViewInit, OnInit {
         type: this.townshipType,
         plssPoints: this.multiSelectPoints
       }
-
-      
       this.mapTownShipExtent = payload;
-      this.apiService.emitTownshipExtent(this.mapTownShipExtent);
       this.apiService.globalLoader = true;
       this.infoPointsSubscriber = this.apiService.infoPoint({ plssFilterDto: payload }).subscribe((coords: []) => {
+        this.apiService.emitTownshipExtent(this.mapTownShipExtent);
         const circleOptions = {
           color: '#0ff',
           fillColor: '#0ff',
@@ -665,6 +670,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       },
         (err) => {
           this.apiService.hide();
+          this.apiService.globalLoader = false;
         });
     }
     else if (this.map.getZoom() > 11 && !this.isShapeDrawn) {
