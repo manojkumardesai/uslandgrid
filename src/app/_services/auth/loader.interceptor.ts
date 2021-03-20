@@ -23,7 +23,6 @@ export class LoaderInterceptor implements HttpInterceptor {
                         this.logout();
                     }
                     this.apiService.hide();
-                    this.apiService.globalLoader = false;
                 }
             },
                 (err: any) => {
@@ -33,7 +32,6 @@ export class LoaderInterceptor implements HttpInterceptor {
                         }
                     }
                     this.apiService.hide();
-                    this.apiService.globalLoader = false;
                 })
         );
     }
