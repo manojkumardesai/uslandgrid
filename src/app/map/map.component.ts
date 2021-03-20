@@ -384,7 +384,9 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.miniMap.addLayer(this.wellsLayer);
       }
       if(!this.map.hasLayer(this.clusterLayer)) {
-        this.map.addLayer(this.clusterLayer);
+        if(this.map.getZoom() < 11) {
+          this.map.addLayer(this.clusterLayer);
+        }
       }
     }
     });
