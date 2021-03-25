@@ -32,13 +32,14 @@
 <div class='search'>
     <mat-card class='searchCard'>
         <form class="example-form">
-            <mat-form-field class="example-full-width filterSearchWell form-caption">
+            <mat-form-field class="example-full-width filterSearchWell form-caption" style="font-size: 14px;"> 
               <input type="text"
                      placeholder="Search Wells ID/Name/Operators"
                      aria-label="Search Wells ID/Name/Operators"
                      matInput
                      [formControl]="myControl"
-                     [matAutocomplete]="auto">
+                     [matAutocomplete]="auto"
+                     [title]="tooltipFormator(myControl.value)">
                      <button mat-button *ngIf="this.myControl.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearchInput()">
                         <mat-icon>close</mat-icon>
                       </button>

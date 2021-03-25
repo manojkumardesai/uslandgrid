@@ -35,6 +35,8 @@ export class ApiService {
   clearAdvanceFilter = new Subject<boolean>();
   zoomToSubject = new Subject<any>();
   tabpointsSubject = new Subject<boolean>();
+  yellowPointsSubject = new Subject<any>();
+  selectedWellIdSubject = new Subject<[]>();
   resizeMapSubject = new Subject<boolean>();
 
   // Emit reports pages zone value chart Data
@@ -196,6 +198,10 @@ export class ApiService {
     return this.http.post(this.baseUrl + 'report/pointcounty/permission', payloadData);
   }
 
+  wellListIds(payload) {
+    return this.http.post(this.baseUrl + 'wellidlist', payload);
+  }
+
   emitMapExtent(val) {
     this.mapExtentSubject.next(val);
   }
@@ -240,7 +246,11 @@ export class ApiService {
     this.zoneChartSubject.next(values);
   }
 
-  wellListIds(payload) {
-    return this.http.post(this.baseUrl + 'wellidlist', payload);
+  emitTableSelection(values) {
+    this.yellowPointsSubject.next(values);
+  }
+
+  emitSelectedWellIds(ids) {
+    this.selectedWellIdSubject.next(ids)
   }
 }
