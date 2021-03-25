@@ -67,6 +67,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   isShapeDrawn: boolean = false;
   infoPointLayers = L.featureGroup();
   tablePointLayers = L.featureGroup();
+  yellowPointLayers = L.featureGroup();
   isShapeExporting = false;
   isInfoWindowOpened = false;
   infoPointInfo: any;
@@ -124,6 +125,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   subscription: any = [];
   multiSelectPoints = [];
   infoPointsSubscriber: any;
+  deleteButton: any;
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
     public userService: LoginService) { }
@@ -196,9 +198,16 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.infoPointInfo = [];
         this.markWell(null);
         this.dialog.closeAll();
+        if(this.yellowPointLayers) {
+          this.yellowPointLayers.clearLayers();
+        }
+        this.apiService.emitSelectedWellIds([]);
       })
     );
 
+    this.apiService.yellowPointsSubject.subscribe(wells => {
+      this.markTableWelsSelection(wells)
+    });
     this.subscription.push(
       this.apiService.resizeMapSubject.subscribe(val => {
         if (val) {
@@ -242,8 +251,10 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.culture_layer = $('.leaflet-control-layers-overlays input:checkbox')[2];
     this.psll_layer = $('.leaflet-control-layers-overlays input:checkbox')[3];
     this.wells_layer = $('.leaflet-control-layers-overlays input:checkbox')[4];
+    this.deleteButton = $('.leaflet-draw-edit-remove').removeClass('leaflet-disabled').addClass('leaflet-enabled');
   }
 
+  
   displayFn(well): string {
     return well && well.wellName ? well.wellName : '';
   }
@@ -604,7 +615,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           });
           this.apiService.globalLoader = false;
           this.apiService.hide();
-          return;
+          // return;
         };
         if (this.activeTownship && this.multiSelectPoints && this.multiSelectPoints.length > 10) {
           const dialogRef = this.dialog.open(WarningWindowComponent, {
@@ -618,7 +629,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           });
           this.apiService.globalLoader = false;
           this.apiService.hide();
-          return;
+          // return;
         };
         if (this.activeQuarter || this.activeSection && this.multiSelectPoints && this.multiSelectPoints.length > 50) {
           const dialogRef = this.dialog.open(WarningWindowComponent, {
@@ -632,7 +643,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           });
           this.apiService.globalLoader = false;
           this.apiService.hide();
-          return;
+          // return;
         };
         
       } else {
@@ -641,15 +652,17 @@ export class MapComponent implements AfterViewInit, OnInit {
           lat: ev.latlng.lat
         }];
       }
-
       let payload = {
         type: this.townshipType,
         plssPoints: this.multiSelectPoints
       }
+      if (this.activeCounty && this.multiSelectPoints && this.multiSelectPoints.length > 5) { 
+        this.multiSelectPoints.pop();
+       }
       this.mapTownShipExtent = payload;
+      this.apiService.emitTownshipExtent(this.mapTownShipExtent);
       this.apiService.globalLoader = true;
       this.infoPointsSubscriber = this.apiService.infoPoint({ plssFilterDto: payload }).subscribe((coords: []) => {
-        this.apiService.emitTownshipExtent(this.mapTownShipExtent);
         const circleOptions = {
           color: '#0ff',
           fillColor: '#0ff',
@@ -772,11 +785,6 @@ export class MapComponent implements AfterViewInit, OnInit {
       radius: 8,
       weight: 2
     }
-
-    if (this.infoPointLayers && Object.keys(this.infoPointLayers._layers).length) {
-      circleOptions.color = '#ffff00';
-      circleOptions.fillColor = '#ffff00';
-    }
     const coords = wells.map(well => ({ latitude: well['latitude'], longitude: well['longitude'] }));
     if (this.tablePointLayers) {
       this.tablePointLayers.clearLayers();
@@ -786,6 +794,29 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.tablePointLayers.addLayer(circle);
     })
     this.map.addLayer(this.tablePointLayers);
+  }
+
+  markTableWelsSelection(wells) {
+    const circleOptions = {
+      color: '#ffff00',
+      fillColor: '#ffff00',
+      fillOpacity: 1,
+      radius: 6,
+      weight: 2
+    }
+    if (this.infoPointLayers && Object.keys(this.infoPointLayers._layers).length) {
+      const coords = wells.map(well => ({ latitude: well['latitude'], longitude: well['longitude'] }));
+      if (this.yellowPointLayers) {
+        this.yellowPointLayers.clearLayers();
+      }
+      coords.forEach(coord => {
+        let circle = L.circleMarker([coord['latitude'], coord['longitude']], circleOptions);
+        this.yellowPointLayers.addLayer(circle);
+      })
+      this.map.addLayer(this.yellowPointLayers);
+      const selectedIds = wells.map(well => well.wellId);
+      this.apiService.emitSelectedWellIds(selectedIds);
+    }
   }
 
   clear(event) {
@@ -1181,6 +1212,13 @@ export class MapComponent implements AfterViewInit, OnInit {
       lon: circleExtent.getNorthWest().lng
     }];
     return mapPoint;
+  }
+
+  tooltipFormator(well) {
+      if(!well) { return ''};
+      if(well) {
+        return ''+ well?.wellId + ' ' + well?.wellName + ' ' + well?.operator; 
+      }
   }
 
 }

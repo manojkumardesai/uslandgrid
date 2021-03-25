@@ -85,7 +85,7 @@
                         </ng-container>
                     
                         <tr mat-header-row *matHeaderRowDef="displayedColumns[selectedTab]; sticky: true"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns[selectedTab];">
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns[selectedTab];" [style.background]="selectedTableIds.indexOf(row.wellId) > -1 ? 'yellow' : ''">
                         </tr>
                       </table>
                     </div>

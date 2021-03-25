@@ -58,6 +58,7 @@ export class WellsRecordsComponent implements OnInit {
   townShipData: any;
   wellsTableSubscriber: any;
   tableHeight = 210;
+  selectedTableIds = [];
 
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
@@ -137,6 +138,12 @@ export class WellsRecordsComponent implements OnInit {
           const element = document.getElementById('acc');
           this.tableHeight = element.offsetHeight - 61
         }
+      })
+    );
+    this.subscription.push(
+      this.apiService.selectedWellIdSubject.subscribe(val => {
+        this.selectedTableIds = val;
+        console.log(this.selectedTableIds);
       })
     );
   }
@@ -238,6 +245,7 @@ export class WellsRecordsComponent implements OnInit {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource[this.selectedTab].data.forEach(row => this.selection.select(row));
+      this.apiService.emitTableSelection(this.selection.selected);
   }
 
   /** The label for the checkbox on the passed row */
@@ -280,6 +288,7 @@ export class WellsRecordsComponent implements OnInit {
     } else {
       this.selectedRowEmit.emit(null);
     }
+    this.apiService.emitTableSelection(this.selection.selected);
   }
 
   fetchData(offset = 0, limit = 25) {
@@ -287,7 +296,7 @@ export class WellsRecordsComponent implements OnInit {
       offset,
       limit
     }
-    this.clear();
+    // this.clear();
     Object.assign(this.payLoadWithParams[this.selectedTab], payLoad);
     this.isLoading = true;
     if (!this.displayedColumns[this.selectedTab]) {
@@ -350,7 +359,7 @@ export class WellsRecordsComponent implements OnInit {
 
   onTabChange(offset = 0, limit = 25) {
     this.isLoading = true;
-    this.clear();
+    // this.clear();
     switch (this.selectedTab) {
       case 0:
         this.fetchData(offset, limit);
