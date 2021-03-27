@@ -202,6 +202,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.yellowPointLayers.clearLayers();
         }
         this.apiService.emitSelectedWellIds([]);
+        this.apiService.emitMapExtent([]);
       })
     );
 

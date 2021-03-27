@@ -557,7 +557,7 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
 
 
   getAllocatedFileTypes() {
-    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    let userInfo = JSON.parse(localStorage.getItem('userInfo'));
     let id = userInfo.userId;
     this.apiService.userDetails(id).subscribe(user => {
       this.formats = user['userPermissionDto']['reportTypes'];
