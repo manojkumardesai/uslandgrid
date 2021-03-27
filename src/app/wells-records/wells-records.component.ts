@@ -359,7 +359,9 @@ export class WellsRecordsComponent implements OnInit {
 
   onTabChange(offset = 0, limit = 25) {
     this.isLoading = true;
-    // this.clear();
+    this.selection.clear();
+    this.apiService.emitTableSelection(this.selection.selected);
+    this.selectedTableIds = [];
     switch (this.selectedTab) {
       case 0:
         this.fetchData(offset, limit);
