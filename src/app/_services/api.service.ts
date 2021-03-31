@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, from, Subject, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { share } from 'rxjs/operators';
@@ -202,6 +202,9 @@ export class ApiService {
     return this.http.post(this.baseUrl + 'wellidlist', payload);
   }
 
+  getMarkedMap(payload) {
+    return this.http.post(this.baseUrl + 'wells/mapmark', payload);
+  }
   emitMapExtent(val) {
     this.mapExtentSubject.next(val);
   }
