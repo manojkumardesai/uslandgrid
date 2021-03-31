@@ -330,7 +330,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.mapTownShipExtent = {};
       }
       if(this.selectedArea) {
-        this.map.removeLayer(this.selectedArea);
+        this.selectedArea.clearLayers();
       }
       if (this.editableLayers) {
         this.editableLayers.clearLayers();
@@ -348,7 +348,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.infoPointLayers.clearLayers();
       }
       if(this.selectedArea) {
-        this.map.removeLayer(this.selectedArea);
+        this.selectedArea.clearLayers();
       }
       if (this.tablePointLayers) {
         this.tablePointLayers.clearLayers();
@@ -1175,7 +1175,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.yellowPointLayers.clearLayers();
         }
         if(this.selectedArea) {
-          this.map.removeLayer(this.selectedArea);
+          this.selectedArea.clearLayers();
         }
         if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
           const mapPoint = this.getShapeExtent();
