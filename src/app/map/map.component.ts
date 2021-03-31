@@ -126,6 +126,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   multiSelectPoints = [];
   infoPointsSubscriber: any;
   deleteButton: any;
+  selectedArea = L.featureGroup();
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
     public userService: LoginService) { }
@@ -146,6 +147,9 @@ export class MapComponent implements AfterViewInit, OnInit {
           }
           if (this.infoPointLayers) {
             this.infoPointLayers.clearLayers();
+          }
+          if(this.selectedArea) {
+            this.selectedArea.clearLayers();
           }
           this.activeTownship = false;
           this.activeSection = false;
@@ -326,6 +330,9 @@ export class MapComponent implements AfterViewInit, OnInit {
       if (this.mapTownShipExtent && Object.keys(this.mapTownShipExtent).length) {
         this.mapTownShipExtent = {};
       }
+      if(this.selectedArea) {
+        this.map.removeLayer(this.selectedArea);
+      }
       if (this.editableLayers) {
         this.editableLayers.clearLayers();
       }
@@ -340,6 +347,9 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map.on('draw:deleted', (e) => {
       if (this.infoPointLayers) {
         this.infoPointLayers.clearLayers();
+      }
+      if(this.selectedArea) {
+        this.map.removeLayer(this.selectedArea);
       }
       if (this.tablePointLayers) {
         this.tablePointLayers.clearLayers();
@@ -632,7 +642,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.apiService.hide();
           // return;
         };
-        if (this.activeQuarter || this.activeSection && this.multiSelectPoints && this.multiSelectPoints.length > 50) {
+        if ((this.activeQuarter || this.activeSection) && this.multiSelectPoints && this.multiSelectPoints.length > 50) {
           const dialogRef = this.dialog.open(WarningWindowComponent, {
             data: {
               mesg: `Only 50 ${this.activeQuarter ? ' quarters ' : ' sections '} allowed per selection`,
@@ -657,6 +667,18 @@ export class MapComponent implements AfterViewInit, OnInit {
         type: this.townshipType,
         plssPoints: this.multiSelectPoints
       }
+      const payloadForMarkMap =  {
+        plssFilterDto : {
+          type: this.townshipType,
+          longitude: ev.latlng.lng,
+          latitude: ev.latlng.lat
+        }
+      };
+      this.apiService.getMarkedMap(payloadForMarkMap).subscribe((res: any) => {
+        if(Object.keys(res).length) {
+          this.drawOWSLayer(res, ev);
+        }
+      });
       if (this.activeCounty && this.multiSelectPoints && this.multiSelectPoints.length > 5) { 
         this.multiSelectPoints.pop();
        }
@@ -1160,6 +1182,9 @@ export class MapComponent implements AfterViewInit, OnInit {
         if (this.infoPointLayers) {
           this.infoPointLayers.clearLayers();
         }
+        if(this.selectedArea) {
+          this.map.removeLayer(this.selectedArea);
+        }
         if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
           const mapPoint = this.getShapeExtent();
           this.mapExtent = mapPoint;
@@ -1222,4 +1247,21 @@ export class MapComponent implements AfterViewInit, OnInit {
       }
   }
 
+  drawOWSLayer(info, event) {
+    if(event.originalEvent.ctrlKey)  {
+      const layer  = L.geoJson(info);
+      this.selectedArea.addLayer(layer);
+      this.map.addLayer(this.selectedArea);
+    }
+    else {
+      if(this.selectedArea) {
+        this.selectedArea.clearLayers();
+      }
+      const layer  = L.geoJson(info);
+      this.selectedArea.addLayer(layer);
+      this.map.addLayer(this.selectedArea);
+    }
+  }
+
+  
 }
