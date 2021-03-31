@@ -206,7 +206,6 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.yellowPointLayers.clearLayers();
         }
         this.apiService.emitSelectedWellIds([]);
-        this.apiService.emitMapExtent([]);
       })
     );
 
@@ -621,12 +620,8 @@ export class MapComponent implements AfterViewInit, OnInit {
             },
             disableClose: true
           });
-          dialogRef.afterClosed().subscribe(val => {
-            this.multiSelectPoints = [];
-          });
           this.apiService.globalLoader = false;
           this.apiService.hide();
-          // return;
         };
         if (this.activeTownship && this.multiSelectPoints && this.multiSelectPoints.length > 10) {
           const dialogRef = this.dialog.open(WarningWindowComponent, {
@@ -635,12 +630,8 @@ export class MapComponent implements AfterViewInit, OnInit {
             },
             disableClose: true
           });
-          dialogRef.afterClosed().subscribe(val => {
-            this.multiSelectPoints = [];
-          });
           this.apiService.globalLoader = false;
           this.apiService.hide();
-          // return;
         };
         if ((this.activeQuarter || this.activeSection) && this.multiSelectPoints && this.multiSelectPoints.length > 50) {
           const dialogRef = this.dialog.open(WarningWindowComponent, {
@@ -649,12 +640,8 @@ export class MapComponent implements AfterViewInit, OnInit {
             },
             disableClose: true
           });
-          dialogRef.afterClosed().subscribe(val => {
-            this.multiSelectPoints = [];
-          });
           this.apiService.globalLoader = false;
           this.apiService.hide();
-          // return;
         };
         
       } else {
@@ -699,10 +686,12 @@ export class MapComponent implements AfterViewInit, OnInit {
         if (this.editableLayers) {
           this.editableLayers.clearLayers();
         }
-        coords['wellDtos'].forEach(coord => {
-          let circle = L.circleMarker([coord['latitude'], coord['longitude']], circleOptions);
-          this.infoPointLayers.addLayer(circle);
+        let circle = L.featureGroup();
+        coords['wellDtos'].forEach((coord) => {
+          let circleMarker = L.circleMarker([coord['latitude'], coord['longitude']], circleOptions);
+          circle.addLayer(circleMarker);
         })
+        this.infoPointLayers.addLayer(circle);
         this.map.addLayer(this.infoPointLayers);
         this.apiService.globalLoader = false;
       },
@@ -1181,6 +1170,9 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.multiSelectPoints = [];
         if (this.infoPointLayers) {
           this.infoPointLayers.clearLayers();
+        }
+        if(this.yellowPointLayers) {
+          this.yellowPointLayers.clearLayers();
         }
         if(this.selectedArea) {
           this.map.removeLayer(this.selectedArea);
