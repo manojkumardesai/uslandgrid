@@ -1181,28 +1181,24 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.activeSection = false;
         this.activeQuarter = false;
         this.activeCounty = false;
-        this.resetTownShipSelection();
       }
       if (type === 'section') {
         this.activeSection = !this.activeSection;
         this.activeTownship = false;
         this.activeQuarter = false;
         this.activeCounty = false;
-        this.resetTownShipSelection();
       }
       if (type === 'quarter') {
         this.activeTownship = false;
         this.activeSection = false;
         this.activeQuarter = !this.activeQuarter;
         this.activeCounty = false;
-        this.resetTownShipSelection();
       }
       if (type === 'county') {
         this.activeTownship = false;
         this.activeSection = false;
         this.activeQuarter = false;
         this.activeCounty = !this.activeCounty;
-        this.resetTownShipSelection();
       }
       this.townshipType = type;
       this.isTownshipIsActive = true;
