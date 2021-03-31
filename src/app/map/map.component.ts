@@ -127,6 +127,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   infoPointsSubscriber: any;
   deleteButton: any;
   selectedArea = L.featureGroup();
+  numberOfClick = 0;
   constructor(public apiService: ApiService,
     public dialog: MatDialog,
     public userService: LoginService) { }
@@ -622,6 +623,9 @@ export class MapComponent implements AfterViewInit, OnInit {
           });
           this.apiService.globalLoader = false;
           this.apiService.hide();
+          if(this.numberOfClick >= 5) {
+            return;
+          }
         };
         if (this.activeTownship && this.multiSelectPoints && this.multiSelectPoints.length > 10) {
           const dialogRef = this.dialog.open(WarningWindowComponent, {
@@ -632,6 +636,9 @@ export class MapComponent implements AfterViewInit, OnInit {
           });
           this.apiService.globalLoader = false;
           this.apiService.hide();
+          if(this.numberOfClick >= 10) {
+            return;
+          }
         };
         if ((this.activeQuarter || this.activeSection) && this.multiSelectPoints && this.multiSelectPoints.length > 50) {
           const dialogRef = this.dialog.open(WarningWindowComponent, {
@@ -642,6 +649,9 @@ export class MapComponent implements AfterViewInit, OnInit {
           });
           this.apiService.globalLoader = false;
           this.apiService.hide();
+          if(this.numberOfClick >= 50) {
+            return;
+          }
         };
         
       } else {
@@ -661,14 +671,41 @@ export class MapComponent implements AfterViewInit, OnInit {
           latitude: ev.latlng.lat
         }
       };
-      this.apiService.getMarkedMap(payloadForMarkMap).subscribe((res: any) => {
-        if(Object.keys(res).length) {
-          this.drawOWSLayer(res, ev);
-        }
-      });
+
+      if (this.activeCounty && this.multiSelectPoints && this.multiSelectPoints.length <= 5) {
+        this.apiService.getMarkedMap(payloadForMarkMap).subscribe((res: any) => {
+          if (Object.keys(res).length) {
+            this.drawOWSLayer(res, ev);
+          }
+        });
+      }
+      if (this.activeTownship && this.multiSelectPoints && this.multiSelectPoints.length <= 10) {
+        this.apiService.getMarkedMap(payloadForMarkMap).subscribe((res: any) => {
+          if (Object.keys(res).length) {
+            this.drawOWSLayer(res, ev);
+          }
+        });
+      }
+      if ((this.activeQuarter || this.activeSection) && this.multiSelectPoints && this.multiSelectPoints.length <= 50) {
+        this.apiService.getMarkedMap(payloadForMarkMap).subscribe((res: any) => {
+          if (Object.keys(res).length) {
+            this.drawOWSLayer(res, ev);
+          }
+        });
+      }
+      
       if (this.activeCounty && this.multiSelectPoints && this.multiSelectPoints.length > 5) { 
         this.multiSelectPoints.pop();
        }
+      if (this.activeTownship && this.multiSelectPoints && this.multiSelectPoints.length > 10) { 
+        this.multiSelectPoints.pop();
+       }
+      if ((this.activeQuarter || this.activeSection) && this.multiSelectPoints && this.multiSelectPoints.length > 50) { 
+        this.multiSelectPoints.pop();
+       }
+       setTimeout(() => {
+         this.numberOfClick = this.multiSelectPoints.length;
+       }, 1000);
       this.mapTownShipExtent = payload;
       this.apiService.emitTownshipExtent(this.mapTownShipExtent);
       this.apiService.globalLoader = true;
@@ -1166,29 +1203,35 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.townshipType = type;
       this.isTownshipIsActive = true;
       if (!this.activeSection && !this.activeTownship && !this.activeQuarter && !this.activeCounty) {
-        // this.mapTownShipExtent = {};
-        this.multiSelectPoints = [];
-        if (this.infoPointLayers) {
-          this.infoPointLayers.clearLayers();
-        }
-        if(this.yellowPointLayers) {
-          this.yellowPointLayers.clearLayers();
-        }
-        if(this.selectedArea) {
-          this.selectedArea.clearLayers();
-        }
-        if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
-          const mapPoint = this.getShapeExtent();
-          this.mapExtent = mapPoint;
-        } else {
-          this.apiService.loadResetTable(true);
-        }
-
+        this.resetTownShipSelection();
       }
     }
 
   }
 
+
+  resetTownShipSelection() {
+     // this.mapTownShipExtent = {};
+     this.multiSelectPoints = [];
+     if (this.infoPointLayers) {
+       this.infoPointLayers.clearLayers();
+     }
+     if (this.yellowPointLayers) {
+       this.yellowPointLayers.clearLayers();
+     }
+     if (this.selectedArea) {
+       this.selectedArea.clearLayers();
+     }
+     if (this.infoPointsSubscriber) {
+       this.infoPointsSubscriber.unsubscribe();
+     }
+     if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
+       const mapPoint = this.getShapeExtent();
+       this.mapExtent = mapPoint;
+     } else {
+       this.apiService.loadResetTable(true);
+     }
+  }
 
   getShapeExtent() {
     const circleExtent = this.editableLayers.getBounds();
