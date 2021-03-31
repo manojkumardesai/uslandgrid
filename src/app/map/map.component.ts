@@ -695,13 +695,13 @@ export class MapComponent implements AfterViewInit, OnInit {
       }
       
       if (this.activeCounty && this.multiSelectPoints && this.multiSelectPoints.length > 5) { 
-        this.multiSelectPoints.pop();
+        this.multiSelectPoints.length = 5;
        }
       if (this.activeTownship && this.multiSelectPoints && this.multiSelectPoints.length > 10) { 
-        this.multiSelectPoints.pop();
+        this.multiSelectPoints.length = 10;
        }
       if ((this.activeQuarter || this.activeSection) && this.multiSelectPoints && this.multiSelectPoints.length > 50) { 
-        this.multiSelectPoints.pop();
+        this.multiSelectPoints.length = 50;
        }
        setTimeout(() => {
          this.numberOfClick = this.multiSelectPoints.length;
