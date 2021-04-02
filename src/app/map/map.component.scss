@@ -119,17 +119,16 @@
 
 .export-wrapper {
   position: absolute;
-  background: transparent;
-  height: 56px;
+  background: white;
+  height: 58px;
   width: 33.5px;
   z-index: 1000;
   left: 10px;
-  top: 187px;
+  top: 218px;
   border: 2px solid rgba(0, 0, 0, 0.2);
   border-top: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     .export-township-icon {
-    //   border-left: 1px solid rgba(0, 0, 0, 0.4);
-    // border-right: 1px solid rgba(0, 0, 0, 0.4);
     border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     border-top: 1px solid #ccc;
       .btn-township {
@@ -144,14 +143,12 @@
       }
     }
     .export-report-icon {
-    //   border-left: 1px solid rgba(0, 0, 0, 0.4);
-    // border-right: 1px solid rgba(0, 0, 0, 0.4);
-    border-bottom: 1px solid #ccc;
+    width: 31px;
       .btn-export {
         border: 0;
         background-color: white; 
-        width: 100%; 
-        height: 27px;
+        width: 30px; 
+        height: 26px;
         cursor: pointer;
         &:focus {
           outline: none;

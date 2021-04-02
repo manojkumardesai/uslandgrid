@@ -34,19 +34,19 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     text-align: right;
 } 
 
-.leaflet-draw-toolbar-top {
-    position: relative !important;
-    top: -41px !important;
-  }
-
-.leaflet-draw-section {
+.leaflet-draw-section:first-child {
     position: relative;
-    top: 83px !important;
-  }
+    top: 42px;
+}
 
-  .leaflet-bar {
-      border-radius: 0 !important;
-  }
+.leaflet-draw-section:nth-child(2) {
+    position: relative;
+    top: 27px;
+}
+
+.leaflet-draw-toolbar {
+    margin-top: -45px;
+}
   
 @keyframes slideDown {
     0% { }
