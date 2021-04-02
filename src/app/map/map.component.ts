@@ -622,7 +622,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           });
           this.apiService.globalLoader = false;
           this.apiService.hide();
-          if(this.numberOfClick >= 5) {
+          if (this.selectedArea.getLayers().length === 5) {
             return;
           }
         };
@@ -635,7 +635,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           });
           this.apiService.globalLoader = false;
           this.apiService.hide();
-          if(this.numberOfClick >= 10) {
+          if (this.selectedArea.getLayers().length === 10) {
             return;
           }
         };
@@ -648,7 +648,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           });
           this.apiService.globalLoader = false;
           this.apiService.hide();
-          if(this.numberOfClick >= 50) {
+          if (this.selectedArea.getLayers().length === 50) {
             return;
           }
         };
