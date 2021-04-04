@@ -19,6 +19,7 @@ export class ApiService {
   appllyAnyCondtion: boolean = false;
   savedFormData: any;
   public globalLoader = false;
+  filterByMapExtentApplied: boolean = false;
 
 
   public checkStateOfFilter = new Subject<any>();
