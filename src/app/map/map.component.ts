@@ -1223,6 +1223,8 @@ export class MapComponent implements AfterViewInit, OnInit {
      }
      if (this.infoPointsSubscriber) {
        this.infoPointsSubscriber.unsubscribe();
+       this.apiService.globalLoader = false;
+       this.resetTownShipSelection();
      }
      if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
        const mapPoint = this.getShapeExtent();

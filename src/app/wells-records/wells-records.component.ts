@@ -143,7 +143,6 @@ export class WellsRecordsComponent implements OnInit {
     this.subscription.push(
       this.apiService.selectedWellIdSubject.subscribe(val => {
         this.selectedTableIds = val;
-        console.log(this.selectedTableIds);
       })
     );
   }
@@ -257,6 +256,7 @@ export class WellsRecordsComponent implements OnInit {
   }
 
   filterEmit() {
+    this.apiService.filterByMapExtentApplied = true;
     this.apiService.loadTableByMapExtent(true);
     this.selection.clear();
     this.apiService.clearTabPoints(true);
@@ -265,6 +265,10 @@ export class WellsRecordsComponent implements OnInit {
   clear() {
     this.apiService.clearTabPoints(true);
     this.selection.clear();
+    if (this.apiService.filterByMapExtentApplied) {
+      this.apiService.emitMapExtent([]);
+      this.apiService.filterByMapExtentApplied = false;
+    }
   }
 
   refreshEmit() {
