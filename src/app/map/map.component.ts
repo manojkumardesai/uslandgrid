@@ -503,7 +503,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   addWellsLayer() {
     this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
-      layers: 'OKWells',
+      layers: 'OKWells_v1',
       format: 'image/png8',
       transparent: true,
       styles: '',
@@ -514,7 +514,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   addWellsLayer_1() {
     this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
-      layers: 'OKWells',
+      layers: 'OKWells_v1',
       format: 'image/png8',
       transparent: true,
       styles: '',
@@ -1224,7 +1224,6 @@ export class MapComponent implements AfterViewInit, OnInit {
      if (this.infoPointsSubscriber) {
        this.infoPointsSubscriber.unsubscribe();
        this.apiService.globalLoader = false;
-       this.resetTownShipSelection();
      }
      if (this.editableLayers && Object.keys(this.editableLayers._layers).length) {
        const mapPoint = this.getShapeExtent();
