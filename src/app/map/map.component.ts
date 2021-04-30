@@ -253,9 +253,10 @@ export class MapComponent implements AfterViewInit, OnInit {
 
     this.base_layer = $('.leaflet-control-layers-overlays input:checkbox')[0];
     this.satelight_layer = $('.leaflet-control-layers-overlays input:checkbox')[1];
-    this.culture_layer = $('.leaflet-control-layers-overlays input:checkbox')[2];
-    this.psll_layer = $('.leaflet-control-layers-overlays input:checkbox')[3];
-    this.wells_layer = $('.leaflet-control-layers-overlays input:checkbox')[4];
+    this.wells_layer = $('.leaflet-control-layers-overlays input:checkbox')[2];
+    this.culture_layer = $('.leaflet-control-layers-overlays input:checkbox')[3];
+    this.psll_layer = $('.leaflet-control-layers-overlays input:checkbox')[4];
+    
     this.deleteButton = $('.leaflet-draw-edit-remove').removeClass('leaflet-disabled').addClass('leaflet-enabled');
   }
 
@@ -503,7 +504,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   addWellsLayer() {
     this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
-      layers: 'OKWells_v1',
+      layers: 'OKWell_V2',
       format: 'image/png8',
       transparent: true,
       styles: '',
@@ -514,7 +515,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   addWellsLayer_1() {
     this.wellsLayer = L.tileLayer.wms('https://maps.uslandgrid.com/geoserver/Wells/wms?', {
-      layers: 'OKWells_v1',
+      layers: 'OKWell_V2',
       format: 'image/png8',
       transparent: true,
       styles: '',
