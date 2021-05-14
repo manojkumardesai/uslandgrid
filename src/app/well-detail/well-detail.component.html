@@ -9,7 +9,11 @@
     </tr>
     <tr>
       <td></td>
-      <td class="row1"><a href='#/user-auth/login'>Login</a></td>
+      <td class="row1">
+        <a href='#/user-auth/login'>Login</a>
+        <!-- <a href='#/user-auth/login' *ngIf='!loginService.isloggedin()'>Login</a>
+        <a  *ngIf='loginService.isloggedin()' (click)='logout()'>Logout</a> -->
+      </td>
     </tr>
     <tr>
       <td *ngIf='wellDetails != null' class="row1"><a target="_blank"
@@ -38,7 +42,7 @@
             </tr>
             <tr class="tableRows">
               <td class="colorRows tableRows">Well Number</td>
-              <td class="tableRows"> {{  wellDetails.wellNumber  }} </td>
+              <td class="tableRows"> {{ wellDetails.wellNumber }} </td>
             </tr>
             <tr class="tableRows">
               <td class="colorRows tableRows">Status</td>
@@ -47,7 +51,7 @@
             <tr class="tableRows">
               <td class="colorRows tableRows">Geocoordinates</td>
               <td class="tableRows">
-                {{ wellDetails.latitude | number:'.1-8'  }},{{ wellDetails.longitude | number:'.1-8'  }}</td>
+                {{ wellDetails.latitude | number:'.1-8' }},{{ wellDetails.longitude | number:'.1-8' }}</td>
             </tr>
             <tr class="tableRows">
               <td class="colorRows tableRows">Spud Date</td>
@@ -74,65 +78,63 @@
       </td>
       <!-- Line chart -->
       <td class="line">
-        <div class='chartStyle1' *ngIf="lineChartData"> 
+        <div class='chartStyle1' *ngIf="lineChartData">
           <span>
-            <button mat-raised-button id="buttongas"
-            (click)="gasProduction()">Gas</button>
-            <button mat-raised-button id="buttonoil"
-            (click)="oilProduction()">Oil</button>&nbsp;&nbsp;
+            <button mat-raised-button id="buttongas" style="outline:none" (click)="gasProduction()">Gas</button>
+            <button mat-raised-button id="buttonoil" style="outline:none"
+              (click)="oilProduction()">Oil</button>&nbsp;&nbsp;
           </span>
           <h5>{{linetitle}}</h5>
           <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
             [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"
-            [plugins]="lineChartPlugins">
+            [plugins]="lineChartPlugins" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
           </canvas>
-        </div> 
+        </div>
       </td>
     </tr>
   </table>
 
-  <!-- Barchart and Donut chart -->
+  <!-- Barchart and Guage chart -->
   <table class="tablehead line" style="height:600px">
     <span class="tab">
-      <button mat-raised-button id="buttonoilzone"
-      (click)="oilProductionzone()">Oil</button>&nbsp;&nbsp;
-    <button mat-raised-button  id="buttongaszone"
-      (click)="gasProductionzone()">Gas</button>&nbsp;&nbsp;
+      <button mat-raised-button id="buttonoilzone" style="outline:none"
+        (click)="oilProductionzone()">Oil</button>&nbsp;&nbsp;
+      <button mat-raised-button id="buttongaszone" style="outline:none"
+        (click)="gasProductionzone()">Gas</button>&nbsp;&nbsp;
       <!-- <button mat-raised-button id="operator"
     (click)="operator()">Operator</button> -->
     </span>
     <tr>
       <td>
         <table>
-        <rg-gauge-chart
-        [canvasWidth]="canvasWidth"
-        [needleValue]="needleValue"
-        [centralLabel]="centralLabel"
-        [options]="options"
-        [name]="name"
-        [bottomLabel]="bottomLabel"></rg-gauge-chart>
-    
-        <rg-gauge-chart
-        [canvasWidth]="canvasWidth"
-        [needleValue]="needleValue"
-        [centralLabel]="centralLabel"
-        [options]="options"
-        [name]="name"
-        [bottomLabel]="bottomLabel"></rg-gauge-chart>
-      </table>
+          <rg-gauge-chart [canvasWidth]="canvasWidth" [needleValue]="needleValue" [centralLabel]="centralLabel"
+            [options]="options" [name]="name" [bottomLabel]="bottomLabel"></rg-gauge-chart>
+
+          <rg-gauge-chart [canvasWidth]="canvasWidth" [needleValue]="needleValue" [centralLabel]="centralLabel"
+            [options]="options" [name]="name" [bottomLabel]="bottomLabel"></rg-gauge-chart>
+        </table>
       </td>
       <td>
+
+        <!-- <div class='chartStyle1' *ngIf="multilineChartData">
+          <canvas baseChart [datasets]="multidataset" [labels]="multilineChartLabels" [options]="multilineChartOptions"
+            [colors]="multilineChartColors" [legend]="multilineChartLegend" [chartType]="multilineChartType"
+            [plugins]="multilineChartPlugins" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+          </canvas>
+        </div> -->
         <div class='chartStyle2' *ngIf="barChartData">
           <h4>{{title}}</h4>
           <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
             [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType"></canvas>
-        </div> 
+        </div>
+
+
       </td>
       <td>
         <div class="chartStyle3">
-          <canvas baseChart
-              [chartType]="chartType" [datasets]="chartDatasets" [labels]="chartLabels" [colors]="chartColors"
-              [options]="chartOptions" [legend]="true" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+          <canvas baseChart [chartType]="chartType" [datasets]="chartDatasets" [labels]="chartLabels"
+            [colors]="chartColors" [options]="chartOptions" [legend]="true" (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)">
           </canvas>
         </div>
       </td>
@@ -143,14 +145,14 @@
           [legend]="doughNutChartLegend" [chartType]="doughNutChartType" style="width:350px;height:500px"></canvas>
         </div>
       </td> -->
-      </tr>
+    </tr>
   </table>
   <!-- Oil and Gas Data -->
-   <table class="tablehead" *ngIf='isLoggedIn'>
+  <table class="tablehead" *ngIf='isLoggedIn'>
     <tr>
-      <button mat-raised-button color="accent" style="background-color:#33a02c;position:relative"
+      <button mat-raised-button color="accent" style="background-color:#33a02c;position:relative;outline:none"
         (click)="oilValue()">Oil</button>&nbsp;&nbsp;
-      <button mat-raised-button color="accent" style="background-color:#F93C3D;position:absolute"
+      <button mat-raised-button color="accent" style="background-color:#F93C3D;position:absolute;outline:none"
         (click)="gasValue()">Gas</button>
     </tr>
     <tr>
@@ -161,8 +163,8 @@
             <th class="oilColorData oilData" id="demolow">Low</th>
           </thead>
           <tbody>
-            <td class="oilData  oilHeight" id="high">50</td>
-            <td class="oilData  oilHeight" id="low">5</td>
+            <td class="oilData  oilHeight" id="high">{{maxoilvalue}}</td>
+            <td class="oilData  oilHeight" id="low">{{minoilvalue}}</td>
           </tbody>
         </table>
       </td>
@@ -173,12 +175,12 @@
             <th class="oilColorData oilData" id="demoavgyear">Avg.Yearly</th>
           </thead>
           <tbody>
-            <td class="oilData oilHeight" id="avgmonth">200</td>
-            <td class="oilData oilHeight" id="avgyear">1000</td>
+            <td class="oilData oilHeight" id="avgmonth">{{ monthlyavgoilvalue }}</td>
+            <td class="oilData oilHeight" id="avgyear">{{ yearlyavgoilvalue}}</td>
           </tbody>
         </table>
       </td>
-      <td class="oilTdClass">
+      <!-- <td class="oilTdClass">
         <table class="table table-bordered">
           <thead>
             <th class="oilColorData oilData" id="demominmonth">MinMonthly</th>
@@ -189,7 +191,7 @@
             <td class="oilData oilHeight" id="maxmonth">190</td>
           </tbody>
         </table>
-      </td>
+      </td> -->
       <td class="oilTdClass">
         <table class="table table-bordered">
           <thead>
@@ -197,8 +199,8 @@
             <th class="oilColorData oilData" id="demomaxyear">MaxYearly</th>
           </thead>
           <tbody>
-            <td class="oilData oilHeight oilHeight" id="minyear">990</td>
-            <td class="oilData oilHeight oilHeight" id="maxyear">1200</td>
+            <td class="oilData oilHeight oilHeight" id="minyear">{{minyearlyoilvalue}}</td>
+            <td class="oilData oilHeight oilHeight" id="maxyear">{{maxyearlyoilvalue}}</td>
           </tbody>
         </table>
       </td>
@@ -209,17 +211,17 @@
             <th class="oilColorData oilData" id="demolastmonth">LastMonth</th>
           </thead>
           <tbody>
-            <td class="oilData oilHeight oilHeight" id="firstmonth">990</td>
-            <td class="oilData oilHeight oilHeight" id="lastmonth">1200</td>
+            <td class="oilData oilHeight oilHeight" id="firstmonth">{{firstmonthoilvalue}}</td>
+            <td class="oilData oilHeight oilHeight" id="lastmonth">{{lastmonthoilvalue}}</td>
           </tbody>
         </table>
       </td>
     </tr>
-  </table> 
+  </table>
 
   <!-- Scout data  -->
 
-  <table class='tablehead' *ngIf='isLoggedIn'> 
+  <table class='tablehead' *ngIf='isLoggedIn'>
     <td colspan='2' style="width:40%">
       <table class="table table-bordered scoutTable">
         <thead>
@@ -272,31 +274,31 @@
         <tbody>
           <tr>
             <td class='scoutData'>PrimaryProduct</td>
-            <td class='scoutData'></td>
+            <td class='scoutData' id='primaryprod'>Oil</td>
           </tr>
           <tr>
             <td class='scoutData'>MaximumProduction Date</td>
-            <td class='scoutData'></td>
+            <td class='scoutData' id='maxproddate'>{{oilmaxproddate}}</td>
           </tr>
           <tr>
             <td class='scoutData'>FirstYear Production</td>
-            <td class='scoutData'></td>
+            <td class='scoutData' id='firstyearprod'>{{firstyrprodoil}}</td>
           </tr>
           <tr>
             <td class='scoutData'>LastYear Production</td>
-            <td class='scoutData'></td>
+            <td class='scoutData' id='lastyearprod'>{{lastyrprodoil}}</td>
           </tr>
           <tr>
             <td class='scoutData'>First Six Months Production</td>
-            <td class='scoutData'></td>
+            <td class='scoutData' id='firstsixmonthsprod'>{{firstsixmonprodoil}}</td>
           </tr>
           <tr>
             <td class='scoutData'>Last Six Months Production</td>
-            <td class='scoutData'></td>
+            <td class='scoutData' id='lastsixmonthsprod'>{{lastsixmonprodoil}}</td>
           </tr>
           <tr>
             <td class='scoutData'>CumulativeProduction</td>
-            <td class='scoutData'></td>
+            <td class='scoutData' id='cumm_prod'>{{cumprodoil}}</td>
           </tr>
         </tbody>
       </table>
@@ -305,34 +307,34 @@
   <!-- tabs -->
 
   <div class='btn-group btn-group-lg tabshead'>
-    <button mat-stroked-button  class='tabs' (click)="WH()" id='wh'>Well Header</button>
-    <button mat-stroked-button  class='tabs' (click)="MC()" id='mc'>Casing</button>
-    <button mat-stroked-button  class='tabs' (click)="IP()" id='ip'>Initial Potential</button>
-    <button mat-stroked-button  class='tabs' (click)="CP()" id='cp'>Completion</button>
-    <button mat-stroked-button  class='tabs' (click)="FT()" id='ft'>Formation</button>
-    <button mat-stroked-button  class='tabs' (click)="PF()" id='pf'>Perforation</button>
-    <button mat-stroked-button  class='tabs' (click)="ST()" id='st'>Survey</button>
-    <button mat-stroked-button  class='tabs' (click)="PT()" id='pt'>Production</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="WH()" id='wh'>Well Header</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="MC()" id='mc'>Casing</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="IP()" id='ip'>Initial Potential</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="CP()" id='cp'>Completion</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="FT()" id='ft'>Formation</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="PF()" id='pf'>Perforation</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="ST()" id='st'>Survey</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="PT()" id='pt'>Production</button>
   </div>
 
 
-<!-- Well Records -->
-<ng-container *ngIf='isLoggedIn'>
-  <div class='tableAdjust' *ngIf='hideTableWH'>
-    <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsWH.length'>
-      <thead class='headerPart'>
-      <th *ngFor="let value of WHheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-    </thead>
-      <tbody>
-      <tr *ngFor="let value of wellDetailsWH" class='layerText'>
-        <td  *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-    </tbody>
-    </table>
-  </div>
-</ng-container>
+  <!-- Well Records -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class='tableAdjust' *ngIf='hideTableWH'>
+      <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsWH.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of WHheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsWH" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
 
 
   <!-- Casing Data -->
@@ -340,52 +342,52 @@
     <div class="tableAdjust" *ngIf='hideTableMC'>
       <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsMC.length'>
         <thead class='headerPart'>
-        <th *ngFor="let value of MCheaders" class='layerText layerTableColor'>
-          {{ value }}
-        </th>
-      </thead>
+          <th *ngFor="let value of MCheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
         <tbody>
-        <tr *ngFor="let value of wellDetailsMC" class='layerText'>
-          <td *ngFor="let val of value">{{ val.value }}</td>
-        </tr>
-      </tbody>
+          <tr *ngFor="let value of wellDetailsMC" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </ng-container>
 
 
   <!-- Initial Potential -->
-  <ng-container *ngIf='isLoggedIn' >
+  <ng-container *ngIf='isLoggedIn'>
     <div class="tableAdjust" *ngIf='hideTableIP'>
       <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsIP.length'>
         <thead class='headerPart'>
-        <th *ngFor="let value of IPheaders" class='layerText layerTableColor'>
-          {{ value }}
-        </th>
-      </thead>
+          <th *ngFor="let value of IPheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
         <tbody>
-        <tr *ngFor="let value of wellDetailsIP" class='layerText'>
-          <td *ngFor="let val of value">{{ val.value }}</td>
-        </tr>
-      </tbody>
+          <tr *ngFor="let value of wellDetailsIP" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </ng-container>
 
   <!-- Completion -->
-  <ng-container *ngIf='isLoggedIn' >
+  <ng-container *ngIf='isLoggedIn'>
     <div class="tableAdjust" *ngIf='hideTableCP'>
       <table class="table table-bordered tablehead" *ngIf='wellDetailsCP.length'>
         <thead class='headerPart'>
-        <th *ngFor="let value of CPheaders" class='layerText layerTableColor'>
-          {{ value }}
-        </th>
-      </thead>
+          <th *ngFor="let value of CPheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
         <tbody>
-        <tr *ngFor="let value of wellDetailsCP" class='layerText'>
-          <td *ngFor="let val of value">{{ val.value }}</td>
-        </tr>
-      </tbody>
+          <tr *ngFor="let value of wellDetailsCP" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </ng-container>
@@ -395,33 +397,33 @@
     <div class="tableAdjust" *ngIf='hideTableFT'>
       <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsFT.length'>
         <thead class='headerPart'>
-        <th *ngFor="let value of FTheaders" class='layerText layerTableColor'>
-          {{ value}}
-        </th>
-      </thead>
+          <th *ngFor="let value of FTheaders" class='layerText layerTableColor'>
+            {{ value}}
+          </th>
+        </thead>
         <tbody>
-        <tr *ngFor="let value of wellDetailsFT" class='layerText'>
-          <td *ngFor="let val of value">{{ val.value }}</td>
-        </tr>
-      </tbody>
+          <tr *ngFor="let value of wellDetailsFT" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </ng-container>
 
   <!-- Perforation -->
-  <ng-container  *ngIf='isLoggedIn'>
+  <ng-container *ngIf='isLoggedIn'>
     <div class="tableAdjust" *ngIf='hideTablePF'>
       <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsPF.length'>
         <thead class='headerPart'>
-        <th *ngFor="let value of PFheaders" class='layerText layerTableColor'>
-          {{ value }}
-        </th>
-      </thead>
+          <th *ngFor="let value of PFheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
         <tbody>
-        <tr *ngFor="let value of wellDetailsPF" class='layerText'>
-          <td *ngFor="let val of value">{{ val.value }}</td>
-        </tr>
-      </tbody>
+          <tr *ngFor="let value of wellDetailsPF" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </ng-container>
@@ -431,15 +433,15 @@
     <div class="tableAdjust" *ngIf='hideTableST'>
       <table class="table table-bordered tablehead" *ngIf='wellDetailsSurvey.length'>
         <thead class='headerPart'>
-        <th *ngFor="let value of STheaders" class='layerText layerTableColor'>
-          {{ value }}
-        </th>
-      </thead>
+          <th *ngFor="let value of STheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
         <tbody>
-        <tr *ngFor="let value of wellDetailsSurvey" class='layerText'>
-          <td *ngFor="let val of value">{{ val.value }}</td>
-        </tr>
-      </tbody>
+          <tr *ngFor="let value of wellDetailsSurvey" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </ng-container>
@@ -449,329 +451,326 @@
     <div class="tableAdjust" *ngIf='hideTablePT'>
       <table class="table table-bordered tablehead" *ngIf='wellDetailsPT.length'>
         <thead class='headerPart'>
-        <th *ngFor="let value of PTheaders" class='layerText layerTableColor'>
-          {{ value }}
-        </th>
-      </thead>
+          <th *ngFor="let value of PTheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
         <tbody>
-        <tr *ngFor="let value of wellDetailsPT" class='layerText'>
-          <td *ngFor="let val of value">{{ val.value }}</td>
-        </tr>
-      </tbody>
+          <tr *ngFor="let value of wellDetailsPT" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </ng-container>
-<!-- second time adding tabs -->
+  <!-- second time adding tabs -->
   <div class='btn-group btn-group-lg tabshead'>
-    <button mat-stroked-button  class='tabs' (click)="WH1()" id='wh1'>Well Header</button>
-    <button mat-stroked-button  class='tabs' (click)="MC1()" id='mc1'>Casing</button>
-    <button mat-stroked-button  class='tabs' (click)="IP1()" id='ip1'>Initial Potential</button>
-    <button mat-stroked-button  class='tabs' (click)="CP1()" id='cp1'>Completion</button>
-    <button mat-stroked-button  class='tabs' (click)="FT1()" id='ft1'>Formation</button>
-    <button mat-stroked-button  class='tabs' (click)="PF1()" id='pf1'>Perforation</button>
-    <button mat-stroked-button  class='tabs' (click)="ST1()" id='st1'>Survey</button>
-    <button mat-stroked-button  class='tabs' (click)="PT1()" id='pt1'>Production</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="WH1()" id='wh1'>Well Header</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="MC1()" id='mc1'>Casing</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="IP1()" id='ip1'>Initial Potential</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="CP1()" id='cp1'>Completion</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="FT1()" id='ft1'>Formation</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="PF1()" id='pf1'>Perforation</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="ST1()" id='st1'>Survey</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="PT1()" id='pt1'>Production</button>
   </div>
   <!-- second time adding layers code -->
-<!-- Well Records -->
-<ng-container *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTableWH1'>
-    <table class="table table-bordered tablehead table-responsive"  *ngIf='wellDetailsWH.length'>
-       <thead class='headerPart'>
-      <th *ngFor="let value of WHheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-       </thead>
-        <tbody>
-      <tr *ngFor="let value of wellDetailsWH" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-      </tbody> 
-    </table>
-  </div>
-</ng-container>
- <!-- Casing Data -->
- <ng-container *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTableMC1'>
-    <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsMC.length'>
-       <thead class='headerPart'>
-      <th *ngFor="let value of MCheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-       </thead>
-        <tbody>
-      <tr *ngFor="let value of wellDetailsMC" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-       </tbody>
-    </table>
-  </div>
-</ng-container>
-
-<!-- Initial Potential -->
-<ng-container *ngIf='isLoggedIn' >
-  <div class="tableAdjust" *ngIf='hideTableIP1'>
-    <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsIP.length'>
-       <thead class='headerPart'>
-      <th *ngFor="let value of IPheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-      </thead>
-        <tbody>
-      <tr *ngFor="let value of wellDetailsIP" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-</ng-container>
-
-<!-- Completion -->
-<ng-container *ngIf='isLoggedIn' >
-  <div class="tableAdjust" *ngIf='hideTableCP1'>
-    <table class="table table-bordered tablehead" *ngIf='wellDetailsCP.length'>
-      <thead class='headerPart'>
-      <th *ngFor="let value of CPheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-       </thead>
-        <tbody>
-      <tr *ngFor="let value of wellDetailsCP" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-       </tbody>
-    </table>
-  </div>
-</ng-container>
-
-<!-- Formation -->
-<ng-container *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTableFT1'>
-    <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsFT.length'>
-        <thead class='headerPart'>
-      <th *ngFor="let value of FTheaders" class='layerText layerTableColor'>
-        {{ value}}
-      </th>
-      </thead>
-        <tbody>
-      <tr *ngFor="let value of wellDetailsFT" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-         </tbody>
-    </table>
-  </div>
-</ng-container>
-
-<!-- Perforation -->
-<ng-container  *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTablePF1'>
-    <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsPF.length'>
-      <thead class='headerPart'>
-      <th *ngFor="let value of PFheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-       </thead>
-        <tbody>
-      <tr *ngFor="let value of wellDetailsPF" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-       </tbody>
-    </table>
-  </div>
-</ng-container>
-
-<!-- Survey   -->
-<ng-container *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTableST1'>
-    <table class="table table-bordered tablehead" *ngIf='wellDetailsSurvey.length'>
-      <thead class='headerPart'>
-      <th *ngFor="let value of STheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let value of wellDetailsSurvey" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-    </tbody>  
-    </table>
-  </div>
-</ng-container>
-
-<!-- Production  -->
-<ng-container *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTablePT1'>
-    <table class="table table-bordered tablehead" *ngIf='wellDetailsPT.length'>
-      <thead class='headerPart'>
-      <th *ngFor="let value of PTheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let value of wellDetailsPT" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-    </tbody>
-    </table>
-  </div>
-</ng-container>
-<!-- third time adding tabs -->
-  <div class='btn-group btn-group-lg tabshead'>
-    <button mat-stroked-button  class='tabs' (click)="WH2()" id='wh2'>Well Header</button>
-    <button mat-stroked-button  class='tabs' (click)="MC2()" id='mc2'>Casing</button>
-    <button mat-stroked-button  class='tabs' (click)="IP2()" id='ip2'>Initial Potential</button>
-    <button mat-stroked-button  class='tabs' (click)="CP2()" id='cp2'>Completion</button>
-    <button mat-stroked-button  class='tabs' (click)="FT2()" id='ft2'>Formation</button>
-    <button mat-stroked-button  class='tabs' (click)="PF2()" id='pf2'>Perforation</button>
-    <button mat-stroked-button  class='tabs' (click)="ST2()" id='st2'>Survey</button>
-    <button mat-stroked-button  class='tabs' (click)="PT2()" id='pt2'>Production</button>
-  </div>
-<!-- third time adding layers code -->
   <!-- Well Records -->
-<ng-container *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTableWH2'>
-    <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsWH.length'>
-      <thead class='headerPart'>
-      <th *ngFor="let value of WHheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-      </thead>
-      <tbody>
-      <tr *ngFor="let value of wellDetailsWH" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-       </tbody>
-    </table>
-  </div>
-</ng-container>
-
-<!-- Casing Data -->
-<ng-container *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTableMC2'>
-    <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsMC.length'>
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableWH1'>
+      <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsWH.length'>
         <thead class='headerPart'>
-      <th *ngFor="let value of MCheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-       </thead>
-        <tbody>
-      <tr *ngFor="let value of wellDetailsMC" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-       </tbody>
-    </table>
-  </div>
-</ng-container>
-
-<!-- Initial Potential -->
-<ng-container *ngIf='isLoggedIn' >
-  <div class="tableAdjust" *ngIf='hideTableIP2'>
-    <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsIP.length'>
-       <thead class='headerPart'>
-      <th *ngFor="let value of IPheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-      </thead>
-        <tbody> 
-      <tr *ngFor="let value of wellDetailsIP" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-    </tbody>   
-    </table>
-  </div>
-</ng-container>
-
-<!-- Completion -->
-<ng-container *ngIf='isLoggedIn' >
-  <div class="tableAdjust" *ngIf='hideTableCP2'>
-    <table class="table table-bordered tablehead" *ngIf='wellDetailsCP.length'>
-       <thead class='headerPart'>
-      <th *ngFor="let value of CPheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
+          <th *ngFor="let value of WHheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
         </thead>
         <tbody>
-      <tr *ngFor="let value of wellDetailsCP" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-</ng-container>
-
-<!-- Formation -->
-<ng-container *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTableFT2'>
-    <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsFT.length'>
-       <thead class='headerPart'>
-      <th *ngFor="let value of FTheaders" class='layerText layerTableColor'>
-        {{ value}}
-      </th>
-       </thead>
+          <tr *ngFor="let value of wellDetailsWH" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+  <!-- Casing Data -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableMC1'>
+      <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsMC.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of MCheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
         <tbody>
-      <tr *ngFor="let value of wellDetailsFT" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-       </tbody>
-    </table>
-  </div>
-</ng-container>
+          <tr *ngFor="let value of wellDetailsMC" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
 
-<!-- Perforation -->
-<ng-container  *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTablePF2'>
-    <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsPF.length'>
-       <thead class='headerPart'>
-      <th *ngFor="let value of PFheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-     </thead>
-        <tbody>  
-      <tr *ngFor="let value of wellDetailsPF" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-         </tbody>
-    </table>
-  </div>
-</ng-container>
+  <!-- Initial Potential -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableIP1'>
+      <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsIP.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of IPheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsIP" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
 
-<!-- Survey   -->
-<ng-container *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTableST2'>
-    <table class="table table-bordered tablehead" *ngIf='wellDetailsSurvey.length'>
-      <thead class='headerPart'>
-      <th *ngFor="let value of STheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let value of wellDetailsSurvey" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-    </tbody>
-    </table>
-  </div>
-</ng-container>
+  <!-- Completion -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableCP1'>
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsCP.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of CPheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsCP" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
 
-<!-- Production  -->
-<ng-container *ngIf='isLoggedIn'>
-  <div class="tableAdjust" *ngIf='hideTablePT2'>
-    <table class="table table-bordered tablehead" *ngIf='wellDetailsPT.length'>
-      <thead class='headerPart'>
-      <th *ngFor="let value of PTheaders" class='layerText layerTableColor'>
-        {{ value }}
-      </th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let value of wellDetailsPT" class='layerText'>
-        <td *ngFor="let val of value">{{ val.value }}</td>
-      </tr>
-    </tbody>
-    </table>
+  <!-- Formation -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableFT1'>
+      <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsFT.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of FTheaders" class='layerText layerTableColor'>
+            {{ value}}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsFT" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- Perforation -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTablePF1'>
+      <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsPF.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of PFheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsPF" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- Survey   -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableST1'>
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsSurvey.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of STheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsSurvey" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- Production  -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTablePT1'>
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsPT.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of PTheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsPT" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+  <!-- third time adding tabs -->
+  <div class='btn-group btn-group-lg tabshead'>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="WH2()" id='wh2'>Well Header</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="MC2()" id='mc2'>Casing</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="IP2()" id='ip2'>Initial Potential</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="CP2()" id='cp2'>Completion</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="FT2()" id='ft2'>Formation</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="PF2()" id='pf2'>Perforation</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="ST2()" id='st2'>Survey</button>
+    <button style="outline: none;" mat-stroked-button class='tabs' (click)="PT2()" id='pt2'>Production</button>
   </div>
-</ng-container>
+  <!-- third time adding layers code -->
+  <!-- Well Records -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableWH2'>
+      <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsWH.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of WHheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsWH" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- Casing Data -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableMC2'>
+      <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsMC.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of MCheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsMC" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- Initial Potential -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableIP2'>
+      <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsIP.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of IPheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsIP" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- Completion -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableCP2'>
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsCP.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of CPheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsCP" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- Formation -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableFT2'>
+      <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsFT.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of FTheaders" class='layerText layerTableColor'>
+            {{ value}}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsFT" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- Perforation -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTablePF2'>
+      <table class="table table-bordered tablehead table-responsive" *ngIf='wellDetailsPF.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of PFheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsPF" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- Survey   -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTableST2'>
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsSurvey.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of STheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsSurvey" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <!-- Production  -->
+  <ng-container *ngIf='isLoggedIn'>
+    <div class="tableAdjust" *ngIf='hideTablePT2'>
+      <table class="table table-bordered tablehead" *ngIf='wellDetailsPT.length'>
+        <thead class='headerPart'>
+          <th *ngFor="let value of PTheaders" class='layerText layerTableColor'>
+            {{ value }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of wellDetailsPT" class='layerText'>
+            <td *ngFor="let val of value">{{ val.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
 </table>
-
-
-
-
