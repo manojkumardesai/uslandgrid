@@ -2,6 +2,7 @@ import { OnInit, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { LoginService } from "../../_services/login.service";
 import { ApiService } from "../../_services/api.service";
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'user-info',
@@ -22,7 +23,8 @@ export class UserInfoComponent implements OnInit {
 
     constructor(private _activateRoute: ActivatedRoute,
         private _loginService: LoginService,
-        private _apiservice: ApiService) {
+        private _apiservice: ApiService,
+        private _location: Location) {
 
     }
 
@@ -124,6 +126,10 @@ export class UserInfoComponent implements OnInit {
                 this.message = data['message'];
             }
         })
+    }
+
+    goBack(): void {
+        this._location.back();
     }
 
     stopCloseDropdown($event) {
