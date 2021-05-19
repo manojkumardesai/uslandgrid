@@ -21,11 +21,7 @@ export class AdminComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
     dataSource = new MatTableDataSource([])
     constructor(private _apiService: ApiService, private _router: Router) {
-
     }
-
-
-
 
     ngOnInit() {
         this.getListOfUser();
