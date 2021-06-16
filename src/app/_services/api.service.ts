@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, from, Subject, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { share } from 'rxjs/operators';
@@ -19,14 +19,29 @@ export class ApiService {
   appllyAnyCondtion: boolean = false;
   savedFormData: any;
   public globalLoader = false;
+  filterByMapExtentApplied: boolean = false;
 
 
   public checkStateOfFilter = new Subject<any>();
   public townshipSubject = new Subject<any>();
   public isFilterApplied = false;
-  public reserFilterSubject = new Subject<any>();
-  public clusterTestData = [];
 
+  mapExtentSubject = new Subject<[]>();
+  mapExtentTownshipSubject = new Subject<[]>();
+  openAdvanceFilter = new Subject<boolean>();
+  filteredSubject = new Subject<{}>();
+  filterByMapSubject = new Subject<boolean>();
+
+  resetTableSubject = new Subject<boolean>();
+  clearAdvanceFilter = new Subject<boolean>();
+  zoomToSubject = new Subject<any>();
+  tabpointsSubject = new Subject<boolean>();
+  yellowPointsSubject = new Subject<any>();
+  selectedWellIdSubject = new Subject<[]>();
+  resizeMapSubject = new Subject<boolean>();
+
+  // Emit reports pages zone value chart Data
+  zoneChartSubject = new Subject<any>();
   private visible$ = new BehaviorSubject<boolean>(false);
 
   show() {
@@ -178,17 +193,68 @@ export class ApiService {
     return this.http.post(this.baseUrl + 'well/areacount', data);
   }
 
-  emitTownshipData(val) {
-    this.townshipSubject.next(val);
-  }
-
   exportCreteria(payload) {
     const payloadData = Object.assign({}, payload);
     delete payloadData.reportType;
     return this.http.post(this.baseUrl + 'report/pointcounty/permission', payloadData);
   }
 
-  resetFilterSubject(val) {
-    this.reserFilterSubject.next(val);
+  wellListIds(payload) {
+    return this.http.post(this.baseUrl + 'wellidlist', payload);
+  }
+
+  getMarkedMap(payload) {
+    return this.http.post(this.baseUrl + 'wells/mapmark', payload);
+  }
+  emitMapExtent(val) {
+    this.mapExtentSubject.next(val);
+  }
+
+  emitTownshipExtent(val) {
+    this.mapExtentTownshipSubject.next(val);
+  }
+
+  emitFilterSubject(val) {
+    this.filteredSubject.next(val);
+  }
+
+  loadAdvanceFilter(val) {
+    this.openAdvanceFilter.next(val);
+  }
+
+  loadResetTable(val) {
+    this.resetTableSubject.next(val);
+  }
+
+  loadTableByMapExtent(val) {
+    this.filterByMapSubject.next(val);
+  }
+
+  resetAdvanceFilter(val) {
+    this.clearAdvanceFilter.next(val);
+  }
+
+  loadZoomTo(val) {
+    this.zoomToSubject.next(val);
+  }
+
+  clearTabPoints(val) {
+    this.tabpointsSubject.next(val);
+  }
+
+  resizeMap(val) {
+    this.resizeMapSubject.next(val);
+  }
+
+  emitZoneChartSubject(values) {
+    this.zoneChartSubject.next(values);
+  }
+
+  emitTableSelection(values) {
+    this.yellowPointsSubject.next(values);
+  }
+
+  emitSelectedWellIds(ids) {
+    this.selectedWellIdSubject.next(ids)
   }
 }

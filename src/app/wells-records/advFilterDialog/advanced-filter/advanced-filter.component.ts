@@ -194,14 +194,11 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
     }
 
     this.subscriptions.push(
-      this.apiService.checkStateOfFilter.subscribe(
-        res => this.dialogRef.close(),
-        err => console.error(err)
-      )
-    )
-
-    this.subscriptions.push(
-      this.apiService.reserFilterSubject.subscribe(val => this.clearFilters())
+      this.apiService.clearAdvanceFilter.subscribe(val => {
+        if (val) {
+          this.clearFilters();
+        }
+      })
     );
   }
 
@@ -560,7 +557,7 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
 
 
   getAllocatedFileTypes() {
-    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    let userInfo = JSON.parse(localStorage.getItem('userInfo'));
     let id = userInfo.userId;
     this.apiService.userDetails(id).subscribe(user => {
       this.formats = user['userPermissionDto']['reportTypes'];
@@ -856,7 +853,7 @@ export class AdvancedFilterComponent implements OnInit, AfterViewInit {
     payLoad['filters']['exp'] = this.payLoad.filter(obj => obj.min || obj.max || obj.value && obj.value.length);
     let payloadCounties = this.payLoad.filter(col => col.column == 'County').map(v => v.value[0] || "").filter(arr => arr.length);
     let allotedCounties = this.counties.filter(arr => arr.length);
-    let userinfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    let userinfo = JSON.parse(localStorage.getItem('userInfo'))
     if (userinfo['role'] !== 'ADMIN' && !payloadCounties.every(item => allotedCounties.includes(item))) {
       $('#authDialog').toggle();
       return;

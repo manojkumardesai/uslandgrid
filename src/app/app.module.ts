@@ -31,6 +31,10 @@ import { ActivateUser } from './user-auth/activate-user/activate-user.component'
 import { WarningWindowComponent } from './dilogs/warning-window/warning-window.component';
 // import { RouterStateSnapshot } from '@angular/router';
 import { UserIdleModule } from 'angular-user-idle';
+import { GaugeChartModule } from 'angular-gauge-chart';
+import { MainPageComponent } from './main-page/main-page.component';
+import { AngularSplitModule } from 'angular-split';
+import { ReportsGraphComponent } from './reports-graph/reports-graph.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +56,9 @@ import { UserIdleModule } from 'angular-user-idle';
     ResetPasswordComponent,
     UserInfoComponent,
     ActivateUser,
-    WarningWindowComponent
+    WarningWindowComponent,
+    MainPageComponent,
+    ReportsGraphComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +72,9 @@ import { UserIdleModule } from 'angular-user-idle';
     ReactiveFormsModule,
     NgxMatSelectSearchModule,
     BsDatepickerModule.forRoot(),
-    UserIdleModule.forRoot({ idle: 3600, timeout: 60, ping: 30 })
+    UserIdleModule.forRoot({ idle: 3600, timeout: 60, ping: 30 }),
+    GaugeChartModule,
+    AngularSplitModule
   ],
   providers: [
     httpInterceptorProviders

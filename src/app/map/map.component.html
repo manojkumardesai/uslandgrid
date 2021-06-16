@@ -1,5 +1,5 @@
-<div class="loader-container" *ngIf="(apiService.isVisible() | async) || apiService.globalLoader">
-    <div class="loader"></div>
+<div class="loader-container" *ngIf="(apiService.isVisible() | async) || apiService.globalLoader" tabindex="-1">
+    <div class="loader" tabindex="-1"></div>
 </div>
 <div class="map-container">
     <div class="map-frame">
@@ -32,13 +32,14 @@
 <div class='search'>
     <mat-card class='searchCard'>
         <form class="example-form">
-            <mat-form-field class="example-full-width filterSearchWell">
+            <mat-form-field class="example-full-width filterSearchWell form-caption" style="font-size: 14px;"> 
               <input type="text"
-                     placeholder="Search Wells"
-                     aria-label="Search Wells"
+                     placeholder="Search Wells ID/Name/Operators"
+                     aria-label="Search Wells ID/Name/Operators"
                      matInput
                      [formControl]="myControl"
-                     [matAutocomplete]="auto">
+                     [matAutocomplete]="auto"
+                     [title]="tooltipFormator(myControl.value)">
                      <button mat-button *ngIf="this.myControl.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearchInput()">
                         <mat-icon>close</mat-icon>
                       </button>
@@ -51,7 +52,7 @@
           </form>
     </mat-card>
 </div>
-<div>
+<!-- <div>
     <app-wells-records [payLoadFromFilter]='payLoadFromFilter' [mapExtent]='mapExtent'
     (filterByExtent)="filterEmit($event)"
     (zoomTo)="zoomToEmit($event)"
@@ -62,13 +63,16 @@
     (openAdvancedFilterEvent)="openAdvancedFilterEvent($event)"
     [mapTownShipExtent]="mapTownShipExtent"
     ></app-wells-records>
-</div>
+</div> -->
 <div class="export-wrapper">
     <div class="dropdown dropright twonshipStyles export-township-icon" title="Township">
         <button type="button" data-toggle="dropdown" class="btn-township">
             <i class="fa fa-pie-chart"></i>
         </button>
         <div class="dropdown-menu">
+            <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'county')">  
+                <input type="checkbox" class="mr-1" name="quarterQuarter" id="quarterQuarter" [checked]="activeCounty"> County
+            </a>
             <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'township')"> 
                 <input type="checkbox" class="mr-1" name="township" id="township" [checked]="activeTownship"> Township
             </a>
@@ -78,9 +82,7 @@
             <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'quarter')"> 
                 <input type="checkbox" class="mr-1" name="quarter" id="quarter" [checked]="activeQuarter"> Quarter
             </a>
-            <a class="dropdown-item pl-2" style="font-size: 12px; cursor: pointer;" (click)="generateTownShip($event, 'quaterQuater')">  
-                <input type="checkbox" class="mr-1" name="quarterQuarter" id="quarterQuarter" [checked]="activeQuarterQuarter"> QuarterQuater
-            </a>
+            
         </div>
     </div>
     <div class="dropdown dropleft twonshipStyles export-report-icon" title="{{this.userService.isloggedin() ? 'Export' : 'Please login'}}">

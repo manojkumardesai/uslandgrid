@@ -1,6 +1,6 @@
 
 import { Injectable } from "@angular/core";
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } from "@angular/common/http";
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse, HttpErrorResponse } from "@angular/common/http";
 import { ApiService } from "../api.service";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
@@ -19,13 +19,26 @@ export class LoaderInterceptor implements HttpInterceptor {
                     this.apiService.show();
                 }
                 if (event instanceof HttpResponse) {
+                    if(event.body.statusCode == 513) {
+                        this.logout();
+                    }
                     this.apiService.hide();
-
                 }
             },
                 (err: any) => {
-                    this.apiService.hide()
+                    if (err instanceof HttpErrorResponse) {
+                        if (err.status === 401) {
+                            this.logout();
+                        }
+                    }
+                    this.apiService.hide();
                 })
         );
+    }
+
+    logout() {
+        localStorage.removeItem('userInfo');
+        localStorage.removeItem('loginToken');
+        window.location.reload(true);
     }
 }
