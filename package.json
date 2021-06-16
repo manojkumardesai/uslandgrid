@@ -33,7 +33,7 @@
     "leaflet-mouse-position": "^1.2.0",
     "leaflet.markercluster": "^1.4.1",
     "leaflet.wms": "^0.2.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "ng2-charts": "^2.3.0",
     "ngx-bootstrap": "^5.6.1",
     "ngx-infinite-scroll": "^9.0.0",
